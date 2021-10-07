@@ -7,6 +7,7 @@ using namespace std;
 
 class SSH_1D{
 
+
   public:
     SSH_1D(double t1 = 1, double t2 = 2); //t1 = intracell hopping , t2 = intercell hopping
     ~SSH_1D();
