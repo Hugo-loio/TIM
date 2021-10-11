@@ -1,13 +1,12 @@
 #include <iostream>
-#include "matplotlibcpp.h"
 #include <armadillo>
 #include "SSH_1D.h"
+#include "odata.h"
 
 using namespace std;
 using namespace arma;
-namespace plt = matplotlibcpp;
 
-int main()
+int main(int argc, char * argv[])
 {
   int n = 100;
   int N = 10;
@@ -24,11 +23,13 @@ int main()
     y[i] = mod.berry_kspace(N); 
   }
 
-  plt::plot(x,y);
-  plt::xlabel("J'");
-  plt::ylabel("$ \\phi$");
-  plt::title("Berry phase, J = 1");
-  plt::show();
+  vector<vector<double>> data;
+  data.push_back(x);
+  data.push_back(y);
+  odata od(argv[0], "1DSSHBerryPhase.dat");
+  od.data(data);
+
+  cout << argv[0] << endl;
 
   return 0;
 }

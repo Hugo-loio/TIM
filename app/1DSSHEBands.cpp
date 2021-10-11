@@ -1,13 +1,12 @@
 #include <iostream>
-#include "matplotlibcpp.h"
 #include <armadillo>
 #include "SSH_1D.h"
+#include "odata.h"
 
 using namespace std;
 using namespace arma;
-namespace plt = matplotlibcpp;
 
-int main()
+int main(int argc, char ** argv)
 {
   int n = 100;
   vector<double> x(n), y1(n), y2(n);
@@ -23,12 +22,13 @@ int main()
     y2[i] = (mod.eigenvalk(x[i])).at(1);
   }
 
-  plt::plot(x,y1);
-  plt::plot(x,y2);
-  plt::xlabel("k");
-  plt::ylabel("E");
-  plt::title("1D SSH energy bands, J = 1, J' = 2");
-  plt::show();
+  vector<vector<double>> data;
+  data.push_back(x);
+  data.push_back(y1);
+  data.push_back(y2);
+
+  odata od(argv[0], "1DSSHEBands.dat");
+  od.data(data);
 
   return 0;
 }

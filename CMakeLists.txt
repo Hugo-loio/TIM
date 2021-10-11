@@ -10,25 +10,11 @@ endif()
 find_package (Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-# find python libraries
-find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)
-find_package(PythonLibs 3.0 REQUIRED)
-include_directories(${PYTHON3_INCLUDE_DIRS} ${NumPy_INCLUDE_DIRS})
-
-# populate matplotlib repository
-include(FetchContent)
-FetchContent_Declare(
-  matplotlib
-  GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
-  GIT_TAG        master
-  )
-FetchContent_GetProperties(matplotlib)
-if(NOT matplotlib_POPULATED)
-  FetchContent_Populate(matplotlib)
-endif()
-
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
+
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/data)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/scripts/plots)
 
 include_directories(SYSTEM ${matplotlib_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
 
@@ -39,6 +25,6 @@ foreach(app ${app_sources})
 
   add_executable(${exe} ${app} ${sources})
 
-  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES} ${PYTHON_LIBRARIES} Python3::NumPy)
+  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES})
 
 endforeach(app ${app_sources})

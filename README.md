@@ -4,7 +4,7 @@ Topological Insulator Models (TIM) provides c++ classes for tight binding models
 ## Dependencies
 
 * [Armadillo](http://arma.sourceforge.net/)
-* [Matplotlib](https://matplotlib.org/)
+* [Matplotlib](https://matplotlib.org/) - *Optional* - only for running the python plotting scritps in the `scripts/` folder.
 
 ## Build
 
