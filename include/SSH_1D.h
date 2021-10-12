@@ -25,14 +25,17 @@ class SSH_1D{
 
     double berry_kspace(int N); //N number of k intervals
 
-    /*TODO
-      cx_mat rH(int L, bool closed); //Get hamiltonian in real space with L unit cells, closed = true(false) means periodic boundary conditions apply(don't apply). 
-      double berry_twisted(int L, int M, int N); L is number of unit cells, M is number of occupied states and N is number of k intervals
-      */
+    void set_rH(int L, bool closed); //Set hamiltonian in real space with L unit cells, closed = true(false) means periodic boundary conditions apply(don't apply). 
+    sp_mat & get_rH(){return rH;};
+    //double berry_twisted(int M, int N);  M is number of occupied states and N is number of k intervals
 
   private:
     double t1;
     double t2;
+
+    sp_mat rH;
+    int L;
+    bool closed;
 };
 
 #endif

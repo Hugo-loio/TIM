@@ -4,6 +4,7 @@
 SSH_1D::SSH_1D(double t1, double t2){
   this->t1 = t1;
   this->t2 = t2;
+  L = 0;
 }
 
 SSH_1D::~SSH_1D(){
@@ -62,3 +63,21 @@ double SSH_1D::berry_kspace(int N){
   res *= cdot(u2,u0);
   return abs(log(res).imag());
 }
+
+void SSH_1D::set_rH(int L, bool closed){
+  rH = sp_mat(2*L,2*L);
+  rH(1,0) = -t1;
+  rH(0,1) = -t1;
+  rH(2*L-1,2*L-2) = -t1;
+  rH(2*L-2,2*L-1) = -t1;
+  for(int i = 1; i < 2*L-1; i++){
+    rH(i,i+1) = (i%2)*(-t2)+((i+1)%2)*(-t1);
+    rH(i,i-1) = (i%2)*(-t1)+((i+1)%2)*(-t2);
+  }
+  if(closed){
+    rH(0,2*L-1) = -t1;
+    rH(2*L-1,0) = -t1;
+  }
+}
+
+
