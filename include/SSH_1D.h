@@ -1,11 +1,12 @@
 #ifndef SSH_1D_h
 #define SSH_1D_h
 
+#include "tbhop.h"
 #include <armadillo>
 using namespace arma;
 using namespace std;
 
-class SSH_1D{
+class SSH_1D : public tbhop::Kloop{
 
 
   public:
@@ -19,6 +20,8 @@ class SSH_1D{
     double get_intrahop();
 
     cx_mat kH(double k); //Get hamiltonian in k space
+
+    cx_mat hloop(double k){return kH(k);};
 
     vec eigenvalk(double k);
     cx_mat eigenveck(double k);

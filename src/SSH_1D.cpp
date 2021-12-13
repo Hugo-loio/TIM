@@ -1,4 +1,5 @@
 #include "SSH_1D.h"
+#include "tbhop.h"
 #include <complex>
 
 SSH_1D::SSH_1D(double t1, double t2){
@@ -51,17 +52,7 @@ cx_mat SSH_1D::eigenveck(double k){
 }
 
 double SSH_1D::berry_kspace(int N){
-  cx_vec u0 = eigenveck(0).col(0);
-  cx_vec u1 = u0;
-  cx_vec u2 = eigenveck(2*M_PI/N).col(0);
-  complex<double> res = cdot(u1,u2);
-  for(int i = 2; i < N; i++){
-    u1 = u2;
-    u2 = eigenveck(2*M_PI*(double)i/N).col(0);
-    res *= cdot(u1,u2);
-  }
-  res *= cdot(u2,u0);
-  return abs(log(res).imag());
+  return abs(this->berry_phase(N, 1));
 }
 
 void SSH_1D::set_rH(int L, bool closed){

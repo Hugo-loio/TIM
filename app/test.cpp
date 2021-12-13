@@ -1,8 +1,10 @@
 // basic file operations
 #include <iostream>
 #include "odata.h"
+#include <armadillo>
 
 using namespace std;
+using namespace arma;
 
 int main (int arc, char ** argv) {
   cout << arc << endl;
@@ -38,6 +40,20 @@ int main (int arc, char ** argv) {
   dat2.push_back(dat21);
 
   od.data(dat2);
+
+  cx_mat A(4,4, fill::randu);
+
+  cout << A << endl;
+
+  A.resize(4,2);
+
+  cout << A << endl;
+
+  int a = A.size();
+
+  int b = size(A)[0];
+
+  cout << A.size() << " " << size(A) << " " << a << " " << b << " " << size(A)[1] <<  endl;
 
   return 0;
 }
