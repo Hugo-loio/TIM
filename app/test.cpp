@@ -1,59 +1,48 @@
 // basic file operations
 #include <iostream>
 #include "odata.h"
+#include "TBmod.h"
 #include <armadillo>
 
 using namespace std;
 using namespace arma;
 
 int main (int arc, char ** argv) {
-  cout << arc << endl;
-  cout << argv[0] << endl;
+  /*
+     cx_mat A(4,4, fill::randu);
 
-  odata od(argv[0], "test.txt");
-  od.line("test the line function");
+     cout << A << endl;
 
+     A.resize(4,2);
 
-  double ** dat = new double*[2];
-  dat[0] = new double[3];
-  dat[0][0] = 1;
-  dat[0][1] = 2;
-  dat[0][2] = 3;
+     cout << A << endl;
 
-  dat[1] = new double[3];
-  dat[1][0] = 3;
-  dat[1][1] = 2;
-  dat[1][2] = 4;
+     int a = A.size();
 
-  od.data(dat, 2, 3); 
+     int b = size(A)[0];
 
-  vector<vector<double>> dat2; 
-  vector<double> dat20;
-  dat20.push_back(1);
-  dat20.push_back(2);
-  dat20.push_back(3);
-  vector<double> dat21;
-  dat21.push_back(3);
-  dat21.push_back(2);
-  dat21.push_back(1);
-  dat2.push_back(dat20);
-  dat2.push_back(dat21);
+     cout << A.size() << " " << size(A) << " " << a << " " << b << " " << size(A)[1] <<  endl;
+     */
 
-  od.data(dat2);
+  int L[1] = {2};
+  TBmod SSH(1, 2, L);
 
-  cx_mat A(4,4, fill::randu);
+  int n1[1] = {0};
+  int n2[1] = {1};
+  SSH.set_hop(0,1, n1, 1);
+  SSH.set_hop(1,0, n2, 2);
 
-  cout << A << endl;
+  cout << "PBCs\n" <<  SSH.get_rH() << endl;
 
-  A.resize(4,2);
+  bool pbc[1] = {false};
+  SSH.set_periodic(pbc);
 
-  cout << A << endl;
+  cout << "No PBCs\n" << SSH.get_rH() << endl;
 
-  int a = A.size();
+  double twisted[1] = {M_PI/2};
+  SSH.set_twisted(twisted);
 
-  int b = size(A)[0];
-
-  cout << A.size() << " " << size(A) << " " << a << " " << b << " " << size(A)[1] <<  endl;
+  cout << "Pi twisted BCs\n" << SSH.get_rH() << endl;
 
   return 0;
 }
