@@ -1,6 +1,6 @@
-#include "hop.h"
+#include "Hop.h"
 
-hop::hop(int norb1, int norb2, int * n, double hop, int ndim){
+Hop::Hop(int norb1, int norb2, int * n, double hop, int ndim){
   this->norb1 = norb1;
   this->norb2 = norb2;
   this->n = new int[ndim];
@@ -11,11 +11,11 @@ hop::hop(int norb1, int norb2, int * n, double hop, int ndim){
   this->ndim = ndim;
 }
 
-hop::~hop(){
+Hop::~Hop(){
   delete[] n;
 }
 
-int hop::get_maxn(){
+int Hop::get_maxn(){
   int max = 0;
   for(int i = 0; i < ndim; i++){
     if(n[i] > max){

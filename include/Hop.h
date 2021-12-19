@@ -1,11 +1,11 @@
 #ifndef HOP_H
 #define HOP_H
 
-class hop{
+class Hop{
   public:
     //Hopping hop between norb1 in home cell and orb2 in neighbouring cell defined by vector the ndim dimentional n 
-    hop(int norb1, int norb2, int * n, double hop, int ndim);
-    ~hop();
+    Hop(int norb1, int norb2, int * n, double hop, int ndim);
+    ~Hop();
     //Max distance between cells in a specific direction
     int get_maxn(); 
     //Getting hopping amplitude
