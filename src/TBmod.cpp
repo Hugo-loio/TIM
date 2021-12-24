@@ -11,10 +11,12 @@ TBmod::TBmod(int ndim, int norb, int * L){
   this->theta = new double[ndim];
   this->L = new int[ndim];
   this->Laccum = new int[ndim];
+  this->Lbound = new int[ndim];
   for(int i = 0; i < ndim; i++){
     this->pcb[i] = true; 
     this->theta[i] = 0;
     this->L[i] = 1;
+    this->Lbound = 0;
   }
   set_size(L);
 }
@@ -24,21 +26,28 @@ TBmod::~TBmod(){
   delete[] pcb;
   delete[] theta;
   delete[] Laccum;
-  delete[] nfull;
+  delete[] Lbound;
+  delete[] nfull_bulk;
+  delete[] nfull_bound;
   //delete[] n;
 }
 
 void TBmod::set_hop(int norb1, int norb2, int * n, complex<double> hop){
   this->hop.push_back(Hop(norb1, norb2, n, hop, ndim));
+  bool newbound = false;
+  for(int i = 0; i < ndim; i++){
+    if(n[i] > Lbound[i]){
+      newbound = true;
+      Lbound[i] = n[i];
+    }
+  }
+  if(newbound){
+    calc_n();
+  }
 }
 
 void TBmod::set_onsite(int norb, complex<double> en){
-  int * n_temp = new int[ndim];
-  for(int i = 0; i < ndim; i++){
-    n_temp[i] = 0;
-  }
-  hop.push_back(Hop(norb, norb, n_temp, en, ndim));
-  delete[] n_temp;
+  os.push_back(Onsite(norb,en));
 }
 
 void TBmod::set_periodic(bool * pbc){
@@ -59,9 +68,22 @@ void TBmod::set_size(int * L){
       this->L[i] = L[i];
     }
   }
-  calc_Laccum();
-  //calc_n();
-  calc_nfull();
+
+  //Calculate Laccum
+  for(int i = 0; i < ndim; i++){
+    Laccum[i] = 1;
+    for(int e = 0; e <= i; e++){
+      Laccum[i] *= L[e];
+    }
+  }
+
+  //calculate system volume
+  vol = 1;
+  for(int i = 0; i < ndim; i++){
+    vol *= L[i];
+  }
+
+  calc_n();
 }
 
 
@@ -79,66 +101,103 @@ bool TBmod::check_size(){
   return res;
 }
 
-void TBmod::calc_Laccum(){
-  for(int i = 0; i < ndim; i++){
-    Laccum[i] = 1;
-    for(int e = 0; e <= i; e++){
-      Laccum[i] *= L[e];
-    }
-  }
+void TBmod::calc_n(){
+  delete[] nfull_bulk;
+  nfull_bulk = new int*[Laccum[ndim-1]];
+  /*
+     int e,k;
+     for(int i = 0; i < Laccum[ndim-1]; i++){
+     nfull[i] = new int[ndim];
+     for(e = 0; e < ndim; e++){
+     nfull[i][e] = i;
+     for(k = 0; k < e; k++){
+     nfull[i][e] -= nfull[i][k];
+     }
+     nfull[i][e] = nfull[i][e] % Laccum[e];
+     if(e > 0){
+     nfull[i][e] = nfull[i][e]/Laccum[e-1];
+     }
+     }
+     }
+     */
 }
 
-void TBmod::calc_nfull(){
-  nfull = new int*[Laccum[ndim-1]];
-  int e,k;
-  for(int i = 0; i < Laccum[ndim-1]; i++){
-    nfull[i] = new int[ndim];
-    for(e = 0; e < ndim; e++){
-      nfull[i][e] = i;
-      for(k = 0; k < e; k++){
-	nfull[i][e] -= nfull[i][k];
+void TBmod::loop_nfull(int i, int depth, int * coord, bool up){
+  if(depth = ndim-1){
+    //TODO:: check if boundary or bulk
+    //fill nfull
+    int n = 1;
+    for(int e = 0; e < ndim; e++){
+      if(e == 0){
+	n = val[0];
       }
-      nfull[i][e] = nfull[i][e] % Laccum[e];
-      if(e > 0){
-	nfull[i][e] = nfull[i][e]/Laccum[e-1];
+      else{
+	n += Laccum[e-1]*val[e];
+      }
+      nfull_bulk[i][e] = val[e];
+    }
+    nfull_bulk[ndim] = n;
+
+    //increase coordinate
+    if(coord[ndim-1] == L[ndim-1] - 1){
+      coord[ndim -1] = 0; 
+      loop_nfull(i, depth--, coord, true);
+    }
+    else{
+      coord[ndim-1]++;
+    }
+  }
+  else{
+    if(up){
+      if(coord[depth] == L[depth] -1 ){
+	coord[depth] = 0;
+	loop_nfull(i, depth--, coord, true);
+      }
+      else{
+	coord[depth]++;
       }
     }
-  }
-}
-
-int TBmod::get_m1(int * n, Hop & hop){
-  int * temp = new int[ndim];
-  int temp2 = 0;
-
-  int e = 0;
-  for(int i = 0; i < ndim; i++){
-    temp[i] = norb*n[i];
-    for(e = 0; e < i; e++){
-      temp[i] *= L[e];
+    else{
+      loop_nfull(i, depth++, coord, false);
     }
-    temp2 += temp[i];
   }
-  delete[] temp;
-
-  return hop.get_norb1() + temp2;
 }
 
-int TBmod::get_m2(int * n, Hop & hop){
-  int * temp = new int[ndim];
-  int temp2 = 0;
+/*
+   int TBmod::get_m1(int * n, Hop & hop){
+   int * temp = new int[ndim];
+   int temp2 = 0;
 
-  int e = 0;
-  for(int i = 0; i < ndim; i++){
-    temp[i] = norb*((n[i] + hop.get_n()[i]) % L[i]);
-    for(e = 0; e < i; e++){
-      temp[i] *= L[e];
-    }
-    temp2 += temp[i];
-  }
-  delete[] temp;
+   int e = 0;
+   for(int i = 0; i < ndim; i++){
+   temp[i] = norb*n[i];
+   for(e = 0; e < i; e++){
+   temp[i] *= L[e];
+   }
+   temp2 += temp[i];
+   }
+   delete[] temp;
 
-  return hop.get_norb2() + temp2;
-}
+   return hop.get_norb1() + temp2;
+   }
+
+   int TBmod::get_m2(int * n, Hop & hop){
+   int * temp = new int[ndim];
+   int temp2 = 0;
+
+   int e = 0;
+   for(int i = 0; i < ndim; i++){
+   temp[i] = norb*((n[i] + hop.get_n()[i]) % L[i]);
+   for(e = 0; e < i; e++){
+   temp[i] *= L[e];
+   }
+   temp2 += temp[i];
+   }
+   delete[] temp;
+
+   return hop.get_norb2() + temp2;
+   }
+   */
 
 cx_mat TBmod::get_rH(){
   cx_mat res(norb*Laccum[ndim-1], norb*Laccum[ndim-1], fill::zeros);

@@ -2,6 +2,7 @@
 #define TBMOD_H
 
 #include "Hop.h"
+#include "Onsite.h"
 #include <armadillo>
 #include <vector>
 
@@ -14,6 +15,7 @@ class TBmod{
     //Tight-binding model with ndim spatial dimensions and norb orbitals per unit cell
     //L is explained in method set_size
     TBmod(int ndim, int norb, int * L = NULL); 
+    //TODO: copy const
     ~TBmod();
 
     //Set hopping between norb1 in home cell and orb2 in neighbouring cell defined by vector n (n should only have non-negative values)
@@ -41,40 +43,48 @@ class TBmod{
 
   private:
 
+    /*
     //Get Hilbert space index of created orbital in hopping term  
     int get_m1(int * n, Hop & hop);
     //Get Hilbert space index of annihilated orbital in hopping term (PCBs apply)
     int get_m2(int * n, Hop & hop);
+    */
 
-    //Calculate accumulated size [Lx,Lx*Ly,Lx*Ly*Lz,...]
-    void calc_Laccum();
-
-    //Calculate mesh of unit cells depending on L (full for all directions, otherwise only directions with no PBCs)
-    //void calc_n();
-    void calc_nfull();
+    //Generate meshes of unit cells
+    void calc_n();
+    //Recursive functions that loop through all unit cells
+    void loop_nfull(int i, int depth, int * coord, bool up);
+    //void loop_n();
 
     //Check is system size is big enough for given hopping terms in the directions where PCBs don't apply (hopping can't be larger than system size)
     bool check_size();
 
     //Hopping and on-site terms
     vector<Hop> hop;
+    vector<Onsite> os; 
     //System dimension
     int ndim;
     //Number of orbitals per unit cell
     int norb;
     //System size
     int * L;
-    //Accumulated system size
-    int * Laccum;
+    //Size of boundary (depends on the max neighbour order of the hopping terms)
+    int * Lbound;
+    //System volume
+    int V;
+    //Accumulated system size [Lx, LxLy, ...]
+    int * Laccum; //If this is no longer necessary only use vol
     //Periodic boundary conditions
     bool * pcb;
     //Twisted boundary conditions
     double * theta;
-    //Mesh of unit cells in all directions
-    int ** nfull;
-    //Mesh of unit cells only in directions with no PCBs
-    int ** n;
-
+    //Meshes of unit cells with ndim spatial indexes of unit cells and corresponding 1D index 
+    //Mesh of unit cells in all directions (bulk and boundary)
+    int ** nfull_bulk;
+    int ** nfull_bound;
+    //Mesh of unit cells only in directions with no PCBs (bulk and boundary)
+    int ** n_bulk;
+    int ** n_bound;
 };
 
 #endif
