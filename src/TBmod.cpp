@@ -122,43 +122,46 @@ void TBmod::calc_n(){
      */
 }
 
-void TBmod::loop_nfull(int i, int depth, int * coord, bool up){
+void TBmod::next_point_full(int i, int depth, int * point, bool up){
   if(depth = ndim-1){
+    /*
     //TODO:: check if boundary or bulk
     //fill nfull
     int n = 1;
     for(int e = 0; e < ndim; e++){
-      if(e == 0){
-	n = val[0];
-      }
-      else{
-	n += Laccum[e-1]*val[e];
-      }
-      nfull_bulk[i][e] = val[e];
-    }
-    nfull_bulk[ndim] = n;
-
-    //increase coordinate
-    if(coord[ndim-1] == L[ndim-1] - 1){
-      coord[ndim -1] = 0; 
-      loop_nfull(i, depth--, coord, true);
+    if(e == 0){
+    n = val[0];
     }
     else{
-      coord[ndim-1]++;
+    n += Laccum[e-1]*val[e];
+    }
+    nfull_bulk[i][e] = val[e];
+    }
+    nfull_bulk[ndim] = n;
+    */
+
+    //increase coordinate
+    if(point[ndim-1] == L[ndim-1] - 1){
+      point[ndim -1] = 0; 
+      loop_nfull(i, depth--, point, true);
+    }
+    else{
+      point[ndim-1]++;
     }
   }
   else{
     if(up){
-      if(coord[depth] == L[depth] -1 ){
-	coord[depth] = 0;
-	loop_nfull(i, depth--, coord, true);
+      //increase coordinate
+      if(point[depth] == L[depth] -1 ){
+	point[depth] = 0;
+	loop_nfull(i, depth--, point, true);
       }
       else{
-	coord[depth]++;
+	point[depth]++;
       }
     }
     else{
-      loop_nfull(i, depth++, coord, false);
+      loop_nfull(i, depth++, point, false);
     }
   }
 }

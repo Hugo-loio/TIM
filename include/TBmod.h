@@ -52,8 +52,8 @@ class TBmod{
 
     //Generate meshes of unit cells
     void calc_n();
-    //Recursive functions that loop through all unit cells
-    void loop_nfull(int i, int depth, int * coord, bool up);
+    //Recursive functions that take point and change it to next point in mesh
+    void next_point_full(int i, int depth, int * point, bool up);
     //void loop_n();
 
     //Check is system size is big enough for given hopping terms in the directions where PCBs don't apply (hopping can't be larger than system size)
