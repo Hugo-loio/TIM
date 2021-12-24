@@ -21,13 +21,11 @@ class TBmod{
     //Set hopping between norb1 in home cell and orb2 in neighbouring cell defined by vector n (n should only have non-negative values)
     void set_hop(int norb1, int norb2, int * n, complex<double> hop);
     //Set on-site energy for orbital norb
-    void set_onsite(int norb, complex<double> en); //TODO: on site should be separate from hoppings because of h.c.
-    //pcb specifies the existance of periodic boundary conditions in each direction (true for PBCs)
-    //By default PBCs apply to all spatial directions
-    void set_periodic(bool * pbc);
-    //Apply twisted boundary conditions with angle (rad) specified by array theta
-    //If theta_i = 0 then don't change the boundary conditions in that direction
-    void set_twisted(double * theta);
+    void set_onsite(int norb, complex<double> en); 
+    //Set boundary conditions for each direction: 0 for open, 1 for periodic (default BCs), 2 for twisted
+    void set_bc(int * bc);
+    //ndim twist angle array used in directions with twisted boundary conditions
+    void set_twists(double * theta);
     //Array L specifies the number of unit cells in each direction, L[i] > 0 (if direction i doesn't exist set L[i] = 1)
     void set_size(int * L);
 
@@ -43,24 +41,16 @@ class TBmod{
 
   private:
 
-    /*
-    //Get Hilbert space index of created orbital in hopping term  
-    int get_m1(int * n, Hop & hop);
-    //Get Hilbert space index of annihilated orbital in hopping term (PCBs apply)
-    int get_m2(int * n, Hop & hop);
-    */
     //Get integer index corresponding to ndim unit cell point
     int get_n(int * n);
-
     //Generate meshes of unit cells
     void calc_n();
     //Recursive functions that take point and change it to next point in mesh
     void next_point_ndim(int depth, int * point, bool up);
     void next_point_nrdim(int depth, int * point, bool up);
-    //void loop_n();
-
-    //Check is system size is big enough for given hopping terms in the directions where PCBs don't apply (hopping can't be larger than system size)
-    bool check_size();
+    //Check is system size is big enough for given hopping terms (increase size if it isn't)
+    void check_size();
+    void calc_accum();
 
     //Hopping and on-site terms
     vector<Hop> hop;
@@ -77,21 +67,15 @@ class TBmod{
     int * L;
     //Size of boundary (depends on the max neighbour order of the hopping terms)
     int * Lbound;
-    //System volume
-    //int V;
     //Accumulated system size [Lx, LxLy, ...]
-    int * Laccum; //If this is no longer necessary only use vol
+    int * Laccum; 
     //Accumulated system boundary size [Lbound[0],Lbound[0]*Lbound[1],...]
-    int * Lbacuum;
-    /*
-    //Accumulated system bulk size [Lbound[0],Lbound[0]*Lbound[1],...]
-    int * Lboundacuum;
-    */
-    //Periodic boundary conditions
-    bool * pcb;
-    //Twisted boundary conditions
+    int * Lbaccum;
+    //Boundary conditions
+    int * bc;
+    //Twists for twisted boundary conditions
     double * theta;
-    //Meshes of unit cells with ndim spatial indexes of unit cells and corresponding 1D index 
+    //Meshes of unit cells with ndim spatial indexes and one collapsed 1D index 
     //Mesh of unit cells in all directions (bulk and boundary)
     int ** nfull_bulk;
     int ** nfull_bound;

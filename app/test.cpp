@@ -32,15 +32,20 @@ int main (int arc, char ** argv) {
   SSH.set_hop(0,1, n1, 1);
   SSH.set_hop(1,0, n2, 2);
 
+  cout << "ola" << endl;
+
   cout << "PBCs\n" <<  SSH.get_rH() << endl;
 
-  bool pbc[1] = {false};
-  SSH.set_periodic(pbc);
+  int bc[1] = {0};
+  SSH.set_bc(bc);
 
   cout << "No PBCs\n" << SSH.get_rH() << endl;
 
+  bc[0] = 2;
+  SSH.set_bc(bc);
+
   double twisted[1] = {M_PI/2};
-  SSH.set_twisted(twisted);
+  SSH.set_twists(twisted);
 
   cout << "Pi twisted BCs\n" << SSH.get_rH() << endl;
 
