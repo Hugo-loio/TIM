@@ -49,11 +49,14 @@ class TBmod{
     //Get Hilbert space index of annihilated orbital in hopping term (PCBs apply)
     int get_m2(int * n, Hop & hop);
     */
+    //Get integer index corresponding to ndim unit cell point
+    int get_n(int * n);
 
     //Generate meshes of unit cells
     void calc_n();
     //Recursive functions that take point and change it to next point in mesh
-    void next_point_full(int i, int depth, int * point, bool up);
+    void next_point_ndim(int depth, int * point, bool up);
+    void next_point_nrdim(int depth, int * point, bool up);
     //void loop_n();
 
     //Check is system size is big enough for given hopping terms in the directions where PCBs don't apply (hopping can't be larger than system size)
@@ -64,6 +67,10 @@ class TBmod{
     vector<Onsite> os; 
     //System dimension
     int ndim;
+    //Number of directions with no PCBs
+    int nrdim;
+    //Index of directions with no PCBs
+    int * rindex;
     //Number of orbitals per unit cell
     int norb;
     //System size
@@ -71,9 +78,15 @@ class TBmod{
     //Size of boundary (depends on the max neighbour order of the hopping terms)
     int * Lbound;
     //System volume
-    int V;
+    //int V;
     //Accumulated system size [Lx, LxLy, ...]
     int * Laccum; //If this is no longer necessary only use vol
+    //Accumulated system boundary size [Lbound[0],Lbound[0]*Lbound[1],...]
+    int * Lbacuum;
+    /*
+    //Accumulated system bulk size [Lbound[0],Lbound[0]*Lbound[1],...]
+    int * Lboundacuum;
+    */
     //Periodic boundary conditions
     bool * pcb;
     //Twisted boundary conditions

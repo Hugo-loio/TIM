@@ -77,11 +77,23 @@ void TBmod::set_size(int * L){
     }
   }
 
+  //Calculate Lbacuum
+  for(int i = 0; i < ndim; i++){
+    Lbaccum[i] = 1;
+    for(int e = 0; e <= i; e++){
+      Lbaccum[i] *= L[e]-Lbound[e];
+    }
+  }
+
+  //Calculate 
+
+  /*
   //calculate system volume
   vol = 1;
   for(int i = 0; i < ndim; i++){
-    vol *= L[i];
+  vol *= L[i];
   }
+  */
 
   calc_n();
 }
@@ -101,9 +113,70 @@ bool TBmod::check_size(){
   return res;
 }
 
+int TBmod::get_n(int * n){
+  int res = 1;
+  for(int i = 0; i < ndim; i++){
+    if(i == 0){
+      res = n[0];
+    }
+    else{
+      res += Laccum[e-1]*n[e];
+    }
+  }
+  return res;
+}
+
 void TBmod::calc_n(){
-  delete[] nfull_bulk;
-  nfull_bulk = new int*[Laccum[ndim-1]];
+  if(check_size()){
+    if(nfull_bulk != NULL){
+      delete[] nfull_bulk;
+    }
+    if(nfull_bound != NULL){
+      delete[] nfull_bound;
+    }
+
+    nfull_bulk = new int * [Laccum[ndim-1]-Lbaccum[ndim-1]];
+    nfull_bound = new int * [Lbaccum[ndim -1]];
+
+    int * point = new int[ndim];
+    for(int i = 0; i < ndim; i++){
+      point[i] = 0;
+    }
+
+    int e,j;
+    //nfull
+    int count_bulk = 0;
+    int count_bound = 0;
+    bool bound = false;
+    for(int i = 0; i < Laccum[ndim-1];i++){
+      for(e = 0; e < ndim; e++){
+	if(point[e] > L[e] - Lbound[e] - 1){
+	  bound = true;
+	}
+      }
+      if(bound){
+	nfull_bound[count_bound] = new int[ndim + 1];
+	for(j = 0; j < ndim; j++){
+	  nfull_bound[count_bound][j] = point[j];
+	}
+	nfull_bound[count_bound][ndim] = get_n(point);
+	count_bound++;
+      }
+      else{
+	nfull_bulk[count_bulk] = new int[ndim + 1];
+	for(j = 0; j < ndim; j++){
+	  nfull_bulk[count_bulk][j] = point[j];
+	}
+	nfull_bulk[count_bulk][ndim] = get_n(point);
+	count_bulk++;
+      }
+      bound = false;
+      next_point_ndim(0, point, false);
+    }
+  }
+  else{
+    cout << "Error: Hopping terms aren't compatible with system size" << endl;
+  }
   /*
      int e,k;
      for(int i = 0; i < Laccum[ndim-1]; i++){
@@ -122,28 +195,13 @@ void TBmod::calc_n(){
      */
 }
 
-void TBmod::next_point_full(int i, int depth, int * point, bool up){
+void TBmod::next_point_ndim(int depth, int * point, bool up){
   if(depth = ndim-1){
-    /*
-    //TODO:: check if boundary or bulk
-    //fill nfull
-    int n = 1;
-    for(int e = 0; e < ndim; e++){
-    if(e == 0){
-    n = val[0];
-    }
-    else{
-    n += Laccum[e-1]*val[e];
-    }
-    nfull_bulk[i][e] = val[e];
-    }
-    nfull_bulk[ndim] = n;
-    */
 
     //increase coordinate
     if(point[ndim-1] == L[ndim-1] - 1){
       point[ndim -1] = 0; 
-      loop_nfull(i, depth--, point, true);
+      next_point_ndim(depth--, point, true);
     }
     else{
       point[ndim-1]++;
@@ -154,14 +212,44 @@ void TBmod::next_point_full(int i, int depth, int * point, bool up){
       //increase coordinate
       if(point[depth] == L[depth] -1 ){
 	point[depth] = 0;
-	loop_nfull(i, depth--, point, true);
+	next_point_ndim(depth--, point, true);
       }
       else{
 	point[depth]++;
       }
     }
     else{
-      loop_nfull(i, depth++, point, false);
+      //Go to next direction
+      next_point_ndim(depth++, point, false);
+    }
+  }
+}
+
+void TBmod::next_point_nrdim(int i, int depth, int * point, bool up){
+  if(depth = nrdim-1){
+    //increase coordinate
+    if(point[nrdim-1] == L[rindex[nrdim -1]] - 1){
+      point[nrdim -1] = 0; 
+      next_point_nrdim(i, depth--, point, true);
+    }
+    else{
+      point[nrdim-1]++;
+    }
+  }
+  else{
+    if(up){
+      //increase coordinate
+      if(point[depth] == L[rindex[depth]] -1 ){
+	point[depth] = 0;
+	next_point_nrdim(i, depth--, point, true);
+      }
+      else{
+	point[depth]++;
+      }
+    }
+    else{
+      //Go to next direction
+      next_point_ndim(i, depth++, point, false);
     }
   }
 }
