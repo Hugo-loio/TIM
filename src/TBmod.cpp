@@ -257,17 +257,15 @@ cx_mat TBmod::get_rH(){
     for(i = 1; i < ndim; i++){
       incn += hop[e].get_n()[i]*Laccum[i-1];
     }
-    cout << "ole " << Laccum[ndim-1] << " " << Lbaccum[ndim-1] << " " << L[0] << " " << Lbound[0] << endl;
     //Go through bulk mesh
     for(i = 0; i < Laccum[ndim-1] - Lbaccum[ndim-1]; i++){
       res(hop[e].get_norb1() + norb*nfull_bulk[i][ndim], hop[e].get_norb2() + norb*(nfull_bulk[i][ndim] + incn)) += hop[e].get_hop();
     }
-    cout << "ole" << endl;
     //Go through boundary mesh and check BCs
     for(i = 0; i < Lbaccum[ndim-1]; i++){
       phase = 1;
       for(j = 0; j < ndim; j++){
-	nbound[j] = (nfull_bound[i][j] + hop[e].get_n()[j]) % (L[j] - 1);
+	nbound[j] = (nfull_bound[i][j] + hop[e].get_n()[j]) % L[j];
 	if(nfull_bound[i][j] + hop[e].get_n()[j] > L[j] - 1){
 	  switch(bc[j]){
 	    case 0 :
@@ -281,7 +279,6 @@ cx_mat TBmod::get_rH(){
       res(hop[e].get_norb1() + norb*nfull_bound[i][ndim], hop[e].get_norb2() + norb*get_n(nbound)) += phase*hop[e].get_hop();
     }
   }
-  cout << "ole" << endl;
 
   delete[] nbound;
 

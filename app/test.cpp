@@ -32,8 +32,6 @@ int main (int arc, char ** argv) {
   SSH.set_hop(0,1, n1, 1);
   SSH.set_hop(1,0, n2, 2);
 
-  cout << "ola" << endl;
-
   cout << "PBCs\n" <<  SSH.get_rH() << endl;
 
   int bc[1] = {0};
