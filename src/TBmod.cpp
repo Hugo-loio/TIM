@@ -12,14 +12,16 @@ TBmod::TBmod(int ndim, int norb, int * L){
   this->L = new int[ndim];
   this->Laccum = new int[ndim];
   this->Lbaccum = new int[ndim];
-  this->Lbound = new int[ndim];
+  this->Lbound = new int * [ndim];
   this->nfull_bulk = NULL;
   this->nfull_bound = NULL;
   for(int i = 0; i < ndim; i++){
     this->bc[i] = 1; 
     this->theta[i] = 0;
     this->L[i] = 1;
-    this->Lbound[i] = 0;
+    this->Lbound[i] = new int[2];
+    this->Lbound[i][0] = 0;
+    this->Lbound[i][1] = 0;
   }
 
   set_size(L);
@@ -41,12 +43,16 @@ void TBmod::set_hop(int norb1, int norb2, int * n, complex<double> hop){
   this->hop.push_back(Hop(norb1, norb2, n, hop, ndim));
   bool newbound = false;
   for(int i = 0; i < ndim; i++){
-    if(n[i] > Lbound[i]){
+    if(abs(n[i]) > L[i]){
+      L[i] = n[i];
+    }
+    if(n[i] > 0 && n[i] > Lbound[i][1]){
       newbound = true;
-      Lbound[i] = n[i];
-      if(n[i] > L[i]){
-	L[i] = n[i];
-      }
+      Lbound[i][1] = n[i];
+    }
+    else if(n[i] < 0 && n[i] < -Lbound[i][0]){
+      newbound = true;
+      Lbound[i][0] = -n[i];
     }
   }
   if(newbound){
@@ -92,10 +98,18 @@ void TBmod::calc_accum(){
 
   //Calculate Lbaccum
   for(int i = 0; i < ndim; i++){
-    Lbaccum[i] = Lbound[0];
+    if((Lbound[0][0] + Lbound[0][1]) < L[0]){
+      Lbaccum[i] = Lbound[0][0] + Lbound[0][1];
+    }
+    else{
+      Lbaccum[i] = L[0];
+    }
     for(int e = 0; e <= i; e++){
-      if(Lbound[e] != 0){
-	Lbaccum[i] *= Lbound[e];
+      if((Lbound[e][0] + Lbound[e][1]) != 0 && (Lbound[e][0] + Lbound[e][1]) < L[e]){
+	Lbaccum[i] *= Lbound[e][0] + Lbound[e][1];
+      }
+      else{
+	Lbaccum[i] *= L[e];
       }
     }
   }
@@ -155,7 +169,7 @@ void TBmod::calc_n(){
   bool bound = false;
   for(int i = 0; i < Laccum[ndim-1];i++){
     for(e = 0; e < ndim; e++){
-      if(point[e] > L[e] - Lbound[e] - 1){
+      if(point[e] > L[e] - Lbound[e][1] - 1 || point[e] < Lbound[e][0]){
 	bound = true;
       }
     }
@@ -265,8 +279,18 @@ cx_mat TBmod::get_rH(){
     for(i = 0; i < Lbaccum[ndim-1]; i++){
       phase = 1;
       for(j = 0; j < ndim; j++){
-	nbound[j] = (nfull_bound[i][j] + hop[e].get_n()[j]) % L[j];
+	nbound[j] = (nfull_bound[i][j] + hop[e].get_n()[j] + L[j]) % L[j];
 	if(nfull_bound[i][j] + hop[e].get_n()[j] > L[j] - 1){
+	  switch(bc[j]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(-ii*theta[j]);
+	  }
+	}
+	else if(nfull_bound[i][j] + hop[e].get_n()[j] < 0){
+	  cout << "ola " << bc[j] << " theta " << theta[j] << " " << nbound[j] << endl;
 	  switch(bc[j]){
 	    case 0 :
 	      phase = 0;

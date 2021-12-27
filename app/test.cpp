@@ -29,8 +29,8 @@ int main (int arc, char ** argv) {
 
   int n1[1] = {0};
   int n2[1] = {1};
-  SSH.set_hop(0,1, n1, 1);
-  SSH.set_hop(1,0, n2, 2);
+  SSH.set_hop(0,1, n1, -1);
+  SSH.set_hop(1,0, n2, -2);
 
   cout << "PBCs\n" <<  SSH.get_rH() << endl;
 

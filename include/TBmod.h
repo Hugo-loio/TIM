@@ -18,7 +18,7 @@ class TBmod{
     //TODO: copy const
     ~TBmod();
 
-    //Set hopping between norb1 in home cell and orb2 in neighbouring cell defined by vector n (n should only have non-negative values)
+    //Set hopping between norb1 in home cell and orb2 in neighbouring cell defined by vector n 
     void set_hop(int norb1, int norb2, int * n, complex<double> hop);
     //Set on-site energy for orbital norb
     void set_onsite(int norb, complex<double> en); 
@@ -66,10 +66,10 @@ class TBmod{
     //System size
     int * L;
     //Size of boundary (depends on the max neighbour order of the hopping terms)
-    int * Lbound;
+    int ** Lbound;
     //Accumulated system size [Lx, LxLy, ...]
     int * Laccum; 
-    //Accumulated system boundary size [Lbound[0],Lbound[0]*Lbound[1],...]
+    //Accumulated system boundary size 
     int * Lbaccum;
     //Boundary conditions
     int * bc;
