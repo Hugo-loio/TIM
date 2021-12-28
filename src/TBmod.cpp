@@ -6,15 +6,16 @@ using namespace std;
 
 TBmod::TBmod(int ndim, int norb, int * L){
   this->ndim = ndim;
+  this->nrdim = 0;
   this->norb = norb;
   this->bc = new int[ndim];
   this->theta = new double[ndim];
   this->L = new int[ndim];
   this->Laccum = new int[ndim];
-  this->Lbaccum = new int[ndim];
   this->Lbound = new int * [ndim];
   this->nfull_bulk = NULL;
   this->nfull_bound = NULL;
+  this->rindex = new int[nrdim];
   for(int i = 0; i < ndim; i++){
     this->bc[i] = 1; 
     this->theta[i] = 0;
@@ -32,11 +33,12 @@ TBmod::~TBmod(){
   delete[] bc;
   delete[] theta;
   delete[] Laccum;
-  delete[] Lbaccum;
   delete[] Lbound;
   delete[] nfull_bulk;
   delete[] nfull_bound;
-  //delete[] n;
+  delete[] n_bulk;
+  delete[] n_bound;
+  delete[] rindex;
 }
 
 void TBmod::set_hop(int norb1, int norb2, int * n, complex<double> hop){
@@ -65,9 +67,25 @@ void TBmod::set_onsite(int norb, complex<double> en){
 }
 
 void TBmod::set_bc(int * bc){
+  nrdim = 0;
   for(int i = 0; i < ndim; i++){
     this->bc[i] = bc[i];
+    if(bc[i] != 1){
+      nrdim++;
+    }
   }
+
+  delete[] rindex;
+  rindex = new int [nrdim];
+  int e = 0;
+  for(int i = 0; i < ndim; i++){
+    if(bc[i] != 1){
+      rindex[e] = i;
+      e++;
+    }
+  }
+
+  calc_n();
 }
 
 void TBmod::set_twists(double * theta){
@@ -83,11 +101,12 @@ void TBmod::set_size(int * L){
     }
   }
   check_size();
-  calc_accum();
+  calc_vol();
+  calc_nfull();
   calc_n();
 }
 
-void TBmod::calc_accum(){
+void TBmod::calc_vol(){
   //Calculate Laccum
   for(int i = 0; i < ndim; i++){
     Laccum[i] = 1;
@@ -96,23 +115,31 @@ void TBmod::calc_accum(){
     }
   }
 
-  //Calculate Lbaccum
+  //Calculate Vbound and Vbulk for full mesh
+  Vbulkfull = 1;
+  Vboundfull = 0;
   for(int i = 0; i < ndim; i++){
-    if((Lbound[0][0] + Lbound[0][1]) < L[0]){
-      Lbaccum[i] = Lbound[0][0] + Lbound[0][1];
-    }
-    else{
-      Lbaccum[i] = L[0];
-    }
-    for(int e = 0; e <= i; e++){
-      if((Lbound[e][0] + Lbound[e][1]) != 0 && (Lbound[e][0] + Lbound[e][1]) < L[e]){
-	Lbaccum[i] *= Lbound[e][0] + Lbound[e][1];
-      }
-      else{
-	Lbaccum[i] *= L[e];
-      }
-    }
+    Vbulkfull *= L[i] - (Lbound[i][0] + Lbound[i][1]);
   }
+  if(Vbulkfull < 0){
+    Vbulkfull = 0;
+  }
+  Vboundfull = Laccum[ndim -1] - Vbulkfull;
+
+  //Calculate Vbound and Vbulk for reduced mesh
+  Vbulk = 1;
+  Vbound = 0;
+  int vol = 1;
+  int e;
+  for(int i = 0; i < nrdim; i++){
+    e = rindex[i];
+    vol *= L[e];
+    Vbulk *= L[e] - (Lbound[e][0] + Lbound[e][1]);
+  }
+  if(Vbulk <  0){
+    vbulk = 0;
+  }
+  Vbound = vol - Vbulk;
 }
 
 void TBmod::check_size(){
@@ -133,7 +160,7 @@ void TBmod::check_size(){
   }
 }
 
-int TBmod::get_n(int * n){
+int TBmod::get_nfull(int * n){
   int res = 1;
   for(int i = 0; i < ndim; i++){
     if(i == 0){
@@ -146,7 +173,7 @@ int TBmod::get_n(int * n){
   return res;
 }
 
-void TBmod::calc_n(){
+void TBmod::calc_nfull(){
   if(nfull_bulk != NULL){
     delete[] nfull_bulk;
   }
@@ -154,8 +181,8 @@ void TBmod::calc_n(){
     delete[] nfull_bound;
   }
 
-  nfull_bulk = new int * [Laccum[ndim-1]-Lbaccum[ndim-1]];
-  nfull_bound = new int * [Lbaccum[ndim -1]];
+  nfull_bulk = new int * [Vbulkfull];
+  nfull_bound = new int * [Vboundfull];
 
   int * point = new int[ndim];
   for(int i = 0; i < ndim; i++){
@@ -163,7 +190,6 @@ void TBmod::calc_n(){
   }
 
   int e,j;
-  //nfull
   int count_bulk = 0;
   int count_bound = 0;
   bool bound = false;
@@ -178,7 +204,7 @@ void TBmod::calc_n(){
       for(j = 0; j < ndim; j++){
 	nfull_bound[count_bound][j] = point[j];
       }
-      nfull_bound[count_bound][ndim] = get_n(point);
+      nfull_bound[count_bound][ndim] = get_nfull(point);
       count_bound++;
     }
     else{
@@ -186,21 +212,70 @@ void TBmod::calc_n(){
       for(j = 0; j < ndim; j++){
 	nfull_bulk[count_bulk][j] = point[j];
       }
-      nfull_bulk[count_bulk][ndim] = get_n(point);
+      nfull_bulk[count_bulk][ndim] = get_nfull(point);
       count_bulk++;
     }
     bound = false;
-    next_point_ndim(0, point, false);
+    next_point_nfull(0, point, false);
   }
 }
 
-void TBmod::next_point_ndim(int depth, int * point, bool up){
+void TBmod::calc_n(){
+  if(n_bulk != NULL){
+    delete[] n_bulk;
+  }
+  if(n_bound != NULL){
+    delete[] n_bound;
+  }
+
+  n_bulk = new int * [Vbulk];
+  n_bound = new int * [Vbound];
+
+  int * point = new int[nrdim];
+  for(int i = 0; i < nrdim; i++){
+    point[i] = 0;
+  }
+
+  int e,j;
+  int count_bulk = 0;
+  int count_bound = 0;
+  bool bound = false;
+  int vol = Vbulk + Vbound;
+  for(int i = 0; i < vol;i++){
+    for(e = 0; e < nrdim; e++){
+      j = rindex[e];
+      if(point[j] > L[j] - Lbound[j][1] - 1 || point[j] < Lbound[j][0]){
+	bound = true;
+      }
+    }
+    if(bound){
+      n_bound[count_bound] = new int[ndim + 1];
+      for(e = 0; e < ndim; e++){
+	nfull_bound[count_bound][j] = point[j];
+      }
+      n_bound[count_bound][ndim] = get_nfull(point);
+      count_bound++;
+    }
+    else{
+      n_bulk[count_bulk] = new int[ndim + 1];
+      for(e = 0; e < ndim; e++){
+	n_bulk[count_bulk][j] = point[j];
+      }
+      n_bulk[count_bulk][ndim] = get_nfull(point);
+      count_bulk++;
+    }
+    bound = false;
+    next_point_n(0, point, false);
+  }
+}
+
+void TBmod::next_point_nfull(int depth, int * point, bool up){
   if(depth == ndim-1){
 
     //increase coordinate
     if(point[ndim-1] == L[ndim-1] - 1){
       point[ndim -1] = 0; 
-      next_point_ndim(--depth, point, true);
+      next_point_nfull(--depth, point, true);
     }
     else{
       point[ndim-1]++;
@@ -211,7 +286,7 @@ void TBmod::next_point_ndim(int depth, int * point, bool up){
       //increase coordinate
       if(point[depth] == L[depth] -1 ){
 	point[depth] = 0;
-	next_point_ndim(--depth, point, true);
+	next_point_nfull(--depth, point, true);
       }
       else{
 	point[depth]++;
@@ -219,17 +294,17 @@ void TBmod::next_point_ndim(int depth, int * point, bool up){
     }
     else{
       //Go to next direction
-      next_point_ndim(++depth, point, false);
+      next_point_nfull(++depth, point, false);
     }
   }
 }
 
-void TBmod::next_point_nrdim(int depth, int * point, bool up){
+void TBmod::next_point_n(int depth, int * point, bool up){
   if(depth = nrdim-1){
     //increase coordinate
     if(point[nrdim-1] == L[rindex[nrdim -1]] - 1){
       point[nrdim -1] = 0; 
-      next_point_nrdim(depth--, point, true);
+      next_point_n(depth--, point, true);
     }
     else{
       point[nrdim-1]++;
@@ -240,7 +315,7 @@ void TBmod::next_point_nrdim(int depth, int * point, bool up){
       //increase coordinate
       if(point[depth] == L[rindex[depth]] -1 ){
 	point[depth] = 0;
-	next_point_nrdim(depth--, point, true);
+	next_point_n(depth--, point, true);
       }
       else{
 	point[depth]++;
@@ -248,7 +323,7 @@ void TBmod::next_point_nrdim(int depth, int * point, bool up){
     }
     else{
       //Go to next direction
-      next_point_nrdim(depth++, point, false);
+      next_point_n(depth++, point, false);
     }
   }
 }
@@ -272,11 +347,11 @@ cx_mat TBmod::get_rH(){
       incn += hop[e].get_n()[i]*Laccum[i-1];
     }
     //Go through bulk mesh
-    for(i = 0; i < Laccum[ndim-1] - Lbaccum[ndim-1]; i++){
+    for(i = 0; i < Vbulkfull; i++){
       res(hop[e].get_norb1() + norb*nfull_bulk[i][ndim], hop[e].get_norb2() + norb*(nfull_bulk[i][ndim] + incn)) += hop[e].get_hop();
     }
     //Go through boundary mesh and check BCs
-    for(i = 0; i < Lbaccum[ndim-1]; i++){
+    for(i = 0; i < Vboundfull; i++){
       phase = 1;
       for(j = 0; j < ndim; j++){
 	nbound[j] = (nfull_bound[i][j] + hop[e].get_n()[j] + L[j]) % L[j];
@@ -290,7 +365,6 @@ cx_mat TBmod::get_rH(){
 	  }
 	}
 	else if(nfull_bound[i][j] + hop[e].get_n()[j] < 0){
-	  cout << "ola " << bc[j] << " theta " << theta[j] << " " << nbound[j] << endl;
 	  switch(bc[j]){
 	    case 0 :
 	      phase = 0;
@@ -300,7 +374,7 @@ cx_mat TBmod::get_rH(){
 	  }
 	}
       }
-      res(hop[e].get_norb1() + norb*nfull_bound[i][ndim], hop[e].get_norb2() + norb*get_n(nbound)) += phase*hop[e].get_hop();
+      res(hop[e].get_norb1() + norb*nfull_bound[i][ndim], hop[e].get_norb2() + norb*get_nfull(nbound)) += phase*hop[e].get_hop();
     }
   }
 
@@ -312,12 +386,12 @@ cx_mat TBmod::get_rH(){
   int m;
   for(int e  = 0; e < os.size(); e++){
     //Go through bulk mesh
-    for(i = 0; i < Laccum[ndim-1] - Lbaccum[ndim-1]; i++){
+    for(i = 0; i < Vbulkfull; i++){
       m = os[e].get_norb() + norb*nfull_bulk[i][ndim];
       res(m,m) += os[e].get_en();
     }
     //Go through boundary mesh
-    for(i = 0; i < Lbaccum[ndim-1]; i++){
+    for(i = 0; i < Vboundfull; i++){
       m = os[e].get_norb() + norb*nfull_bound[i][ndim];
       res(m,m) += os[e].get_en();
     }

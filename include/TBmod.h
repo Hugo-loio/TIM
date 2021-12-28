@@ -41,16 +41,19 @@ class TBmod{
 
   private:
 
-    //Get integer index corresponding to ndim unit cell point
+    //Get integer index corresponding to unit cell position vector
     int get_n(int * n);
+    int get_nfull(int * n);
     //Generate meshes of unit cells
     void calc_n();
+    void calc_nfull();
     //Recursive functions that take point and change it to next point in mesh
-    void next_point_ndim(int depth, int * point, bool up);
-    void next_point_nrdim(int depth, int * point, bool up);
+    void next_point_n(int depth, int * point, bool up);
+    void next_point_nfull(int depth, int * point, bool up);
     //Check is system size is big enough for given hopping terms (increase size if it isn't)
     void check_size();
-    void calc_accum();
+    //Calculate volumes
+    void calc_vol();
 
     //Hopping and on-site terms
     vector<Hop> hop;
@@ -69,8 +72,12 @@ class TBmod{
     int ** Lbound;
     //Accumulated system size [Lx, LxLy, ...]
     int * Laccum; 
-    //Accumulated system boundary size 
-    int * Lbaccum;
+    //Boundary volume 
+    int Vbound;
+    int Vboundfull;
+    //Bulk volume
+    int Vbulk;
+    int Vbulkfull;
     //Boundary conditions
     int * bc;
     //Twists for twisted boundary conditions
