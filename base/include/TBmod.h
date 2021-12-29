@@ -28,16 +28,21 @@ class TBmod{
     void set_twists(double * theta);
     //Array L specifies the number of unit cells in each direction, L[i] > 0 (if direction i doesn't exist set L[i] = 1)
     void set_size(int * L);
+    //Sparse or normal matrix to be used for Hamiltonian
+    //void set_sparse(bool val);
 
 
     //Get Hamiltonian/eigenvalues/eigenvectors in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
+    cx_mat get_H(double * k);
+    sp_cx_mat get_spH(double * k);
     /*
-       cx_mat get_H(double * k);
        vec get_eval(double * k);
        cx_mat get_evec(double * k);
        */
     //Get Hamiltonian in real space with the boundary conditions set by other methods
     cx_mat get_rH();
+    sp_cx_mat get_sprH();
+
 
   private:
 
@@ -58,11 +63,13 @@ class TBmod{
     //Hopping and on-site terms
     vector<Hop> hop;
     vector<Onsite> os; 
+    //Sparse matrix for hamiltonian
+
     //System dimension
     int ndim;
-    //Number of directions with no PCBs
+    //Number of directions with no PBCs
     int nrdim;
-    //Index of directions with no PCBs
+    //Index of directions with no PBCs
     int * rindex;
     //Number of orbitals per unit cell
     int norb;
@@ -72,6 +79,8 @@ class TBmod{
     int ** Lbound;
     //Accumulated system size [Lx, LxLy, ...]
     int * Laccum; 
+    //Accumulated system size only in directions with no PBCs
+    int * Lraccum;
     //Boundary volume 
     int Vbound;
     int Vboundfull;

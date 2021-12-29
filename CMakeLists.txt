@@ -10,20 +10,23 @@ endif()
 find_package (Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
+file(GLOB base_sources ${PROJECT_SOURCE_DIR}/base/src/*.cpp)
+file(GLOB base_headers ${PROJECT_SOURCE_DIR}/base/include/*.h)
+
+file(GLOB models_sources ${PROJECT_SOURCE_DIR}/models/src/*.cpp)
+file(GLOB models_headers ${PROJECT_SOURCE_DIR}/models/include/*.h)
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/data)
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/scripts/plots)
 
-include_directories(SYSTEM ${matplotlib_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/base/include ${PROJECT_SOURCE_DIR}/models/include)
 
 file(GLOB app_sources ${PROJECT_SOURCE_DIR}/app/*.cpp)
 
 foreach(app ${app_sources})
   get_filename_component(exe ${app} NAME_WE)
 
-  add_executable(${exe} ${app} ${sources})
+  add_executable(${exe} ${app} ${base_sources} ${models_sources})
 
   target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES})
 

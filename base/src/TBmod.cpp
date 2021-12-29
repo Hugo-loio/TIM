@@ -15,7 +15,10 @@ TBmod::TBmod(int ndim, int norb, int * L){
   this->Lbound = new int * [ndim];
   this->nfull_bulk = NULL;
   this->nfull_bound = NULL;
+  this->n_bulk = NULL;
+  this->n_bound = NULL;
   this->rindex = new int[nrdim];
+  this->Lraccum = new int[nrdim];
   for(int i = 0; i < ndim; i++){
     this->bc[i] = 1; 
     this->theta[i] = 0;
@@ -32,6 +35,7 @@ TBmod::~TBmod(){
   delete[] L;
   delete[] bc;
   delete[] theta;
+  delete[] Lraccum;
   delete[] Laccum;
   delete[] Lbound;
   delete[] nfull_bulk;
@@ -85,6 +89,10 @@ void TBmod::set_bc(int * bc){
     }
   }
 
+  delete[] Lraccum;
+  Lraccum = new int [nrdim];
+
+  calc_vol();
   calc_n();
 }
 
@@ -115,6 +123,14 @@ void TBmod::calc_vol(){
     }
   }
 
+  //Calculate Lraccum
+  for(int i = 0; i < nrdim; i++){
+    Lraccum[i] = 1;
+    for(int e = 0; e <= i; e++){
+      Lraccum[i] *= L[rindex[e]];
+    }
+  }
+
   //Calculate Vbound and Vbulk for full mesh
   Vbulkfull = 1;
   Vboundfull = 0;
@@ -129,17 +145,17 @@ void TBmod::calc_vol(){
   //Calculate Vbound and Vbulk for reduced mesh
   Vbulk = 1;
   Vbound = 0;
-  int vol = 1;
   int e;
   for(int i = 0; i < nrdim; i++){
     e = rindex[i];
-    vol *= L[e];
     Vbulk *= L[e] - (Lbound[e][0] + Lbound[e][1]);
   }
   if(Vbulk <  0){
-    vbulk = 0;
+    Vbulk = 0;
   }
-  Vbound = vol - Vbulk;
+  if(nrdim != 0){
+    Vbound = Lraccum[nrdim -1] - Vbulk;
+  }
 }
 
 void TBmod::check_size(){
@@ -168,6 +184,19 @@ int TBmod::get_nfull(int * n){
     }
     else{
       res += Laccum[i-1]*n[i];
+    }
+  }
+  return res;
+}
+
+int TBmod::get_n(int * n){
+  int res = 1;
+  for(int i = 0; i < nrdim; i++){
+    if(i == 0){
+      res = n[0];
+    }
+    else{
+      res += Lraccum[i-1]*n[i];
     }
   }
   return res;
@@ -240,32 +269,38 @@ void TBmod::calc_n(){
   int count_bulk = 0;
   int count_bound = 0;
   bool bound = false;
-  int vol = Vbulk + Vbound;
-  for(int i = 0; i < vol;i++){
-    for(e = 0; e < nrdim; e++){
-      j = rindex[e];
-      if(point[j] > L[j] - Lbound[j][1] - 1 || point[j] < Lbound[j][0]){
-	bound = true;
+  if(nrdim != 0){
+    for(int i = 0; i < Lraccum[nrdim -1] ;i++){
+      for(e = 0; e < nrdim; e++){
+	j = rindex[e];
+	if(point[e] > L[j] - Lbound[j][1] - 1 || point[e] < Lbound[j][0]){
+	  bound = true;
+	}
       }
-    }
-    if(bound){
-      n_bound[count_bound] = new int[ndim + 1];
-      for(e = 0; e < ndim; e++){
-	nfull_bound[count_bound][j] = point[j];
+      if(bound){
+	n_bound[count_bound] = new int[nrdim + 1];
+	for(e = 0; e < nrdim; e++){
+	  n_bound[count_bound][e] = point[e];
+	}
+	n_bound[count_bound][nrdim] = get_n(point);
+	count_bound++;
       }
-      n_bound[count_bound][ndim] = get_nfull(point);
-      count_bound++;
-    }
-    else{
-      n_bulk[count_bulk] = new int[ndim + 1];
-      for(e = 0; e < ndim; e++){
-	n_bulk[count_bulk][j] = point[j];
+      else{
+	n_bulk[count_bulk] = new int[nrdim + 1];
+	for(e = 0; e < nrdim; e++){
+	  n_bulk[count_bulk][e] = point[e];
+	}
+	n_bulk[count_bulk][nrdim] = get_n(point);
+	count_bulk++;
       }
-      n_bulk[count_bulk][ndim] = get_nfull(point);
-      count_bulk++;
+      bound = false;
+      next_point_n(0, point, false);
     }
-    bound = false;
-    next_point_n(0, point, false);
+  }
+  else{
+    n_bulk[0] = new int[2];
+    n_bulk[0][0] = 0;
+    n_bulk[0][1] = 0;
   }
 }
 
@@ -300,22 +335,22 @@ void TBmod::next_point_nfull(int depth, int * point, bool up){
 }
 
 void TBmod::next_point_n(int depth, int * point, bool up){
-  if(depth = nrdim-1){
+  if(depth == nrdim-1){
     //increase coordinate
     if(point[nrdim-1] == L[rindex[nrdim -1]] - 1){
       point[nrdim -1] = 0; 
-      next_point_n(depth--, point, true);
+      next_point_n(--depth, point, true);
     }
     else{
       point[nrdim-1]++;
     }
   }
-  else{
+  else if(depth != -1){
     if(up){
       //increase coordinate
       if(point[depth] == L[rindex[depth]] -1 ){
 	point[depth] = 0;
-	next_point_n(depth--, point, true);
+	next_point_n(--depth, point, true);
       }
       else{
 	point[depth]++;
@@ -323,10 +358,11 @@ void TBmod::next_point_n(int depth, int * point, bool up){
     }
     else{
       //Go to next direction
-      next_point_n(depth++, point, false);
+      next_point_n(++depth, point, false);
     }
   }
 }
+
 
 cx_mat TBmod::get_rH(){
   cx_mat res(norb*Laccum[ndim-1], norb*Laccum[ndim-1], fill::zeros);
@@ -393,6 +429,175 @@ cx_mat TBmod::get_rH(){
     //Go through boundary mesh
     for(i = 0; i < Vboundfull; i++){
       m = os[e].get_norb() + norb*nfull_bound[i][ndim];
+      res(m,m) += os[e].get_en();
+    }
+  }
+
+  return res;
+}
+
+sp_cx_mat TBmod::get_sprH(){
+  sp_cx_mat res(norb*Laccum[ndim-1], norb*Laccum[ndim-1]);
+
+  complex<double> t;
+  int i,j;
+  complex<double> phase;
+  complex<double> ii(0,1);
+
+  int * nbound = new int[ndim];
+  int incn;
+
+  //Hopping terms
+  for(int e = 0; e < hop.size(); e++){
+    //Increase in n to get neighbour cell in hop (in case of bulk)
+    incn = hop[e].get_n()[0];
+    for(i = 1; i < ndim; i++){
+      incn += hop[e].get_n()[i]*Laccum[i-1];
+    }
+    //Go through bulk mesh
+    for(i = 0; i < Vbulkfull; i++){
+      res(hop[e].get_norb1() + norb*nfull_bulk[i][ndim], hop[e].get_norb2() + norb*(nfull_bulk[i][ndim] + incn)) += hop[e].get_hop();
+    }
+    //Go through boundary mesh and check BCs
+    for(i = 0; i < Vboundfull; i++){
+      phase = 1;
+      for(j = 0; j < ndim; j++){
+	nbound[j] = (nfull_bound[i][j] + hop[e].get_n()[j] + L[j]) % L[j];
+	if(nfull_bound[i][j] + hop[e].get_n()[j] > L[j] - 1){
+	  switch(bc[j]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(-ii*theta[j]);
+	  }
+	}
+	else if(nfull_bound[i][j] + hop[e].get_n()[j] < 0){
+	  switch(bc[j]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(ii*theta[j]);
+	  }
+	}
+      }
+      res(hop[e].get_norb1() + norb*nfull_bound[i][ndim], hop[e].get_norb2() + norb*get_nfull(nbound)) += phase*hop[e].get_hop();
+    }
+  }
+
+  delete[] nbound;
+
+  res = res + res.t();
+
+  //On-site terms
+  int m;
+  for(int e  = 0; e < os.size(); e++){
+    //Go through bulk mesh
+    for(i = 0; i < Vbulkfull; i++){
+      m = os[e].get_norb() + norb*nfull_bulk[i][ndim];
+      res(m,m) += os[e].get_en();
+    }
+    //Go through boundary mesh
+    for(i = 0; i < Vboundfull; i++){
+      m = os[e].get_norb() + norb*nfull_bound[i][ndim];
+      res(m,m) += os[e].get_en();
+    }
+  }
+
+  return res;
+}
+
+cx_mat TBmod::get_H(double * k){
+  int size; 
+
+  if(nrdim != 0){
+    size = norb*Lraccum[nrdim-1];
+  }
+  else{
+    size = norb;
+  }
+  cx_mat res(size, size, fill::zeros);
+
+  complex<double> t;
+  int i,j,l;
+  complex<double> phase;
+  complex<double> kphase;
+  complex<double> ii(0,1);
+
+  int * nbound = new int[nrdim];
+  int incn;
+
+  //Hopping terms
+  for(int e = 0; e < hop.size(); e++){
+    //Increase in n to get neighbour cell in hop (in case of bulk)
+    incn = 0;
+    j = 0;
+    kphase = 1;
+    for(i = 0; i < ndim; i++){
+      if(bc[i] != 1){
+	if(i == rindex[0]){
+	  incn = hop[e].get_n()[i];
+	}
+	else{
+	  incn += hop[e].get_n()[i]*Lraccum[j-1];
+	}
+	j++;
+      }
+      else{
+	//Extra phase due to k space hamiltonian
+	kphase *= exp(ii*k[i]*(double)hop[e].get_n()[i]);
+      }
+    }
+
+    //Go through bulk mesh
+    for(i = 0; i < Vbulk; i++){
+      res(hop[e].get_norb1() + norb*n_bulk[i][nrdim], hop[e].get_norb2() + norb*(n_bulk[i][nrdim] + incn)) += hop[e].get_hop()*kphase;
+    }
+    //Go through boundary mesh and check BCs
+    for(i = 0; i < Vbound; i++){
+      phase = 1;
+      for(j = 0; j < nrdim; j++){
+	l = rindex[j];
+	nbound[j] = (n_bound[i][j] + hop[e].get_n()[l] + L[l]) % L[l];
+	if(n_bound[i][j] + hop[e].get_n()[l] > L[l] - 1){
+	  switch(bc[l]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(-ii*theta[j]);
+	  }
+	}
+	else if(nfull_bound[i][j] + hop[e].get_n()[l] < 0){
+	  switch(bc[j]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(ii*theta[j]);
+	  }
+	}
+      }
+      res(hop[e].get_norb1() + norb*n_bound[i][nrdim], hop[e].get_norb2() + norb*get_n(nbound)) += kphase*phase*hop[e].get_hop();
+    }
+  }
+
+  delete[] nbound;
+
+  res = res + res.t();
+
+  //On-site terms
+  int m;
+  for(int e  = 0; e < os.size(); e++){
+    //Go through bulk mesh
+    for(i = 0; i < Vbulk; i++){
+      m = os[e].get_norb() + norb*n_bulk[i][nrdim];
+      res(m,m) += os[e].get_en();
+    }
+    //Go through boundary mesh
+    for(i = 0; i < Vbound; i++){
+      m = os[e].get_norb() + norb*n_bound[i][nrdim];
       res(m,m) += os[e].get_en();
     }
   }
