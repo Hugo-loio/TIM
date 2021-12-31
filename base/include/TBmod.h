@@ -43,6 +43,14 @@ class TBmod{
     cx_mat get_rH();
     sp_cx_mat get_sprH();
 
+  protected:
+
+    //Hopping and on-site terms
+    vector<Hop> hop;
+    vector<Onsite> os; 
+
+    //System dimension
+    int ndim;
 
   private:
 
@@ -60,13 +68,6 @@ class TBmod{
     //Calculate volumes
     void calc_vol();
 
-    //Hopping and on-site terms
-    vector<Hop> hop;
-    vector<Onsite> os; 
-    //Sparse matrix for hamiltonian
-
-    //System dimension
-    int ndim;
     //Number of directions with no PBCs
     int nrdim;
     //Index of directions with no PBCs

@@ -1,7 +1,7 @@
 // basic file operations
 #include <iostream>
 #include "odata.h"
-#include "TBmod.h"
+#include "TBmodOp.h"
 #include <armadillo>
 #include <fstream>
 
@@ -11,6 +11,7 @@ using namespace arma;
 int main (int arc, char ** argv) {
 
   /*
+
      cout << "SSH" << endl;
 
      int L[1] = {2};
@@ -42,7 +43,7 @@ int main (int arc, char ** argv) {
      bc[0] = 1;
      SSH.set_bc(bc);
      cout << "Periodic boundary conditions\n" << SSH.get_H(k) << endl;
-     */
+     */ 
 
   cout << "SSH2D" << endl;
 
@@ -52,6 +53,7 @@ int main (int arc, char ** argv) {
   int n21[2] = {0,0};
   int n22[2] = {1,0};
   int n23[2] = {0,1};
+
   //Intracell hoppings
   SSH2D.set_hop(0,1, n21, -1);
   SSH2D.set_hop(0,2, n21, -1);

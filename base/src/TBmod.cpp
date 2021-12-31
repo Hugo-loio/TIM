@@ -604,3 +604,100 @@ cx_mat TBmod::get_H(double * k){
 
   return res;
 }
+
+sp_cx_mat TBmod::get_spH(double * k){
+  int size; 
+
+  if(nrdim != 0){
+    size = norb*Lraccum[nrdim-1];
+  }
+  else{
+    size = norb;
+  }
+  sp_cx_mat res(size, size);
+
+  complex<double> t;
+  int i,j,l;
+  complex<double> phase;
+  complex<double> kphase;
+  complex<double> ii(0,1);
+
+  int * nbound = new int[nrdim];
+  int incn;
+
+  //Hopping terms
+  for(int e = 0; e < hop.size(); e++){
+    //Increase in n to get neighbour cell in hop (in case of bulk)
+    incn = 0;
+    j = 0;
+    kphase = 1;
+    for(i = 0; i < ndim; i++){
+      if(bc[i] != 1){
+	if(i == rindex[0]){
+	  incn = hop[e].get_n()[i];
+	}
+	else{
+	  incn += hop[e].get_n()[i]*Lraccum[j-1];
+	}
+	j++;
+      }
+      else{
+	//Extra phase due to k space hamiltonian
+	kphase *= exp(ii*k[i]*(double)hop[e].get_n()[i]);
+      }
+    }
+
+    //Go through bulk mesh
+    for(i = 0; i < Vbulk; i++){
+      res(hop[e].get_norb1() + norb*n_bulk[i][nrdim], hop[e].get_norb2() + norb*(n_bulk[i][nrdim] + incn)) += hop[e].get_hop()*kphase;
+    }
+    //Go through boundary mesh and check BCs
+    for(i = 0; i < Vbound; i++){
+      phase = 1;
+      for(j = 0; j < nrdim; j++){
+	l = rindex[j];
+	nbound[j] = (n_bound[i][j] + hop[e].get_n()[l] + L[l]) % L[l];
+	if(n_bound[i][j] + hop[e].get_n()[l] > L[l] - 1){
+	  switch(bc[l]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(-ii*theta[j]);
+	  }
+	}
+	else if(nfull_bound[i][j] + hop[e].get_n()[l] < 0){
+	  switch(bc[j]){
+	    case 0 :
+	      phase = 0;
+	      break;
+	    case 2:
+	      phase *= exp(ii*theta[j]);
+	  }
+	}
+      }
+      res(hop[e].get_norb1() + norb*n_bound[i][nrdim], hop[e].get_norb2() + norb*get_n(nbound)) += kphase*phase*hop[e].get_hop();
+    }
+  }
+
+  delete[] nbound;
+
+  res = res + res.t();
+
+  //On-site terms
+  int m;
+  for(int e  = 0; e < os.size(); e++){
+    //Go through bulk mesh
+    for(i = 0; i < Vbulk; i++){
+      m = os[e].get_norb() + norb*n_bulk[i][nrdim];
+      res(m,m) += os[e].get_en();
+    }
+    //Go through boundary mesh
+    for(i = 0; i < Vbound; i++){
+      m = os[e].get_norb() + norb*n_bound[i][nrdim];
+      res(m,m) += os[e].get_en();
+    }
+  }
+
+  return res;
+}
