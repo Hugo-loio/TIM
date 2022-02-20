@@ -15,3 +15,4 @@ This project was created to aid in my master's thesis.
     make
 
 ## Project class diagram
+![Class Diagram](diagram/diagram.png)
