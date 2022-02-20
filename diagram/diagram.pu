@@ -1,0 +1,99 @@
+@startuml
+!theme black-knight
+
+skinparam dpi 300
+
+package "base" {
+
+  class TBModel{
+    'Attributes
+    # int nOrb
+    # int nDim
+    # vector<Hop> hop
+    # vector<OnSite> onSite
+    'Methods
+    + void setHop()
+    + void setOnSite()
+    + Hop getHop()
+    + OnSite getOnSite()
+  }
+
+  class Hop{
+    -complex<double> hop
+    -int nOrb1
+    -int nOrb2
+    -int * n
+    -int nDim
+    + setHop()
+  }
+
+  class OnSite{
+    -complex<double> en
+    -int nOrb
+    + setEn()
+  }
+
+  class OData{
+  }
+
+  abstract class Hamiltonian{
+  +virtual cx_mat H(double * k = NULL) = 0
+  +virtual sp_cx_mat spH(double * k = NULL) = 0
+  - bool isSparse
+}
+
+class Wilson{
+  + Wilson(Hamiltonian)
+  + void setLoopDir()
+  + cx_mat wilsonLoop()
+  + double berryPhase()
+  + cx_mat wilsonLoopSupercell()
+  + double berryPhaseSupercell()
+}
+
+class DOS{
+}
+
+class MultipoleOp{
+}
+
+class LocalizationStats{
+}
+
+class TBCleanH{
+  + TBCleanH(TBModel)
+  + void setSparse()
+}
+
+class BoundaryWilsonH{
+  + BoundaryWilsonH(Hamiltonian, int dir)
+}
+
+class BoundarySupercellWilsonH{
+  + BoundarySupercellWilsonH(Hamiltonian, int dir)
+}
+
+class TBDisorderedH{
+  + TBDisorderedH(TBModel)
+  + void setSparse()
+}
+
+Wilson o-- Hamiltonian
+DOS o-- Hamiltonian
+MultipoleOp o-- Hamiltonian
+LocalizationStats o--Hamiltonian
+
+Hamiltonian <|-- TBCleanH
+Hamiltonian <|-- TBDisorderedH
+Hamiltonian <|-- BoundaryWilsonH
+Hamiltonian <|-- BoundarySupercellWilsonH
+
+TBCleanH o-- TBModel
+TBDisorderedH o-- TBModel
+
+TBModel o-- OnSite
+TBModel o-- Hop
+
+}
+
+@enduml

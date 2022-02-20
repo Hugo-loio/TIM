@@ -1,5 +1,6 @@
 # TIM
-Topological Insulator Models (TIM) provides c++ classes for tight binding models of topological insulators 
+Topological Insulator Models (TIM) provides c++ classes for tight binding models of topological insulators.
+This project was created to aid in my master's thesis.
 
 ## Dependencies
 
@@ -12,3 +13,5 @@ Topological Insulator Models (TIM) provides c++ classes for tight binding models
     cd build
     cmake ..
     make
+
+## Project class diagram
