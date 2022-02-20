@@ -1,7 +1,9 @@
 @startuml
-!theme reddress-lightblue
 
-skinparam backgroundColor transparent
+'skinparam package backgroundColor transparent
+
+!theme lightgray
+
 skinparam dpi 300
 
 package "base" {
