@@ -1,6 +1,7 @@
 @startuml
 !theme reddress-lightblue
 
+skinparam backgroundColor transparent
 skinparam dpi 300
 
 package "base" {
