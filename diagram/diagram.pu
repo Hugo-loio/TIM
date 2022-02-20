@@ -1,5 +1,5 @@
 @startuml
-!theme black-knight
+!theme reddress-lightblue
 
 skinparam dpi 300
 
