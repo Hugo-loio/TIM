@@ -79,6 +79,10 @@ class TBDisorderedH{
   + void setSparse()
 }
 
+class BoundaryGreenH{
+  + BoundaryGreenH(Hamiltonian, int dir)
+}
+
 Wilson o-- Hamiltonian
 DOS o-- Hamiltonian
 MultipoleOp o-- Hamiltonian
@@ -88,6 +92,7 @@ Hamiltonian <|-- TBCleanH
 Hamiltonian <|-- TBDisorderedH
 Hamiltonian <|-- BoundaryWilsonH
 Hamiltonian <|-- BoundarySupercellWilsonH
+Hamiltonian <|-- BoundaryGreenH
 
 TBCleanH o-- TBModel
 TBDisorderedH o-- TBModel
