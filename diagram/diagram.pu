@@ -1,7 +1,5 @@
 @startuml
 
-'skinparam package backgroundColor transparent
-
 !theme lightgray
 
 skinparam dpi 200
