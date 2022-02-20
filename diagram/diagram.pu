@@ -1,6 +1,6 @@
 @startuml
 
-!theme lightgray
+!theme mytheme
 
 skinparam dpi 200
 
