@@ -80,6 +80,12 @@ skinparam package {
   FontColor $BOXBG
 }
 
+skinparam legend {
+  backgroundColor transparent
+  BorderColor $BOXBG
+  FontColor $BOXBG
+}
+
 ' Sequence diagrams
 
 skinparam actor {
@@ -187,7 +193,8 @@ skinparam object {
 ' Common
 
 skinparam note {
-  accent_style()
+  basic_style()
+  'accent_style()
   font_style()
 }
 

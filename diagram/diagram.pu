@@ -34,7 +34,7 @@ package "base" {
     + setEn()
   }
 
-  class OData{
+  class OData #yellow{
   }
 
   abstract class Hamiltonian{
@@ -43,7 +43,7 @@ package "base" {
   - bool isSparse
 }
 
-class Wilson{
+class Wilson #yellow{
   + Wilson(Hamiltonian)
   + void setLoopDir()
   + cx_mat wilsonLoop()
@@ -52,34 +52,34 @@ class Wilson{
   + double berryPhaseSupercell()
 }
 
-class DOS{
+class DOS #yellow{
 }
 
-class MultipoleOp{
+class MultipoleOp #yellow{
 }
 
-class LocalizationStats{
+class LocalizationStats #yellow{
 }
 
-class TBCleanH{
+class TBCleanH #yellow{
   + TBCleanH(TBModel)
   + void setSparse()
 }
 
-class BoundaryWilsonH{
+class BoundaryWilsonH #yellow{
   + BoundaryWilsonH(Hamiltonian, int dir)
 }
 
-class BoundarySupercellWilsonH{
+class BoundarySupercellWilsonH #yellow{
   + BoundarySupercellWilsonH(Hamiltonian, int dir)
 }
 
-class TBDisorderedH{
+class TBDisorderedH #yellow{
   + TBDisorderedH(TBModel)
   + void setSparse()
 }
 
-class BoundaryGreenH{
+class BoundaryGreenH #yellow{
   + BoundaryGreenH(Hamiltonian, int dir)
 }
 
@@ -100,6 +100,11 @@ TBDisorderedH o-- TBModel
 TBModel o-- OnSite
 TBModel o-- Hop
 
+legend center
+    | Color | Type |
+    |<#$BOXBG>| Done |
+    |<#yellow>| TODO |
+endlegend
 }
 
 @enduml
