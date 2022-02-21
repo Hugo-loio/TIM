@@ -1,7 +1,7 @@
 #ifndef TBMOD_H
 #define TBMOD_H
 
-#include "Hop.h"
+#include "Hop_old.h"
 #include "Onsite.h"
 #include <armadillo>
 #include <vector>

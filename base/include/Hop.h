@@ -1,5 +1,5 @@
-#ifndef HOP_H
-#define HOP_H
+#ifndef HOPOLD_H
+#define HOPOLD_H
 
 #include <complex>
 
@@ -7,22 +7,24 @@ using namespace std;
 
 class Hop{
   public:
-    //Hopping hop between norb1 in home cell and orb2 in neighbouring cell defined by vector the ndim dimentional n 
-    Hop(int norb1, int norb2, int * n, complex<double> hop, int ndim);
+    //Hopping hop between nOrb1 in home cell and nOrb2 in neighbouring cell defined by the nDim dimentional vector n 
+    Hop(int nOrb1, int nOrb2, int * n, complex<double> hop, int nDim);
     Hop(const Hop & copy);
     ~Hop();
-    //Max distance between cells in a specific direction
-    int get_maxn(); 
 
-    const int & get_norb1(){return norb1;};
-    const int & get_norb2(){return norb2;};
-    const int * get_n(){return n;};
-    const complex<double> & get_hop(){return hop;};
+    //Max distance between cells in a specific direction
+    int getMaxN(); 
+
+    const int & getNOrb1(){return nOrb1;};
+    const int & getNOrb2(){return nOrb2;};
+    const int * getN(){return n;};
+    const complex<double> & getHop(){return hop;};
+    void setHop(complex<double> hop){this->hop = hop;};
 
   private:
-    int norb1;
-    int norb2;
-    int ndim;
+    int nOrb1;
+    int nOrb2;
+    int nDim;
     complex<double> hop;
     int * n;
 };
