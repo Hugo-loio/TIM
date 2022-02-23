@@ -22,8 +22,12 @@ class TBModel{
     void setOnSite(OnSite onSite); 
     Hop & getHop(int nHop);
     OnSite & getOnSite(int nOnSite);
+    int getNDim(){return nDim;};
+    int getNOrb(){return nOrb;};
+    int getNHop(){return hop.size();};
+    int getNOnSite(){return onSite.size();};
 
-  protected:
+  private:
 
     //Hopping and on-site terms
     vector<Hop> hop;

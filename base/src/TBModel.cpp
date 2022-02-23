@@ -16,6 +16,9 @@ TBModel::TBModel(const TBModel & model){
   onSite = model.onSite;
 }
 
+TBModel::~TBModel(){
+}
+
 void TBModel::setHop(int nOrb1, int nOrb2, int * n, complex<double> hop){
   this->hop.push_back(Hop(nOrb1, nOrb2, n, hop, nDim));
 }

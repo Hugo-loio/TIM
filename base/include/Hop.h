@@ -18,6 +18,7 @@ class Hop{
     const int & getNOrb1(){return nOrb1;};
     const int & getNOrb2(){return nOrb2;};
     const int * getN(){return n;};
+    const int & getN(int i){return n[i];};
     const complex<double> & getHop(){return hop;};
     void setHop(complex<double> hop){this->hop = hop;};
 

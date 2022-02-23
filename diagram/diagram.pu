@@ -61,7 +61,7 @@ class MultipoleOp #yellow{
 class LocalizationStats #yellow{
 }
 
-class TBCleanH #yellow{
+class TBCleanH{
   + TBCleanH(TBModel)
   + void setSparse()
 }
