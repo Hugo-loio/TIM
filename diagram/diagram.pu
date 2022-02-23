@@ -34,7 +34,7 @@ package "base" {
     + setEn()
   }
 
-  class OData #yellow{
+  class OData{
   }
 
   abstract class Hamiltonian{
