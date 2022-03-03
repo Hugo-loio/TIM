@@ -18,10 +18,10 @@ class SSH{
     void setInterHop(double);
 
     double berryPhase(int n);
-    void getBands(string fileName);
+    void getBands(char * arv0, string fileName, int n);
   private:
-    TBModel model;
-    TBCleanH ham;
+    TBModel * model;
+    TBCleanH * ham;
 };
 
 #endif

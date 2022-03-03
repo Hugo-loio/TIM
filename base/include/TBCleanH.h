@@ -22,7 +22,7 @@ class TBCleanH : public Hamiltonian{
 
     //Get Hamiltonian in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
     cx_mat H(double * k);
-    //sp_cx_mat spH(double * k);
+    sp_cx_mat spH(double * k);
 
     //Whether the user prefers Sparse matrices or not
     void setSparse(bool);

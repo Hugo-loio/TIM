@@ -1,4 +1,7 @@
 #include "OData.h"
+#include <iostream>
+
+using namespace arma;
 
 OData::OData(char * argv0, string fName){
   string path(argv0);
@@ -31,5 +34,23 @@ void OData::data(vector<vector<double>> data){
       }
       f << endl;
     }
+  }
+}
+
+void OData::eBands2D(Hamiltonian & ham, int n, int ky, int kz){
+  double * k = new double[3];
+  k[0] = -M_PI;
+  k[1] = ky; 
+  k[2] = kz;
+
+  vec ee;
+  for(int i = 0; i < n; i++){
+    f << k[0] << " ";
+    eig_sym(ee, ham.H(k));
+    for(int i = 0; i < size(ee)[0]; i++){
+      f << ee.at(i) << " "; 
+    }
+    f << endl;
+    k[0] += 2*M_PI/(double)n;
   }
 }
