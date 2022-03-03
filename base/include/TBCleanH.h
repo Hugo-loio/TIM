@@ -9,7 +9,7 @@ using namespace std;
 
 class TBCleanH : public Hamiltonian{
   public:
-    TBCleanH(TBModel & model);
+    TBCleanH(TBModel model);
     //TBCleanH(const TBCleanH &);
     ~TBCleanH();
 

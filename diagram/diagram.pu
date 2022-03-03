@@ -35,6 +35,8 @@ package "base" {
   }
 
   class OData{
+    + eBands2D(Hamiltonian &, ...)
+    + eBands3D(Hamiltonian &, ...)
   }
 
   abstract class Hamiltonian{
@@ -87,6 +89,7 @@ Wilson o-- Hamiltonian
 DOS o-- Hamiltonian
 MultipoleOp o-- Hamiltonian
 LocalizationStats o--Hamiltonian
+OData o..Hamiltonian
 
 Hamiltonian <|-- TBCleanH
 Hamiltonian <|-- TBDisorderedH

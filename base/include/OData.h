@@ -18,7 +18,7 @@ class OData{
     //x axis is kx, n number of points
     void eBands2D(Hamiltonian & ham, int n, int ky = 0, int kz = 0);
     //x axis is kx, y axis is ky 
-    //void eBands3D(Hamiltonian & ham, int nx, int ny, int kz = 0);
+    void eBands3D(Hamiltonian & ham, int nx, int ny, int kz = 0);
 
   private:
     ofstream f;

@@ -10,7 +10,7 @@ class Hamiltonian{
     virtual cx_mat H(double * k = NULL) = 0;
     virtual sp_cx_mat spH(double * k = NULL) = 0;
     bool getIsSparse(){return isSparse;};
-  private:
+  protected:
     bool isSparse = true;
 };
 

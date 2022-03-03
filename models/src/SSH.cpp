@@ -10,25 +10,30 @@ SSH::SSH(double t1, double t2){
   ham = new TBCleanH(*model);
   int bC[1] = {1};
   ham->setBC(bC);
+  ham->setSparse(false);
 };
 
 SSH::~SSH(){
   delete model;
-  cout << "merda" << endl;
   delete ham;
-  cout << "merda" << endl;
 };
 
 void SSH::setIntraHop(double t1){
   model->getHop(0).setHop(t1);
   delete ham;
   ham = new TBCleanH(*model);
+  int bC[1] = {1};
+  ham->setBC(bC);
+  ham->setSparse(false);
 }
 
 void SSH::setInterHop(double t2){
   model->getHop(1).setHop(t2);
   delete ham;
   ham = new TBCleanH(*model);
+  int bC[1] = {1};
+  ham->setBC(bC);
+  ham->setSparse(false);
 }
 
 void SSH::getBands(char * argv0, string fileName, int n){
@@ -36,8 +41,7 @@ void SSH::getBands(char * argv0, string fileName, int n){
   o.eBands2D(*ham, n);
 }
 
-/*
-   double SSH::berryPhase(int n){
-
-   }
-   */
+double SSH::berryPhase(int n){
+  Wilson wilson(ham, 1);
+  return wilson.berryPhase(n, 1);
+}

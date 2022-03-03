@@ -8,12 +8,12 @@ using namespace arma;
 
 class Wilson{
   public:
-    Wilson(int dim);
+    Wilson(Hamiltonian * ham, int dim);
     ~Wilson();
 
     //n k (momentum) intervals, m occuppied bands
-    cx_mat wilsonLoop(Hamiltonian & ham, int n, int m);
-    double berryPhase(Hamiltonian & ham, int n, int m);
+    cx_mat wilsonLoop(int n, int m);
+    double berryPhase(int n, int m);
 
     void setLoopDir(int dir);
     void setLoopStart(double * k0);
@@ -26,6 +26,7 @@ class Wilson{
     double * k0;
     int dir;
     int dim;
+    Hamiltonian * ham;
 
     cx_mat evOcc(int m, cx_mat h);
 };

@@ -1,5 +1,5 @@
-#ifndef BBH_H
-#define BBH_H
+#ifndef SSH2D_H
+#define SSH2D_H
 
 #include "TBCleanH.h"
 #include <armadillo>
@@ -9,10 +9,10 @@
 using namespace arma;
 using namespace std;
 
-class BBH2D{
+class SSH2D{
   public:
-    BBH2D(double t1 = 1, double t2 = 2);
-    ~BBH2D();
+    SSH2D(double t1 = 1, double t2 = 2);
+    ~SSH2D();
 
     void setIntraHop(double);
     void setInterHop(double);
@@ -24,5 +24,6 @@ class BBH2D{
     TBModel * model;
     TBCleanH * ham;
 };
+
 
 #endif

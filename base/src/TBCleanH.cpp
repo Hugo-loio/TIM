@@ -4,8 +4,7 @@
 using namespace arma;
 using namespace std;
 
-TBCleanH::TBCleanH(TBModel & model) : model(model){
-  this->model = model;
+TBCleanH::TBCleanH(TBModel model) : model(model){
   nDim = model.getNDim();
   nOrb = model.getNOrb();
   nHop = model.getNHop();
@@ -58,6 +57,10 @@ TBCleanH::~TBCleanH(){
   delete[] rIndex;
   delete[] nBound;
   delete[] nBulk;
+}
+
+void TBCleanH::setSparse(bool val){
+  isSparse = val;
 }
 
 void TBCleanH::setSize(int * l){
