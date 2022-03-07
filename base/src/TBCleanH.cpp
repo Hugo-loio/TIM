@@ -1,18 +1,16 @@
 #include "TBCleanH.h"
-//#include <iostream>
+#include <iostream>
 
 using namespace arma;
 using namespace std;
 
-TBCleanH::TBCleanH(TBModel model) : model(model){
-  nDim = model.getNDim();
+TBCleanH::TBCleanH(TBModel model) : model(model), Hamiltonian(model.getNDim()){
   nOrb = model.getNOrb();
   nHop = model.getNHop();
   nOnSite = model.getNOnSite();
 
   nRDim = 0;
   bC = new int[nDim];
-  theta = new double[nDim];
   l = new int[nDim];
   lAccum = new int[nDim];
   lBound = new int * [nDim];
@@ -22,7 +20,6 @@ TBCleanH::TBCleanH(TBModel model) : model(model){
 
   for(int i = 0; i < nDim; i++){
     bC[i] = 1;
-    theta[i] = 0;
     l[i] = 1;
     lBound[i] = new int[2];
     lBound[i][0] = 0;
@@ -45,12 +42,8 @@ TBCleanH::TBCleanH(TBModel model) : model(model){
   calcN();
 }
 
-//TBCleanH::TBCleanH(const TBCleanH &){
-//}
-
 TBCleanH::~TBCleanH(){
   delete[] bC;
-  delete[] theta;
   delete[] l;
   delete[] lAccum;
   delete[] lBound;
@@ -74,11 +67,13 @@ void TBCleanH::setSize(int * l){
   calcN();
 }
 
-void TBCleanH::setTwists(double * theta){
-  for(int i = 0; i < nDim; i++){
-    this->theta[i] = theta[i];
-  }
-}
+/*
+   void TBCleanH::setTwists(double * theta){
+   for(int i = 0; i < nDim; i++){
+   this->theta[i] = theta[i];
+   }
+   }
+   */
 
 void TBCleanH::setBC(int * bC){
   nRDim = 0;

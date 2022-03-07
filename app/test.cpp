@@ -22,7 +22,7 @@ int main (int arc, char ** argv) {
   cout << "SSH Berry phase inter 0.5: " << ssh.berryPhase(10) << endl;
   ssh.getBands(argv[0], "EnergyBandsSSH_inter0.5.dat", 100);
 
-  double k0[2] = {0, 0};
+  double k0[2] = {0, -M_PI};
   cout << "2D SSH" << endl;
   SSH2D ssh2D(1,2);
   cout << "2D SSH Berry phase inter 2: " << ssh2D.berryPhase(100,0,k0) << endl;
@@ -38,6 +38,9 @@ int main (int arc, char ** argv) {
   BBH2D bbh2D(1,2);
   cout << "2D BBH Berry phase inter 2: " << bbh2D.berryPhase(100,0,k0) << endl;
   double avgBerry = 0;
+  for(int i = 0; i < 10; i++){
+    cout << "2D BBH Berry phase inter 2: " << bbh2D.berryPhase(100,0,k0) << endl;
+  }
   for(int i = 0; i < 100; i++){
     avgBerry += bbh2D.berryPhase(100,0,k0);
   }

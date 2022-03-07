@@ -19,7 +19,7 @@ class Wilson{
     void setLoopStart(double * k0);
 
     //n theta (twist angle) intervals
-    //cx_mat wilsonLoopSupercell(int n, int m);
+    cx_mat wilsonLoopSupercell(int n, int m, double * k = NULL);
     //double berryPhaseSupercell(int n, int m);
 
   private:
