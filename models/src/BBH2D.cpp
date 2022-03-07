@@ -58,7 +58,7 @@ void BBH2D::getBands(char * argv0, string fileName, int nx, int ny){
 
 double BBH2D::berryPhase(int n, int dir, double * k0){
   ham->setSparse(true);
-  Wilson wilson(ham, 2);
+  Wilson wilson(ham);
   wilson.setLoopDir(dir);
   if(k0 != NULL){
     wilson.setLoopStart(k0);

@@ -19,6 +19,7 @@ class SSH2D{
     void setSparse(bool);
 
     double berryPhase(int n, int dir = 0, double * k0 = NULL);
+    double berryPhaseSupercell(int n, int dir, int lX, int lY);
     void getBands(char * arv0, string fileName, int nx, int ny);
   private:
     TBModel * model;

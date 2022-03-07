@@ -18,6 +18,7 @@ class SSH{
     void setInterHop(double);
 
     double berryPhase(int n);
+    double berryPhaseSupercell(int n, int l);
     void getBands(char * arv0, string fileName, int n);
   private:
     TBModel * model;

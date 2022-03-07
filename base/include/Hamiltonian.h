@@ -14,6 +14,8 @@ class Hamiltonian{
     bool getIsSparse(){return isSparse;};
     //nDim twist angle array
     void setTwists(double * theta);
+    double * getTwists(){return theta;};
+    int getNDim(){return nDim;};
   protected:
     bool isSparse = true;
     double * theta;

@@ -8,7 +8,7 @@ using namespace arma;
 
 class Wilson{
   public:
-    Wilson(Hamiltonian * ham, int dim);
+    Wilson(Hamiltonian * ham);
     ~Wilson();
 
     //n k (momentum) intervals, m occuppied bands
@@ -20,7 +20,7 @@ class Wilson{
 
     //n theta (twist angle) intervals
     cx_mat wilsonLoopSupercell(int n, int m, double * k = NULL);
-    //double berryPhaseSupercell(int n, int m);
+    double berryPhaseSupercell(int n, int m, double * k = NULL);
 
   private:
     double * k0;

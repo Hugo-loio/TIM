@@ -17,9 +17,6 @@ SSH2D::SSH2D(double t1, double t2){
   model->setHop(2,0, n3, t2);
   model->setHop(3,1, n3, t2);
   ham = new TBCleanH(*model);
-  int bC[2] = {1,1};
-  ham->setBC(bC);
-  ham->setSparse(true);
 };
 
 SSH2D::~SSH2D(){
@@ -33,9 +30,6 @@ void SSH2D::setIntraHop(double t1){
   }
   delete ham;
   ham = new TBCleanH(*model);
-  int bC[2] = {1,1};
-  ham->setBC(bC);
-  ham->setSparse(true);
 }
 
 void SSH2D::setInterHop(double t2){
@@ -44,9 +38,6 @@ void SSH2D::setInterHop(double t2){
   }
   delete ham;
   ham = new TBCleanH(*model);
-  int bC[2] = {1,1};
-  ham->setBC(bC);
-  ham->setSparse(true);
 }
 
 void SSH2D::getBands(char * argv0, string fileName, int nx, int ny){
@@ -55,11 +46,24 @@ void SSH2D::getBands(char * argv0, string fileName, int nx, int ny){
 }
 
 double SSH2D::berryPhase(int n, int dir, double * k0){
+  int bC[2] = {1,1};
+  ham->setBC(bC);
   ham->setSparse(true);
-  Wilson wilson(ham, 2);
+  Wilson wilson(ham);
   wilson.setLoopDir(dir);
   if(k0 != NULL){
     wilson.setLoopStart(k0);
   }
   return wilson.berryPhase(n, 1);
+}
+
+double SSH2D::berryPhaseSupercell(int n, int dir, int lX, int lY){
+  int bC[2] = {2,2};
+  int lVec[2] = {lX, lY};
+  ham->setBC(bC);
+  ham->setSize(lVec);
+  ham->setSparse(true);
+  Wilson wilson(ham);
+  wilson.setLoopDir(dir);
+  return wilson.berryPhaseSupercell(n,lX*lY);
 }
