@@ -60,7 +60,7 @@ double SSH2D::berryPhase(int n, int dir, double * k0){
 double SSH2D::berryPhaseSupercell(int n, int dir, int * bC, int * lVec, double * k){
   ham->setBC(bC);
   ham->setSize(lVec);
-  ham->setSparse(true);
+  ham->setSparse(false);
   double theta[2] = {0,0};
   ham->setTwists(theta);
   Wilson wilson(ham);

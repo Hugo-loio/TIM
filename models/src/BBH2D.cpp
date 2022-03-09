@@ -49,7 +49,7 @@ void BBH2D::getBands(char * argv0, string fileName, int nx, int ny){
 double BBH2D::berryPhase(int n, int dir, double * k0){
   int bC[2] = {1,1};
   ham->setBC(bC);
-  ham->setSparse(true);
+  ham->setSparse(false);
   Wilson wilson(ham);
   wilson.setLoopDir(dir);
   if(k0 != NULL){
@@ -64,7 +64,7 @@ void BBH2D::getWannierBands(char * argv0, string fileName, int dir, int n){
   }
   int bC[2] = {1,1};
   ham->setBC(bC);
-  ham->setSparse(true);
+  ham->setSparse(false);
   boundH = new BoundaryWilsonH(ham, dir, n, 2);
   OData o(argv0, fileName);
   double k[2] = {0,0};
