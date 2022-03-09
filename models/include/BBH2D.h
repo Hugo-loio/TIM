@@ -22,11 +22,13 @@ class BBH2D{
     double berryPhase(int n, int dir = 0, double * k0 = NULL);
     void getBands(char * argv0, string fileName, int nx, int ny);
     void getWannierBands(char * argv0, string fileName, int dir, int n);
+    void test();
+    //cx_mat getH(double * k = NULL);
     //double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
   private:
     TBModel * model;
     TBCleanH * ham;
-    BoundaryWilsonH * boundH;
+    BoundaryWilsonH * boundH = NULL;
 };
 
 #endif

@@ -61,6 +61,8 @@ double SSH2D::berryPhaseSupercell(int n, int dir, int * bC, int * lVec, double *
   ham->setBC(bC);
   ham->setSize(lVec);
   ham->setSparse(true);
+  double theta[2] = {0,0};
+  ham->setTwists(theta);
   Wilson wilson(ham);
   wilson.setLoopDir(dir);
   int m = lVec[dir];
@@ -72,10 +74,9 @@ double SSH2D::berryPhaseSupercell(int n, int dir, int * bC, int * lVec, double *
   return wilson.berryPhaseSupercell(n,m,k);
 }
 
-/*
-   cx_mat SSH2D::getH(int * bC, int * l, double * k){
-   ham->setBC(bC);
-   ham->setSize(l);
-   return ham->
-   }
-   */
+cx_mat SSH2D::getH(int * l, double * k){
+  double theta[2] = {0,0};
+  ham->setTwists(theta);
+  ham->setSize(l);
+  return ham->H(k);
+}

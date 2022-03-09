@@ -60,12 +60,21 @@ double BBH2D::berryPhase(int n, int dir, double * k0){
 
 void BBH2D::getWannierBands(char * argv0, string fileName, int dir, int n){
   if(boundH != NULL){
-    delete[] boundH;
+    delete boundH;
   }
   int bC[2] = {1,1};
   ham->setBC(bC);
   ham->setSparse(true);
   boundH = new BoundaryWilsonH(ham, dir, n, 2);
   OData o(argv0, fileName);
-  o.eBands2D(*boundH, 100);
+  double k[2] = {0,0};
+  if(dir == 0){
+    o.eBands2D(*boundH, 100, 1, k);
+  }
+  else{
+    o.eBands2D(*boundH, 100, 0, k);
+  }
+}
+
+void BBH2D::test(){
 }

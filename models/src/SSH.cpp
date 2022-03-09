@@ -29,7 +29,8 @@ void SSH::setInterHop(double t2){
 
 void SSH::getBands(char * argv0, string fileName, int n){
   OData o(argv0, fileName);
-  o.eBands2D(*ham, n);
+  double k[1];
+  o.eBands2D(*ham, n,0,k);
 }
 
 double SSH::berryPhase(int n){

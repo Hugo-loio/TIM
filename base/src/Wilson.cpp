@@ -140,7 +140,6 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     u = u * (eigVec2.t() * eigVec0);
   }
 
-  //cout << "ola2" << endl;
   delete[] theta;
   return u;
 }

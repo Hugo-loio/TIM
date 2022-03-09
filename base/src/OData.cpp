@@ -37,23 +37,19 @@ void OData::data(vector<vector<double>> data){
   }
 }
 
-void OData::eBands2D(Hamiltonian & ham, int n, int ky, int kz){
-  double * k = new double[3];
-  k[0] = -M_PI;
-  k[1] = ky; 
-  k[2] = kz;
+void OData::eBands2D(Hamiltonian & ham, int n, int dir, double * k){
+  k[dir] = -M_PI;
 
   vec ee;
   for(int i = 0; i <= n; i++){
-    f << k[0] << " ";
+    f << k[dir] << " ";
     eig_sym(ee, ham.H(k));
     for(int i = 0; i < size(ee)[0]; i++){
       f << ee.at(i) << " "; 
     }
     f << endl;
-    k[0] += 2*M_PI/(double)n;
+    k[dir] += 2*M_PI/(double)n;
   }
-  delete[] k;
 }
 
 void OData::eBands3D(Hamiltonian & ham, int nx, int ny, int kz){

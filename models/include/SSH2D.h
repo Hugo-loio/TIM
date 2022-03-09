@@ -21,7 +21,7 @@ class SSH2D{
     double berryPhase(int n, int dir = 0, double * k0 = NULL);
     double berryPhaseSupercell(int n, int dir, int * bC, int * lVec, double * k = NULL);
     void getBands(char * arv0, string fileName, int nx, int ny);
-    //cx_mat getH(int * bC, int * l, bool sparse);
+    cx_mat getH(int * l, double * k = NULL);
   private:
     TBModel * model;
     TBCleanH * ham;
