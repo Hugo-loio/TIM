@@ -111,7 +111,7 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     eigs_gen(eigVal, eigVec1, ham->spH(k), m, "sr");
     cx_mat eigVec2 = eigVec1;
 
-    cx_mat u = eigVec0.t() * eigVec1;
+    u = eigVec0.t() * eigVec1;
 
     for(int i = 2; i < n; i++){
       eigVec1 = eigVec2;
@@ -128,7 +128,7 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     cx_mat eigVec1 = evOcc(m, ham->H(k));
     cx_mat eigVec2 = eigVec1;
 
-    cx_mat u = eigVec0.t() * eigVec1;
+    u = eigVec0.t() * eigVec1;
 
     for(int i = 2; i < n; i++){
       eigVec1 = eigVec2;
@@ -140,7 +140,7 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     u = u * (eigVec2.t() * eigVec0);
   }
 
-  cout << "ola2" << endl;
+  //cout << "ola2" << endl;
   delete[] theta;
   return u;
 }

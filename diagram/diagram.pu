@@ -45,9 +45,8 @@ package "base" {
   - bool isSparse
 }
 
-class Wilson #yellow{
-  + Wilson(Hamiltonian)
-  + void setLoopDir()
+class Wilson {
+  + Wilson(Hamiltonian *)
   + cx_mat wilsonLoop()
   + double berryPhase()
   + cx_mat wilsonLoopSupercell()
@@ -69,11 +68,11 @@ class TBCleanH{
 }
 
 class BoundaryWilsonH #yellow{
-  + BoundaryWilsonH(Hamiltonian, int dir)
+  + BoundaryWilsonH(Hamiltonian *, int dir, int m)
 }
 
 class BoundarySupercellWilsonH #yellow{
-  + BoundarySupercellWilsonH(Hamiltonian, int dir)
+  + BoundarySupercellWilsonH(Hamiltonian *, int dir)
 }
 
 class TBDisorderedH #yellow{
@@ -82,7 +81,7 @@ class TBDisorderedH #yellow{
 }
 
 class BoundaryGreenH #yellow{
-  + BoundaryGreenH(Hamiltonian, int dir)
+  + BoundaryGreenH(Hamiltonian *, int dir)
 }
 
 Wilson o-- Hamiltonian

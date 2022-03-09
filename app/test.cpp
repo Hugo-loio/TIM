@@ -15,33 +15,29 @@ int main (int arc, char ** argv) {
   SSH ssh(1,2);
   cout << "SSH Berry phase inter 2: " << ssh.berryPhase(10) << endl;
   cout << "Supercell: " << ssh.berryPhaseSupercell(10,10) << endl;
-  ssh.getBands(argv[0], "EnergyBandsSSH_inter2.dat", 100);
   ssh.setInterHop(1);
   cout << "SSH Berry phase inter 1: " << ssh.berryPhase(10) << endl;
   cout << "Supercell: " << ssh.berryPhaseSupercell(10,10) << endl;
-  ssh.getBands(argv[0], "EnergyBandsSSH_inter1.dat", 100);
   ssh.setInterHop(0.5);
   cout << "SSH Berry phase inter 0.5: " << ssh.berryPhase(10) << endl;
   cout << "Supercell: " << ssh.berryPhaseSupercell(10,10) << endl;
-  ssh.getBands(argv[0], "EnergyBandsSSH_inter0.5.dat", 100);
 
   double k0[2] = {0, -M_PI};
+  int bC[2] = {2,1};
+  int l[2] = {10,10};
   cout << "2D SSH" << endl;
   SSH2D ssh2D(1,2);
   cout << "2D SSH Berry phase inter 2: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
-  ssh2D.getBands(argv[0], "EnergyBandsSSH2D_inter2.dat", 20, 20);
+  cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
   ssh2D.setInterHop(1);
   cout << "2D SSH Berry phase inter 1: " << ssh2D.berryPhase(100,0,k0) << endl;
   //cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
-  ssh2D.getBands(argv[0], "EnergyBandsSSH2D_inter1.dat", 20, 20);
   ssh2D.setInterHop(0.5);
   cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
   cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
   cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
   cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
   //cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
-  ssh2D.getBands(argv[0], "EnergyBandsSSH2D_inter0.5.dat", 20, 20);
 
   cout << "2D BBH" << endl;
   BBH2D bbh2D(1,2);
@@ -55,7 +51,6 @@ int main (int arc, char ** argv) {
   }
   avgBerry /= 100;
   cout << "Average Berry Phase: " << avgBerry << endl;
-  bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter2.dat", 20, 20);
   bbh2D.setInterHop(1);
   cout << "2D BBH Berry phase inter 1: " << bbh2D.berryPhase(100,0,k0) << endl;
   avgBerry = 0;
@@ -64,7 +59,6 @@ int main (int arc, char ** argv) {
   }
   avgBerry /= 100;
   cout << "Average Berry Phase: " << avgBerry << endl;
-  bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter1.dat", 20, 20);
   bbh2D.setInterHop(0.5);
   cout << "2D BBH Berry phase inter 0.5: " << bbh2D.berryPhase(100,0,k0) << endl;
   avgBerry = 0;
@@ -73,7 +67,6 @@ int main (int arc, char ** argv) {
   }
   avgBerry /= 100;
   cout << "Average Berry Phase: " << avgBerry << endl;
-  bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter0.5.dat", 20, 20);
 
   return 0;
 }

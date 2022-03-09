@@ -16,11 +16,12 @@ class SSH2D{
 
     void setIntraHop(double);
     void setInterHop(double);
-    void setSparse(bool);
+    //void setSparse(bool);
 
     double berryPhase(int n, int dir = 0, double * k0 = NULL);
-    double berryPhaseSupercell(int n, int dir, int lX, int lY);
+    double berryPhaseSupercell(int n, int dir, int * bC, int * lVec, double * k = NULL);
     void getBands(char * arv0, string fileName, int nx, int ny);
+    //cx_mat getH(int * bC, int * l, bool sparse);
   private:
     TBModel * model;
     TBCleanH * ham;
