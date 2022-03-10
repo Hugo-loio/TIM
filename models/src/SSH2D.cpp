@@ -71,6 +71,7 @@ double SSH2D::berryPhaseSupercell(int n, int dir, int * bC, int * lVec, double *
       m*=lVec[i];
     }
   }
+  //cout << m << endl;
   return wilson.berryPhaseSupercell(n,m,k);
 }
 
