@@ -74,3 +74,24 @@ void OData::eBands3D(Hamiltonian & ham, int nx, int ny, int kz){
   }
   delete[] k;
 }
+
+void OData::eBandsPath(Hamiltonian & ham, int nPoints, double ** k, int * segPoints){
+  int nDim = ham.getNDim();
+  double * kTemp = new double[nDim];
+
+  vec ee;
+  for(int i = 0; i < nPoints-1, i++){
+    for(int e = 0; e <= segPoints[i]; e++){
+      for(int j = 0; j < nDim; i++){
+	kTemp[j] = k[i][j]+(double)e*(k[i+1][j]-k[i][j])/(double)segPoints[i];
+      }
+      f << i+(double)e/segPoints[i] << " ";
+      eig_sym(ee, ham.H(kTemp));
+      for(int i = 0; i < size(ee)[0]; i++){
+	f << ee.at(i) << " "; 
+      }
+      f << endl;
+    }
+  }
+  delete[] kTemp;
+}

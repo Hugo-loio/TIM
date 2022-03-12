@@ -11,7 +11,7 @@ def EnergyBands3D(fname, show: bool):
 
     ax.set(xlabel = r'$k_x$', ylabel = r'$k_y$', zlabel = r'$E$', title=r'Energy bands')
 
-    ax.view_init(10,45)
+    ax.view_init(10,30)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 200, bbox_inches='tight')
     if(show):
         plt.show()

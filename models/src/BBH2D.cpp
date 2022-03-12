@@ -4,7 +4,8 @@
 BBH2D::BBH2D(double t1, double t2){
   model = new TBModel(2, 4);
   int n1[2] = {0,0};
-  int n2[2] = {1,0}; int n3[2] = {0,1};
+  int n2[2] = {1,0}; 
+  int n3[2] = {0,1};
   //Intracell hoppings
   model->setHop(0,1, n1, t1);
   model->setHop(0,2, n1, -t1);
