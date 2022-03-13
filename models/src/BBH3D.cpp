@@ -21,18 +21,18 @@ BBH3D::BBH3D(double t1, double t2){
   model->setHop(5,7, n0, t1);
   model->setHop(6,7, n0, t1);
   //Intercell hoppings
-  model->setHop(2,1, nX, -t2);
-  model->setHop(4,3, nX, -t2);
-  model->setHop(6,5, nX, t2);
-  model->setHop(8,7, nX, t2);
-  model->setHop(3,1, nY, t2);
-  model->setHop(4,2, nY, -t2);
-  model->setHop(7,5, nY, -t2);
-  model->setHop(8,6, nY, t2);
+  model->setHop(1,0, nX, -t2);
+  model->setHop(3,2, nX, -t2);
+  model->setHop(5,4, nX, t2);
+  model->setHop(7,6, nX, t2);
+  model->setHop(2,0, nY, t2);
+  model->setHop(3,1, nY, -t2);
+  model->setHop(6,4, nY, -t2);
+  model->setHop(7,5, nY, t2);
+  model->setHop(4,0, nZ, t2);
   model->setHop(5,1, nZ, t2);
   model->setHop(6,2, nZ, t2);
   model->setHop(7,3, nZ, t2);
-  model->setHop(8,4, nZ, t2);
   ham = new TBCleanH(*model);
 };
 
@@ -70,34 +70,50 @@ void BBH3D::setInterHop(double t2){
 
 void BBH3D::getBands(char * argv0, string fileName){
   OData o(argv0, fileName);
-  int nPoints = 8;
-  double ** k = new double * [nPoints];
-  for(int i = 0, i < nPoints; i++){
-    k[i] = new double[3];
-  }
+  int nSegs = 6;
+  double ** kI = new double * [nSegs];
+  double ** kF = new double * [nSegs];
   //Gamma
-  k[0][1] = 0;
-  k[0][2] = 0;
-  k[0][3] = 0;
-  k[3][1] = 0;
-  k[3][2] = 0;
-  k[3][3] = 0;
+  double * Gamma = new double[3];
+  Gamma[0] = 0;
+  Gamma[1] = 0;
+  Gamma[2] = 0;
   //R
+  double * R = new double[3];
+  R[0] = M_PI;
+  R[1] = M_PI;
+  R[1] = M_PI;
   //M
-  k[2][1] = M_PI;
-  k[2][2] = M_PI;
-  k[2][3] = 0;
-  k[6][1] = M_PI;
-  k[6][2] = M_PI;
-  k[6][3] = 0;
+  double * M = new double[3];
+  M[0] = M_PI;
+  M[1] = M_PI;
+  M[2] = 0;
   //X
-  int segPoints = new int[nPoints-1];
-  for(int i = 0; i < nPoints -1; i++){
+  double * X = new double[3];
+  X[0] = 0;
+  X[1] = M_PI;
+  X[2] = 0;
+  //kI
+  kI[0] = Gamma;
+  kI[1] = X;
+  kI[2] = M;
+  kI[3] = Gamma;
+  kI[4] = R;
+  kI[5] = M;
+  //kF
+  kF[0] = X;
+  kF[1] = M;
+  kF[2] = Gamma;
+  kF[3] = R;
+  kF[4] = X;
+  kF[5] = R;
+  int * segPoints = new int[nSegs];
+  for(int i = 0; i < nSegs; i++){
     segPoints[i] = 100;
   }
-  segPoints[5] = 0;
-  o.eBandsPath(*ham,nPoints,k,segPoints);
-  delete[] k;
+  o.eBandsPath(*ham,nSegs,kI,kF,segPoints);
+  delete[] kI;
+  delete[] kF;
   delete[] segPoints;
 }
 

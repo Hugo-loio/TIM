@@ -9,7 +9,7 @@ def EnergyBands3D(fname, show: bool):
     for i in range(2,len(data)):
         ax.plot_trisurf(data[0],data[1],data[i])
 
-    ax.set(xlabel = r'$k_x$', ylabel = r'$k_y$', zlabel = r'$E$', title=r'Energy bands')
+    ax.set(xlabel = r'$k_x$', ylabel = r'$k_y$', zlabel = r'$E$')
 
     ax.view_init(10,30)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 200, bbox_inches='tight')
