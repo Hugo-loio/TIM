@@ -23,7 +23,7 @@ class BBH3D{
     //double berryPhase(int n, int dir = 0, double * k0 = NULL);
     void getBands(char * argv0, string fileName);
     //void getWannierBands(char * argv0, string fileName, int dir, int n);
-    //cx_mat getH(double * k = NULL);
+    cx_mat getH(double * k = NULL);
     //double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
   private:
     TBModel * model;

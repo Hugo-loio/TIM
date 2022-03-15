@@ -8,31 +8,31 @@ BBH3D::BBH3D(double t1, double t2){
   int nY[3] = {0,1,0};
   int nZ[3] = {0,0,1};
   //Intracell hoppings
-  model->setHop(0,1, n0, -t1);
   model->setHop(0,2, n0, t1);
+  model->setHop(0,3, n0, t1);
   model->setHop(0,4, n0, t1);
-  model->setHop(1,3, n0, -t1);
+  model->setHop(1,2, n0, -t1);
+  model->setHop(1,3, n0, t1);
   model->setHop(1,5, n0, t1);
-  model->setHop(2,3, n0, -t1);
   model->setHop(2,6, n0, t1);
   model->setHop(3,7, n0, t1);
-  model->setHop(4,5, n0, t1);
   model->setHop(4,6, n0, -t1);
-  model->setHop(5,7, n0, t1);
-  model->setHop(6,7, n0, t1);
+  model->setHop(4,7, n0, -t1);
+  model->setHop(5,7, n0, -t1);
+  model->setHop(5,6, n0, t1);
   //Intercell hoppings
-  model->setHop(1,0, nX, -t2);
-  model->setHop(3,2, nX, -t2);
-  model->setHop(5,4, nX, t2);
-  model->setHop(7,6, nX, t2);
-  model->setHop(2,0, nY, t2);
-  model->setHop(3,1, nY, -t2);
-  model->setHop(6,4, nY, -t2);
-  model->setHop(7,5, nY, t2);
-  model->setHop(4,0, nZ, t2);
-  model->setHop(5,1, nZ, t2);
-  model->setHop(6,2, nZ, t2);
-  model->setHop(7,3, nZ, t2);
+  model->setHop(0,2, nX, t2);
+  model->setHop(3,1, nX, t2);
+  model->setHop(4,6, nX, -t2);
+  model->setHop(7,5, nX, -t2);
+  model->setHop(0,3, nY, t2);
+  model->setHop(2,1, nY, -t2);
+  model->setHop(4,7, nY, -t2);
+  model->setHop(6,5, nY, t2);
+  model->setHop(0,4, nZ, t2);
+  model->setHop(1,5, nZ, t2);
+  model->setHop(2,6, nZ, t2);
+  model->setHop(3,7, nZ, t2);
   ham = new TBCleanH(*model);
 };
 
@@ -43,7 +43,7 @@ BBH3D::~BBH3D(){
 
 void BBH3D::setIntraHop(double t1){
   for(int i = 0; i < 12; i++){
-    if(i == 0 || i == 3 || i == 5 || i == 9){
+    if(i == 3 || i == 8 || i == 9 || i == 10){
       model->getHop(i).setHop(-t1);
     }
     else{
@@ -56,7 +56,7 @@ void BBH3D::setIntraHop(double t1){
 
 void BBH3D::setInterHop(double t2){
   for(int i = 12; i < 24; i++){
-    if(i == 12 || i == 13 || i == 17 || i == 18){
+    if(i == 14 || i == 15 || i == 17 || i == 18){
       model->getHop(i).setHop(-t2);
     }
     else{
@@ -82,7 +82,7 @@ void BBH3D::getBands(char * argv0, string fileName){
   double * R = new double[3];
   R[0] = M_PI;
   R[1] = M_PI;
-  R[1] = M_PI;
+  R[2] = M_PI;
   //M
   double * M = new double[3];
   M[0] = M_PI;
@@ -109,12 +109,18 @@ void BBH3D::getBands(char * argv0, string fileName){
   kF[5] = R;
   int * segPoints = new int[nSegs];
   for(int i = 0; i < nSegs; i++){
-    segPoints[i] = 100;
+    segPoints[i] = 10;
   }
+  int bC[3] = {1,1,1};
+  ham->setBC(bC);
   o.eBandsPath(*ham,nSegs,kI,kF,segPoints);
   delete[] kI;
   delete[] kF;
   delete[] segPoints;
+}
+
+cx_mat BBH3D::getH(double * k){
+  return ham->H(k);
 }
 
 /*

@@ -11,6 +11,8 @@ using namespace std;
 using namespace arma;
 
 int main (int arc, char ** argv) {
+  ofstream f;
+  f.open("test.txt");
 
   cout << "1D SSH" << endl;
   SSH ssh(1,2);
@@ -44,10 +46,15 @@ int main (int arc, char ** argv) {
 
   cout << "3D BBH" << endl;
   BBH3D bbh3D(1,2);
+  double k[3] = {M_PI/2, M_PI/2, M_PI/2};
   bbh3D.getBands(argv[0], "EnergyBandsBBH3D_inter2.dat");
+  //f << bbh3D.getH(k) << endl;
   bbh3D.setInterHop(1);
   bbh3D.getBands(argv[0], "EnergyBandsBBH3D_inter1.dat");
+  //f << bbh3D.getH(k) << endl;
   bbh3D.setInterHop(0.5);
   bbh3D.getBands(argv[0], "EnergyBandsBBH3D_inter0.5.dat");
+
+  f.close();
   return 0;
 }
