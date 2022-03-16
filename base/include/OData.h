@@ -21,6 +21,7 @@ class OData{
     void eBands3D(Hamiltonian & ham, int nx, int ny, int kz = 0);
     //kI defines start and kF defines the finish k point of each segment, segPoints defines number of points in each segment
     void eBandsPath(Hamiltonian & ham, int nSegs, double ** kI, double ** kF, int * segPoints);
+    void chargeDensity(Hamiltonian & ham, int nOrb, int nOrbFilled, int * l);
 
   private:
     ofstream f;

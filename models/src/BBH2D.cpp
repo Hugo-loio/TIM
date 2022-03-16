@@ -1,21 +1,26 @@
 #include "BBH2D.h"
 #include "OData.h"
 
-BBH2D::BBH2D(double t1, double t2){
+BBH2D::BBH2D(double t1, double t2, double delta){
   model = new TBModel(2, 4);
   int n1[2] = {0,0};
   int n2[2] = {1,0}; 
   int n3[2] = {0,1};
   //Intracell hoppings
-  model->setHop(0,1, n1, t1);
-  model->setHop(0,2, n1, -t1);
+  model->setHop(0,3, n1, t1);
+  model->setHop(0,2, n1, t1);
+  model->setHop(1,2, n1, -t1);
   model->setHop(1,3, n1, t1);
-  model->setHop(2,3, n1, t1);
   //Intercell hoppings
-  model->setHop(1,0, n2, t2);
-  model->setHop(3,2, n2, t2);
-  model->setHop(2,0, n3, -t2);
-  model->setHop(3,1, n3, t2);
+  model->setHop(0,2, n2, t2);
+  model->setHop(3,1, n2, t2);
+  model->setHop(0,3, n3, t2);
+  model->setHop(2,1, n3, -t2);
+  //OnSite
+  model->setOnSite(0,delta);
+  model->setOnSite(1,delta);
+  model->setOnSite(2,-delta);
+  model->setOnSite(3,-delta);
   ham = new TBCleanH(*model);
 };
 
@@ -26,9 +31,9 @@ BBH2D::~BBH2D(){
 
 void BBH2D::setIntraHop(double t1){
   model->getHop(0).setHop(t1);
-  model->getHop(1).setHop(-t1);
+  model->getHop(1).setHop(t1);
   model->getHop(2).setHop(t1);
-  model->getHop(3).setHop(t1);
+  model->getHop(3).setHop(-t1);
   delete ham;
   ham = new TBCleanH(*model);
 }
@@ -40,6 +45,13 @@ void BBH2D::setInterHop(double t2){
   model->getHop(7).setHop(t2);
   delete ham;
   ham = new TBCleanH(*model);
+}
+
+void BBH2D::setOnSite(double delta){
+  model->getOnSite(0).setEn(delta);
+  model->getOnSite(1).setEn(delta);
+  model->getOnSite(2).setEn(-delta);
+  model->getOnSite(3).setEn(-delta);
 }
 
 void BBH2D::getBands(char * argv0, string fileName, int nx, int ny){
@@ -77,5 +89,12 @@ void BBH2D::getWannierBands(char * argv0, string fileName, int dir, int n){
   }
 }
 
-void BBH2D::test(){
+void BBH2D::getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled){
+  int bC[2] = {0,0};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int l[2] = {nx, ny};
+  ham->setSize(l);
+  OData o(argv0, fileName);
+  o.chargeDensity(*ham, 4, nOrbFilled, l);
 }

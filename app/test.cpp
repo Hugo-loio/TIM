@@ -9,46 +9,21 @@ using namespace std;
 using namespace arma;
 
 int main (int arc, char ** argv) {
-
-  cout << "1D SSH" << endl;
-  SSH ssh(1,2);
-  cout << "SSH Berry phase inter 2: " << ssh.berryPhase(10) << endl;
-  cout << "Supercell: " << ssh.berryPhaseSupercell(10,10) << endl;
-  ssh.setInterHop(1);
-  cout << "SSH Berry phase inter 1: " << ssh.berryPhase(10) << endl;
-  cout << "Supercell: " << ssh.berryPhaseSupercell(10,10) << endl;
-  ssh.setInterHop(0.5);
-  cout << "SSH Berry phase inter 0.5: " << ssh.berryPhase(10) << endl;
-  cout << "Supercell: " << ssh.berryPhaseSupercell(10,10) << endl;
-
-  double k0[2] = {0, -M_PI};
-  int bC[2] = {2,1};
-  int l[2] = {10,10};
-  cout << "2D SSH" << endl;
-  SSH2D ssh2D(1,2);
-  cout << "2D SSH Berry phase inter 2: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  ssh2D.setInterHop(1);
-  cout << "2D SSH Berry phase inter 1: " << ssh2D.berryPhase(100,0,k0) << endl;
-  //cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
-  ssh2D.setInterHop(0.5);
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  //cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
-
   cout << "2D BBH" << endl;
   BBH2D bbh2D(1,2);
-  cout << "2D BBH Berry phase inter 2: " << bbh2D.berryPhase(100,0,k0) << endl;
-  double avgBerry = 0;
-  for(int i = 0; i < 10; i++){
-    cout << "2D BBH Berry phase inter 2: " << bbh2D.berryPhase(100,0,k0) << endl;
-  }
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter2.dat", 20, 20, 2);
   bbh2D.setInterHop(1);
-  cout << "2D BBH Berry phase inter 1: " << bbh2D.berryPhase(100,0,k0) << endl;
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter1.dat", 20, 20, 2);
   bbh2D.setInterHop(0.5);
-  cout << "2D BBH Berry phase inter 0.5: " << bbh2D.berryPhase(100,0,k0) << endl;
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.5.dat", 20, 20, 2);
+
+  bbh2D.setOnSite(1e-3);
+  bbh2D.setInterHop(2);
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter2_delta.dat", 20, 20, 2);
+  bbh2D.setInterHop(1);
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter1_delta.dat", 20, 20, 2);
+  bbh2D.setInterHop(0.5);
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.5_delta.dat", 20, 20, 2);
 
   return 0;
 }

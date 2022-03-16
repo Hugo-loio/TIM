@@ -13,9 +13,10 @@ using namespace std;
 class BBH2D{
   public:
     //Intracell hopping t1, intercell hopping t2
-    BBH2D(double t1 = 1, double t2 = 2);
+    BBH2D(double t1 = 1, double t2 = 2, double delta = 0);
     ~BBH2D();
 
+    void setOnSite(double);
     void setIntraHop(double);
     void setInterHop(double);
     //void setSparse(bool);
@@ -23,9 +24,10 @@ class BBH2D{
     double berryPhase(int n, int dir = 0, double * k0 = NULL);
     void getBands(char * argv0, string fileName, int nx, int ny);
     void getWannierBands(char * argv0, string fileName, int dir, int n);
-    void test();
+    void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
     //cx_mat getH(double * k = NULL);
     //double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
+
   private:
     TBModel * model;
     TBCleanH * ham;

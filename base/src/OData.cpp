@@ -95,3 +95,59 @@ void OData::eBandsPath(Hamiltonian & ham, int nSegs, double ** kI, double ** kF,
   }
   delete[] kTemp;
 }
+
+void OData::chargeDensity(Hamiltonian & ham, int nOrb, int nOrbFilled, int * l){
+  int nDim = ham.getNDim();
+  vec eigVal;
+  cx_mat eigVec;
+  eig_sym(eigVal, eigVec, ham.H());
+  int m;
+  double rho;
+
+  if(nDim == 1){ 
+    cx_mat eigVecOcc = eigVec.cols(0,l[0]*nOrbFilled - 1);
+    cx_mat rhoMat = eigVecOcc * (eigVecOcc.t());
+
+    for(int x = 0; x < l[0]; x++){
+      rho = 0;
+      for(int orb = 0; orb < nOrb; orb++){
+	m = orb+x*nOrb; 
+	rho += rhoMat(m,m).real();
+      }
+      f << x + 1 << " " << rho << endl;
+    }
+
+  }
+  else if(nDim == 2){
+    cx_mat eigVecOcc = eigVec.cols(0,l[0]*l[1]*nOrbFilled - 1);
+    cx_mat rhoMat = eigVecOcc * (eigVecOcc.t());
+
+    for(int x = 0; x < l[0]; x++){
+      for(int y = 0; y < l[1]; y++){
+	rho = 0;
+	for(int orb = 0; orb < nOrb; orb++){
+	  m = orb+x*nOrb + y*nOrb*l[0]; 
+	  rho += rhoMat(m,m).real();
+	}
+	f << x + 1 << " " << y + 1 << " " << rho << endl;
+      }
+    }
+  }
+  else if(nDim ==3){
+    cx_mat eigVecOcc = eigVec.cols(0,l[0]*l[1]*l[2]*nOrbFilled - 1);
+    cx_mat rhoMat = eigVecOcc * (eigVecOcc.t());
+
+    for(int x = 0; x < l[0]; x++){
+      for(int y = 0; y < l[1]; y++){
+	for(int z = 0; z < l[2]; z++){
+	  rho = 0;
+	  for(int orb = 0; orb < nOrb; orb++){
+	    m = orb+x*nOrb + y*nOrb*l[0] + z*nOrb*l[0]*l[1]; 
+	    rho += rhoMat(m,m).real();
+	  }
+	  f << x + 1 << " " << y + 1 << " " << z + 1 << " " << rho << endl;
+	}
+      }
+    }
+  }
+}
