@@ -11,7 +11,7 @@ def ChargeDensity2D(fname, show: bool):
     for i in range(2,len(data)):
         ax.plot_trisurf(data[0],data[1],data[i], cmap = cm.coolwarm)
 
-    ax.set(xlabel = r'$x$', ylabel = r'$y$', zlabel = r'$Electron density$')
+    ax.set(xlabel = r'$x$', ylabel = r'$y$', zlabel = r'Electron density')
 
     ax.set_xticks(np.arange(0, data[0][-1] + 1, 5))
     ax.set_yticks(np.arange(0, data[1][-1] + 1, 5))

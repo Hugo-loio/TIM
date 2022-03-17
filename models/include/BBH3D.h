@@ -13,15 +13,17 @@ using namespace std;
 class BBH3D{
   public:
     //Intracell hopping t1, intercell hopping t2
-    BBH3D(double t1 = 1, double t2 = 2);
+    BBH3D(double t1 = 1, double t2 = 2, double delta = 0);
     ~BBH3D();
 
     void setIntraHop(double);
     void setInterHop(double);
+    void setOnSite(double);
     //void setSparse(bool);
 
     //double berryPhase(int n, int dir = 0, double * k0 = NULL);
     void getBands(char * argv0, string fileName);
+    void getChargeDensity(char * argv0, string fileName, int * l, int nOrbFilled);
     //void getWannierBands(char * argv0, string fileName, int dir, int n);
     cx_mat getH(double * k = NULL);
     //double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);

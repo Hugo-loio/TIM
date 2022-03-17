@@ -4,6 +4,7 @@
 #include "SSH.h"
 #include "SSH2D.h"
 #include "BBH2D.h"
+#include "BBH3D.h"
 
 using namespace std;
 using namespace arma;
@@ -25,5 +26,21 @@ int main (int arc, char ** argv) {
   bbh2D.setInterHop(0.5);
   bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.5_delta.dat", 20, 20, 2);
 
+  cout << "3D BBH" << endl;
+  BBH3D bbh3D(1,2);
+  int l[3] = {8,8,8};
+  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter2.dat", l, 4);
+  bbh3D.setInterHop(1);
+  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter1.dat", l, 4);
+  bbh3D.setInterHop(0.5);
+  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter0.5.dat", l, 4);
+
+  bbh3D.setOnSite(1e-3);
+  bbh3D.setInterHop(2);
+  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter2_delta.dat", l, 4);
+  bbh3D.setInterHop(1);
+  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter1_delta.dat", l, 4);
+  bbh3D.setInterHop(0.5);
+  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter0.5_delta.dat", l, 4);
   return 0;
 }

@@ -1,7 +1,7 @@
 #include "BBH3D.h"
 #include "OData.h"
 
-BBH3D::BBH3D(double t1, double t2){
+BBH3D::BBH3D(double t1, double t2, double delta){
   model = new TBModel(3, 8);
   int n0[3] = {0,0,0};
   int nX[3] = {1,0,0}; 
@@ -33,6 +33,15 @@ BBH3D::BBH3D(double t1, double t2){
   model->setHop(1,5, nZ, t2);
   model->setHop(2,6, nZ, t2);
   model->setHop(3,7, nZ, t2);
+  //OnSite
+  model->setOnSite(0,delta);
+  model->setOnSite(1,delta);
+  model->setOnSite(2,-delta);
+  model->setOnSite(3,-delta);
+  model->setOnSite(4,-delta);
+  model->setOnSite(5,-delta);
+  model->setOnSite(6,delta);
+  model->setOnSite(7,delta);
   ham = new TBCleanH(*model);
 };
 
@@ -67,6 +76,16 @@ void BBH3D::setInterHop(double t2){
   ham = new TBCleanH(*model);
 }
 
+void BBH3D::setOnSite(double delta){
+  model->getOnSite(0).setEn(delta);
+  model->getOnSite(1).setEn(delta);
+  model->getOnSite(2).setEn(-delta);
+  model->getOnSite(3).setEn(-delta);
+  model->getOnSite(4).setEn(-delta);
+  model->getOnSite(5).setEn(-delta);
+  model->getOnSite(6).setEn(delta);
+  model->getOnSite(7).setEn(delta);
+}
 
 void BBH3D::getBands(char * argv0, string fileName){
   OData o(argv0, fileName);
@@ -121,6 +140,15 @@ void BBH3D::getBands(char * argv0, string fileName){
 
 cx_mat BBH3D::getH(double * k){
   return ham->H(k);
+}
+
+void BBH3D::getChargeDensity(char * argv0, string fileName, int * l, int nOrbFilled){
+  int bC[3] = {0,0,0};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setSize(l);
+  OData o(argv0, fileName);
+  o.chargeDensity(*ham, 8, nOrbFilled, l);
 }
 
 /*
