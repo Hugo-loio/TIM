@@ -33,16 +33,6 @@ void Wilson::setLoopStart(double * k0){
   }
 }
 
-cx_mat Wilson::evOcc(int m, cx_mat h){
-  vec eigVal;
-  cx_mat eigVec;
-  int n = size(h)[0];
-  eig_sym(eigVal, eigVec, h);
-  eigVec.resize(n,m);
-  eigVal.resize(m);
-  return eigVec;
-}
-
 cx_mat Wilson::wilsonLoop(int n, int m){
   double deltaK = 2*M_PI/(double)n;
   double * k = new double[dim];
@@ -70,8 +60,12 @@ cx_mat Wilson::wilsonLoop(int n, int m){
     u = u * (eigVec2.t() * eigVec0);
   }
   else{
-    cx_mat eigVec0 = evOcc(m, ham->H(k0));
-    cx_mat eigVec1 = evOcc(m, ham->H(k));
+    vec eigVal;
+    cx_mat eigVec0, eigVec1;
+    eig_sym(eigVal, eigVec0, ham->H(k0));
+    eigVec0 = eigVec0.cols(0,m-1);
+    eig_sym(eigVal, eigVec1, ham->H(k));
+    eigVec1 = eigVec1.cols(0,m-1);
     cx_mat eigVec2 = eigVec1;
 
     u = eigVec0.t() * eigVec1;
@@ -79,7 +73,8 @@ cx_mat Wilson::wilsonLoop(int n, int m){
     for(int i = 2; i < n; i++){
       eigVec1 = eigVec2;
       k[dir] = k0[dir] + i*deltaK;
-      eigVec2 = evOcc(m, ham->H(k));
+      eig_sym(eigVal, eigVec2, ham->H(k));
+      eigVec2 = eigVec2.cols(0,m-1);
       u = u* (eigVec1.t() * eigVec2);
     }
     u = u * (eigVec2.t() * eigVec0);
@@ -123,9 +118,13 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     u = u * (eigVec2.t() * eigVec0);
   }
   else{
-    cx_mat eigVec0 = evOcc(m, ham->H(k));
+    vec eigVal;
+    cx_mat eigVec0, eigVec1;
+    eig_sym(eigVal, eigVec0, ham->H(k));
+    eigVec0 = eigVec0.cols(0,m-1);
     ham->setTwists(theta);
-    cx_mat eigVec1 = evOcc(m, ham->H(k));
+    eig_sym(eigVal, eigVec1, ham->H(k));
+    eigVec1 = eigVec1.cols(0,m-1);
     cx_mat eigVec2 = eigVec1;
 
     u = eigVec0.t() * eigVec1;
@@ -134,7 +133,8 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
       eigVec1 = eigVec2;
       theta[dir] = theta0[dir] + i*deltaTheta;
       ham->setTwists(theta);
-      eigVec2 = evOcc(m, ham->H(k));
+      eig_sym(eigVal, eigVec2, ham->H(k));
+      eigVec2 = eigVec2.cols(0,m-1);
       u = u* (eigVec1.t() * eigVec2);
     }
     u = u * (eigVec2.t() * eigVec0);
