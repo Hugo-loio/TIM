@@ -71,22 +71,16 @@ double BBH2D::berryPhase(int n, int dir, double * k0){
   return wilson.berryPhase(n, 1);
 }
 
-void BBH2D::getWannierBands(char * argv0, string fileName, int dir, int n){
+void BBH2D::getWannierBands(char * argv0, string fileName, int dir){
   if(boundH != NULL){
     delete boundH;
   }
   int bC[2] = {1,1};
   ham->setBC(bC);
   ham->setSparse(false);
-  boundH = new BoundaryWilsonH(ham, dir, n, 2);
   OData o(argv0, fileName);
-  double k[2] = {0,0};
-  if(dir == 0){
-    o.eBands2D(*boundH, 100, 1, k);
-  }
-  else{
-    o.eBands2D(*boundH, 100, 0, k);
-  }
+  int nVec[1] = {100};
+  o.wannierBands(*ham, nVec ,10, dir, 2);
 }
 
 void BBH2D::getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled){

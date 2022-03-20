@@ -42,5 +42,6 @@ int main (int arc, char ** argv) {
   bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter1_delta.dat", l, 4);
   bbh3D.setInterHop(0.5);
   bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter0.5_delta.dat", l, 4);
+
   return 0;
 }
