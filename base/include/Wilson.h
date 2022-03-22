@@ -14,6 +14,7 @@ class Wilson{
     //n k (momentum) intervals, m occuppied bands
     cx_mat wilsonLoop(int n, int m);
     double berryPhase(int n, int m);
+    vec wilsonPhases(int n, int m);
     //n[i]  k (momentum) intervals in direction dir[i], i is order in which the Wilson loops are taken
     //cx_mat nestedWilsonLoop(int * n, int * dir, int m); //TODO: add order
 

@@ -151,8 +151,16 @@ void BBH3D::getChargeDensity(char * argv0, string fileName, int * l, int nOrbFil
   o.chargeDensity(*ham, 8, nOrbFilled, l);
 }
 
-/*
+void BBH3D::getWannierBands(char * argv0, string fileName, int dir){
+  int bC[3] = {1,1,1};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  OData o(argv0, fileName);
+  int nVec[2] = {20,20};
+  o.wannierBands(*ham, nVec ,10, dir, 4);
+}
 
+/*
    double BBH3D::berryPhase(int n, int dir, double * k0){
    int bC[2] = {1,1};
    ham->setBC(bC);
@@ -164,26 +172,4 @@ void BBH3D::getChargeDensity(char * argv0, string fileName, int * l, int nOrbFil
    }
    return wilson.berryPhase(n, 1);
    }
-
-   void BBH3D::getWannierBands(char * argv0, string fileName, int dir, int n){
-   if(boundH != NULL){
-   delete boundH;
-   }
-   int bC[2] = {1,1};
-   ham->setBC(bC);
-   ham->setSparse(false);
-   boundH = new BoundaryWilsonH(ham, dir, n, 2);
-   OData o(argv0, fileName);
-   double k[2] = {0,0};
-   if(dir == 0){
-   o.eBands2D(*boundH, 100, 1, k);
-   }
-   else{
-   o.eBands2D(*boundH, 100, 0, k);
-   }
-   }
-
-   void BBH3D::test(){
-   }
-
-*/
+   */

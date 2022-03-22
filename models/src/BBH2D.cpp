@@ -72,9 +72,6 @@ double BBH2D::berryPhase(int n, int dir, double * k0){
 }
 
 void BBH2D::getWannierBands(char * argv0, string fileName, int dir){
-  if(boundH != NULL){
-    delete boundH;
-  }
   int bC[2] = {1,1};
   ham->setBC(bC);
   ham->setSparse(false);

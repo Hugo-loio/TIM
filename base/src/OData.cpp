@@ -164,9 +164,7 @@ void OData::wannierBands(Hamiltonian & ham, int * n, int nWilson, int dirWilson,
     k[i] = -M_PI;
   }
   k[dirWilson] = 0;
-  cx_vec eigVal;
   vec phase(nOrbFilled);
-  complex<double> ii(0,1);  
 
 
   if(dim == 2){
@@ -178,24 +176,47 @@ void OData::wannierBands(Hamiltonian & ham, int * n, int nWilson, int dirWilson,
     else{
       xDir = 0;
     }
-    for(int i = 0; i < n[0]; i++){
+    for(int i = 0; i <= n[0]; i++){
       k[xDir] = -M_PI + i*deltaK;
       wilson.setLoopStart(k);
-      cx_mat loop = wilson.wilsonLoop(nWilson, nOrbFilled);
-      eig_gen(eigVal, loop);
-      eigVal = sort(eigVal);
-      for(int e = 0; e < size(eigVal)[0]; e++){
-	phase[e] = (-ii*log(eigVal[e])).real()/(2*M_PI);
-      }
-      phase = sort(phase);
+      phase = wilson.wilsonPhases(nWilson, nOrbFilled);
       f << k[xDir] << " " ;
-      for(int e = 0; e < size(eigVal)[0]; e++){
+      for(int e = 0; e < size(phase)[0]; e++){
 	f << phase[e] << " ";
       }
       f << endl;
     }
   }
   else if(dim == 3){
+    double deltaKX = 2*M_PI/(double)n[0];
+    double deltaKY = 2*M_PI/(double)n[1];
+    int xDir, yDir;
+    if(dirWilson == 0){
+      xDir = 1;
+      yDir = 2;
+    }
+    else if(dirWilson == 1){
+      xDir = 0;
+      yDir = 2;
+    }
+    else{
+      xDir = 0; 
+      yDir = 1;
+    }
+
+    for(int i = 0; i <= n[0]; i++){
+      k[xDir] = -M_PI + i*deltaKX;
+      for(int e = 0; e <= n[1]; e++){
+	k[yDir] = -M_PI + e*deltaKY;
+	wilson.setLoopStart(k);
+	phase = wilson.wilsonPhases(nWilson, nOrbFilled);
+	f << k[xDir] << " " << k[yDir] << " " ;
+	for(int j = 0; j < size(phase)[0]; j++){
+	  f << phase[j] << " ";
+	}
+	f << endl;
+      }
+    }
   }
   else{
     cout << __PRETTY_FUNCTION__ << "\nError: can't produce Wannier bands for a system with " << dim << "dimensions." << endl;

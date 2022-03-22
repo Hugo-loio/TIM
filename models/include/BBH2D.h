@@ -31,7 +31,7 @@ class BBH2D{
   private:
     TBModel * model;
     TBCleanH * ham;
-    BoundaryWilsonH * boundH = NULL;
+    //BoundaryWilsonH * boundH = NULL;
 };
 
 #endif

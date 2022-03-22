@@ -1,5 +1,6 @@
 #include "Wilson.h"
 #include <iostream>
+#include <complex>
 
 using namespace std;
 using namespace arma;
@@ -85,6 +86,17 @@ cx_mat Wilson::wilsonLoop(int n, int m){
 
 double Wilson::berryPhase(int n, int m){
   return - log_det(this->wilsonLoop(n,m)).imag();
+}
+
+vec Wilson::wilsonPhases(int n, int m){
+  cx_vec eigVal;
+  vec phase(m);
+  eig_gen(eigVal, this->wilsonLoop(n,m));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  return sort(phase);
 }
 
 cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
