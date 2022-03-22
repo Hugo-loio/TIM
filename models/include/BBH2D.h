@@ -26,7 +26,7 @@ class BBH2D{
     void getWannierBands(char * argv0, string fileName, int dir);
     void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
     //cx_mat getH(double * k = NULL);
-    //double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
+    double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
 
   private:
     TBModel * model;

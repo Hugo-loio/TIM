@@ -15,8 +15,9 @@ class Wilson{
     cx_mat wilsonLoop(int n, int m);
     double berryPhase(int n, int m);
     vec wilsonPhases(int n, int m);
-    //n[i]  k (momentum) intervals in direction dir[i], i is order in which the Wilson loops are taken
-    //cx_mat nestedWilsonLoop(int * n, int * dir, int m); //TODO: add order
+    cx_mat wilsonEigVec(int n, int m);
+    //n[i]  k (momentum) intervals in direction dir[i], dir[i] is order in which the Wilson loops are taken
+    cx_mat nestedWilsonLoop(int * n, int * dir, int m); 
 
     void setLoopDir(int dir);
     void setLoopStart(double * k0);
@@ -30,6 +31,8 @@ class Wilson{
     int dir;
     int dim;
     Hamiltonian * ham;
+
+    void scale(cx_mat & vecs, cx_vec scalars);
 };
 
 #endif

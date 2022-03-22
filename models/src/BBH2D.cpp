@@ -89,3 +89,26 @@ void BBH2D::getChargeDensity(char * argv0, string fileName, int nx, int ny, int 
   OData o(argv0, fileName);
   o.chargeDensity(*ham, 4, nOrbFilled, l);
 }
+
+double BBH2D::getQuadrupoleNested(int nx, int ny, double * k0){
+  int bC[2] = {1,1};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int n[2] = {nx,ny};
+  int dir[2] = {0,1};
+  Wilson wilson(ham);
+  double k[2] = {0,0};
+  if(k0 != NULL){
+    wilson.setLoopStart(k0);
+    k[0] = k0[0];
+    k[1] = k0[1];
+  }
+  double quad = 0;
+  for(int i = 0; i < nx; i++){
+    wilson.setLoopStart(k);
+    quad += log_det(wilson.nestedWilsonLoop(n, dir, 2)).imag()/(2*M_PI);
+    k[0] += 2*M_PI/(double)nx;
+    cout << k[0] << " " << k[1] << endl;
+  }
+  return quad/(double)nx;
+}
