@@ -34,43 +34,19 @@ int main (int arc, char ** argv) {
   SSH2D ssh2D(1,2);
   cout << "2D SSH Berry phase inter 2: " << ssh2D.berryPhase(100,0,k0) << endl;
   cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  ssh2D.getH(l3,k).print(f,"Inter 2 real x reciprocal y\n");
-  bC[1] = 2;
-  cout << "Supercell in x, real with PBC in y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  ssh2D.getH(l2,k).print(f,"Inter 2 real\n");
   ssh2D.setInterHop(1.5);
   cout << "2D SSH Berry phase inter 1.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  bC[1] = 1;
   cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  //cout << ssh2D.getH(k) << endl;
-  bC[1] = 2;
-  cout << "Supercell in x, real with PBC in y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  //cout << ssh2D.getH(k) << endl;
   ssh2D.setInterHop(1);
   cout << "2D SSH Berry phase inter 1: " << ssh2D.berryPhase(100,0,k0) << endl;
-  //cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
   ssh2D.setInterHop(0.5);
   cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  cout << "2D SSH Berry phase inter 0.5: " << ssh2D.berryPhase(100,0,k0) << endl;
-  bC[1] = 1;
   cout << "Supercell in x, reciprocal y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
-  bC[1] = 2;
-  cout << "Supercell in x, real with PBC in y: " << ssh2D.berryPhaseSupercell(10,0,bC,l,k0) << endl;
   //cout << "Supercell: " << ssh2D.berryPhaseSupercell(10,0,10,10) << endl;
 
   cout << "\n2D BBH" << endl;
   BBH2D bbh2D(1,2);
   cout << "2D BBH Berry phase inter 2: " << bbh2D.berryPhase(100,0,k0) << endl;
-  double avgBerry = 0;
-  for(int i = 0; i < 10; i++){
-    cout << "2D BBH Berry phase inter 2: " << bbh2D.berryPhase(100,0,k0) << endl;
-  }
   bbh2D.setInterHop(1);
   cout << "2D BBH Berry phase inter 1: " << bbh2D.berryPhase(100,0,k0) << endl;
   bbh2D.setInterHop(0.5);

@@ -68,7 +68,7 @@ double BBH2D::berryPhase(int n, int dir, double * k0){
   if(k0 != NULL){
     wilson.setLoopStart(k0);
   }
-  return wilson.berryPhase(n, 1);
+  return wilson.berryPhase(n, 2);
 }
 
 void BBH2D::getWannierBands(char * argv0, string fileName, int dir){
@@ -108,7 +108,7 @@ double BBH2D::getQuadrupoleNested(int nx, int ny, double * k0){
     wilson.setLoopStart(k);
     quad += log_det(wilson.nestedWilsonLoop(n, dir, 2)).imag()/(2*M_PI);
     k[0] += 2*M_PI/(double)nx;
-    cout << k[0] << " " << k[1] << endl;
+    //cout << k[0] << " " << k[1] << endl;
   }
   return quad/(double)nx;
 }

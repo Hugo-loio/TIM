@@ -201,12 +201,14 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
     cx_mat eigVec;
     cx_mat wannier0, wannier1;
     eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier0 = eigVec.cols(0,m-1);
-    scale(wannier0, wilsonEigVec(n[0],m).col(0));
+    //wannier0 = eigVec.cols(0,m-1);
+    //scale(wannier0, wilsonEigVec(n[0],m).col(0));
+    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[0],m).col(0));
     k0[dir[1]] += deltaK;
     eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier1 = eigVec.cols(0,m-1);
-    scale(wannier1, wilsonEigVec(n[0],m).col(0));
+    //wannier1 = eigVec.cols(0,m-1);
+    //scale(wannier1, wilsonEigVec(n[0],m).col(0));
+    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[0],m).col(0));
     cx_mat wannier2 = wannier1;
 
     u = wannier0.t() * wannier1;
@@ -215,8 +217,9 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
       wannier1 = wannier2;
       k0[dir[1]] = k[dir[1]] + i*deltaK;
       eig_sym(eigVal, eigVec, ham->H(k0));
-      wannier2 = eigVec.cols(0,m-1);
-      scale(wannier2, wilsonEigVec(n[0],m).col(0));
+      //wannier2 = eigVec.cols(0,m-1);
+      //scale(wannier2, wilsonEigVec(n[0],m).col(0));
+      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[0],m).col(0));
       u = u* (wannier1.t() * wannier2);
     }
     u = u * (wannier2.t() * wannier0);
