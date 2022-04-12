@@ -18,6 +18,8 @@ int main (int arc, char ** argv) {
   cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(20,20) << endl;
   cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(10,20) << endl;
   cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(20,10) << endl;
+  cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(30,30) << endl;
+  cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(40,40) << endl;
   cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(20,20,k1) << endl;
   cout << "Quadrupole moment nested: " << bbh2D.getQuadrupoleNested(20,20,k2) << endl;
   bbh2D.setInterHop(3);

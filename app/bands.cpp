@@ -45,6 +45,8 @@ int main (int arc, char ** argv) {
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter3_x.dat", 0); 
 
   bbh2D.setInterHop(1);
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1_x.dat", 0); 
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1_y.dat", 1); 
   //bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter1.dat", 100, 100);
 
   bbh2D.setInterHop(0.5);

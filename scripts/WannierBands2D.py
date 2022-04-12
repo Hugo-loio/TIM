@@ -14,8 +14,8 @@ def WannierBands2D(fname, show: bool, xlab: str):
     if(show):
         plt.show()
 
-names_x = ["WannierBandsBBH2D_inter3_x", "WannierBandsBBH2D_inter2_x", "WannierBandsBBH2D_inter1.5_x", "WannierBandsBBH2D_inter0.5_x"] 
-names_y = ["WannierBandsBBH2D_inter3_y", "WannierBandsBBH2D_inter2_y", "WannierBandsBBH2D_inter1.5_y", "WannierBandsBBH2D_inter0.5_y"] 
+names_x = ["WannierBandsBBH2D_inter3_x", "WannierBandsBBH2D_inter2_x", "WannierBandsBBH2D_inter1.5_x", "WannierBandsBBH2D_inter1_x", "WannierBandsBBH2D_inter0.5_x"] 
+names_y = ["WannierBandsBBH2D_inter3_y", "WannierBandsBBH2D_inter2_y", "WannierBandsBBH2D_inter1.5_y", "WannierBandsBBH2D_inter1_y", "WannierBandsBBH2D_inter0.5_y"] 
 
 for name in names_x:
     WannierBands2D(name + ".dat", True, r'$k_y$')
