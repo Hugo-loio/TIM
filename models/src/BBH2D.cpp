@@ -32,8 +32,8 @@ BBH2D::~BBH2D(){
 void BBH2D::setIntraHop(double t1){
   model->getHop(0).setHop(t1);
   model->getHop(1).setHop(t1);
-  model->getHop(2).setHop(t1);
-  model->getHop(3).setHop(-t1);
+  model->getHop(2).setHop(-t1);
+  model->getHop(3).setHop(t1);
   delete ham;
   ham = new TBCleanH(*model);
 }
@@ -41,8 +41,8 @@ void BBH2D::setIntraHop(double t1){
 void BBH2D::setInterHop(double t2){
   model->getHop(4).setHop(t2);
   model->getHop(5).setHop(t2);
-  model->getHop(6).setHop(-t2);
-  model->getHop(7).setHop(t2);
+  model->getHop(6).setHop(t2);
+  model->getHop(7).setHop(-t2);
   delete ham;
   ham = new TBCleanH(*model);
 }
@@ -76,8 +76,8 @@ void BBH2D::getWannierBands(char * argv0, string fileName, int dir){
   ham->setBC(bC);
   ham->setSparse(false);
   OData o(argv0, fileName);
-  int nVec[1] = {100};
-  o.wannierBands(*ham, nVec ,10, dir, 2);
+  int nVec[1] = {500};
+  o.wannierBands(*ham, nVec ,50, dir, 2);
 }
 
 void BBH2D::getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled){
@@ -104,11 +104,13 @@ double BBH2D::getQuadrupoleNested(int nx, int ny, double * k0){
     k[1] = k0[1];
   }
   double quad = 0;
-  for(int i = 0; i < nx; i++){
+  double nw;
+  for(int i = 0; i < n[dir[0]]; i++){
     wilson.setLoopStart(k);
-    quad += log_det(wilson.nestedWilsonLoop(n, dir, 2)).imag()/(2*M_PI);
-    k[0] += 2*M_PI/(double)nx;
-    //cout << k[0] << " " << k[1] << endl;
+    nw = abs(log_det(wilson.nestedWilsonLoop(n, dir, 2)).imag())/(2*M_PI);
+    quad += nw;
+    //    cout << "i: " << i << " k[dir[0]]: " << k[dir[0]] << " nested:" << nw << endl;
+    k[dir[0]] += 2*M_PI/(double)n[dir[0]];
   }
-  return quad/(double)nx;
+  return quad/(double)n[dir[0]];
 }

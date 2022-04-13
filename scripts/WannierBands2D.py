@@ -14,12 +14,13 @@ def WannierBands2D(fname, show: bool, xlab: str):
     if(show):
         plt.show()
 
-names_x = ["WannierBandsBBH2D_inter3_x", "WannierBandsBBH2D_inter2_x", "WannierBandsBBH2D_inter1.5_x", "WannierBandsBBH2D_inter1_x", "WannierBandsBBH2D_inter0.5_x"] 
-names_y = ["WannierBandsBBH2D_inter3_y", "WannierBandsBBH2D_inter2_y", "WannierBandsBBH2D_inter1.5_y", "WannierBandsBBH2D_inter1_y", "WannierBandsBBH2D_inter0.5_y"] 
+names_x = ["WannierBandsBBH2D_inter3_x", "WannierBandsBBH2D_inter2_x", "WannierBandsBBH2D_inter1.5_x", "WannierBandsBBH2D_inter0.9_x", "WannierBandsBBH2D_inter0.99_x", "WannierBandsBBH2D_inter1_x", "WannierBandsBBH2D_inter1.01_x", "WannierBandsBBH2D_inter1.1_x", "WannierBandsBBH2D_inter0.5_x"] 
+names_y = ["WannierBandsBBH2D_inter3_y", "WannierBandsBBH2D_inter2_y", "WannierBandsBBH2D_inter1.5_y", "WannierBandsBBH2D_inter0.9_y", "WannierBandsBBH2D_inter0.99_y", "WannierBandsBBH2D_inter1_y", "WannierBandsBBH2D_inter1.01_y", "WannierBandsBBH2D_inter1.1_y", "WannierBandsBBH2D_inter0.5_y"] 
+
 
 for name in names_x:
-    WannierBands2D(name + ".dat", True, r'$k_y$')
+    WannierBands2D(name + ".dat", False, r'$k_y$')
 
 for name in names_y:
-    WannierBands2D(name + ".dat", True, r'$k_x$')
+    WannierBands2D(name + ".dat", False, r'$k_x$')
 

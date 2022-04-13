@@ -5,7 +5,6 @@
 #include <armadillo>
 #include <string>
 #include "Wilson.h"
-#include "BoundaryWilsonH.h"
 
 using namespace arma;
 using namespace std;

@@ -163,7 +163,7 @@ void OData::wannierBands(Hamiltonian & ham, int * n, int nWilson, int dirWilson,
   for(int i = 0; i < dim; i++){
     k[i] = -M_PI;
   }
-  k[dirWilson] = 0;
+  k[dirWilson] = 0.1;
   vec phase(nOrbFilled);
 
 

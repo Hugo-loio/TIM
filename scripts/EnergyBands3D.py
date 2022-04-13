@@ -16,7 +16,8 @@ def EnergyBands3D(fname, show: bool):
     if(show):
         plt.show()
 
-names = ["EnergyBandsBBH2D_inter2", "EnergyBandsBBH2D_inter1", "EnergyBandsBBH2D_inter0.5", "EnergyBandsSSH2D_inter2", "EnergyBandsSSH2D_inter1", "EnergyBandsSSH2D_inter0.5"] 
+names = ["EnergyBandsBBH2D_inter2", "EnergyBandsBBH2D_inter1.5", "EnergyBandsBBH2D_inter1", "EnergyBandsBBH2D_inter0.5", "EnergyBandsSSH2D_inter2", "EnergyBandsSSH2D_inter1", "EnergyBandsSSH2D_inter0.5"] 
+#names = ["EnergyBandsBBH2D_inter2", "EnergyBandsBBH2D_inter1.5", "EnergyBandsBBH2D_inter1", "EnergyBandsBBH2D_inter0.5"] 
 
 for name in names:
     EnergyBands3D(name + ".dat", False)

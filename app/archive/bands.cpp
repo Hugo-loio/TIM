@@ -32,11 +32,13 @@ int main (int arc, char ** argv) {
 
   cout << "2D BBH" << endl;
   BBH2D bbh2D(1,2);
+  bbh2D.setInterHop(2);
   bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter2.dat", 100, 100);
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter2_y.dat", 1); 
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter2_x.dat", 0); 
 
   bbh2D.setInterHop(1.5);
+  bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter1.5.dat", 100, 100);
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1.5_y.dat", 1); 
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1.5_x.dat", 0); 
 
@@ -44,10 +46,26 @@ int main (int arc, char ** argv) {
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter3_y.dat", 1); 
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter3_x.dat", 0); 
 
+  bbh2D.setInterHop(0.9);
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter0.9_x.dat", 0); 
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter0.9_y.dat", 1); 
+
+  bbh2D.setInterHop(0.99);
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter0.99_x.dat", 0); 
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter0.99_y.dat", 1); 
+
+  bbh2D.setInterHop(1.01);
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1.01_x.dat", 0); 
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1.01_y.dat", 1); 
+
+  bbh2D.setInterHop(1.1);
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1.1_x.dat", 0); 
+  bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1.1_y.dat", 1); 
+
   bbh2D.setInterHop(1);
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1_x.dat", 0); 
   bbh2D.getWannierBands(argv[0], "WannierBandsBBH2D_inter1_y.dat", 1); 
-  //bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter1.dat", 100, 100);
+  bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter1.dat", 100, 100);
 
   bbh2D.setInterHop(0.5);
   bbh2D.getBands(argv[0], "EnergyBandsBBH2D_inter0.5.dat", 100, 100);
