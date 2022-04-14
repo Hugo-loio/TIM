@@ -16,7 +16,7 @@ def WannierBands3D(fname, show: bool, xlab: str, ylab: str):
     if(show):
         plt.show()
 
-names_x = ["WannierBandsBBH3D_inter2_x", "WannierBandsBBH3D_inter1_x", "WannierBandsBBH3D_inter0.5_x"] 
+names_x = ["WannierBandsBBH3D_inter2_x", "WannierBandsBBH3D_inter1.01_x", "WannierBandsBBH3D_inter1_x", "WannierBandsBBH3D_inter0.99_x", "WannierBandsBBH3D_inter0.5_x"] 
 names_y = ["WannierBandsBBH3D_inter2_y"] 
 names_z = ["WannierBandsBBH3D_inter2_z"] 
 

@@ -222,4 +222,104 @@ void OData::wannierBands(Hamiltonian & ham, int * n, int nWilson, int dirWilson,
     cout << __PRETTY_FUNCTION__ << "\nError: can't produce Wannier bands for a system with " << dim << "dimensions." << endl;
   }
 
+  delete[] k;
+}
+
+void OData::nestedWannierBands(Hamiltonian & ham, int nPoints, int xDir, int * nWilson, int * dirWilson, int nOrbFilled){
+  Wilson wilson(&ham);
+  int dim = ham.getNDim();
+  double * k = new double[dim];
+  for(int i = 0; i < dim; i++){
+    k[i] = -M_PI;
+  }
+  vec phase;
+
+  if(dim == 3){
+    double deltaK = 2*M_PI/(double)nPoints;
+
+    for(int i = 0; i <= nPoints; i++){
+      k[xDir] = -M_PI + i*deltaK;
+      wilson.setLoopStart(k);
+      phase = wilson.nestedWilsonPhases(nWilson, dirWilson, nOrbFilled);
+      f << k[xDir] << " " ;
+      for(int j = 0; j < size(phase)[0]; j++){
+	f << phase[j] << " ";
+      }
+      f << endl;
+    }
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << "\nError: can't produce nested Wannier bands for a system with " << dim << "dimensions." << endl;
+  }
+
+  delete[] k;
+}
+
+void OData::supercellWannierBands(Hamiltonian & ham, int * nPoints, int nWilson, int dirWilson, int nOrbFilled){
+  Wilson wilson(&ham);
+  wilson.setLoopDir(dirWilson);
+  int dim = ham.getNDim();
+  double * theta = new double[dim];
+  for(int i = 0; i < dim; i++){
+    theta[i] = ham.getTwists()[i];
+  }
+  vec phase(nOrbFilled);
+
+
+  if(dim == 2){
+    double deltaTheta = 2*M_PI/(double)nPoints[0];
+    int xDir; 
+    if(dirWilson == 0){
+      xDir = 1; 
+    }
+    else{
+      xDir = 0;
+    }
+    for(int i = 0; i <= nPoints[0]; i++){
+      theta[xDir] = -M_PI + i*deltaTheta;
+      ham.setTwists(theta);
+      phase = wilson.supercellWilsonPhases(nWilson, nOrbFilled);
+      f << theta[xDir] << " " ;
+      for(int e = 0; e < size(phase)[0]; e++){
+	f << phase[e] << " ";
+      }
+      f << endl;
+    }
+  }
+  else if(dim == 3){
+    double deltaThetaX = 2*M_PI/(double)nPoints[0];
+    double deltaThetaY = 2*M_PI/(double)nPoints[1];
+    int xDir, yDir;
+    if(dirWilson == 0){
+      xDir = 1;
+      yDir = 2;
+    }
+    else if(dirWilson == 1){
+      xDir = 0;
+      yDir = 2;
+    }
+    else{
+      xDir = 0; 
+      yDir = 1;
+    }
+
+    for(int i = 0; i <= nPoints[0]; i++){
+      theta[xDir] = -M_PI + i*deltaThetaX;
+      for(int e = 0; e <= nPoints[1]; e++){
+	theta[yDir] = -M_PI + e*deltaThetaY;
+	ham.setTwists(theta);
+	phase = wilson.supercellWilsonPhases(nWilson, nOrbFilled);
+	f << theta[xDir] << " " << theta[yDir] << " " ;
+	for(int j = 0; j < size(phase)[0]; j++){
+	  f << phase[j] << " ";
+	}
+	f << endl;
+      }
+    }
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << "\nError: can't produce Wannier bands for a system with " << dim << "dimensions." << endl;
+  }
+
+  delete[] theta;
 }

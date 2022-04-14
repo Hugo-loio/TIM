@@ -27,6 +27,8 @@ class BBH2D{
     //cx_mat getH(double * k = NULL);
     double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
 
+    void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
+
   private:
     TBModel * model;
     TBCleanH * ham;

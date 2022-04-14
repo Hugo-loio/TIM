@@ -26,6 +26,11 @@ class OData{
     void chargeDensity(Hamiltonian & ham, int nOrb, int nOrbFilled, int * l);
 
     void wannierBands(Hamiltonian & ham, int * n, int nWilson, int dirWilson, int nOrbFilled); 
+
+    void nestedWannierBands(Hamiltonian & ham, int nPoints, int xDir, int * nWilson, int * dirWilson, int nOrbFilled);
+
+    void supercellWannierBands(Hamiltonian & ham, int * nPoints, int nWilson, int dirWilson, int nOrbFilled);
+
   private:
     ofstream f;
 };

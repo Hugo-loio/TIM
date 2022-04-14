@@ -160,6 +160,17 @@ double Wilson::berryPhaseSupercell(int n, int m, double * k){
   return - log_det(this->wilsonLoopSupercell(n,m,k)).imag();
 }
 
+vec Wilson::supercellWilsonPhases(int n, int m, double * k){
+  cx_vec eigVal;
+  vec phase(m);
+  eig_gen(eigVal, this->wilsonLoopSupercell(n,m,k));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  return sort(phase);
+}
+
 cx_mat Wilson::wilsonEigVec(int n, int m){
   cx_vec eigVal;
   cx_mat eigVec;
@@ -195,10 +206,10 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
     cx_mat eigVec;
     cx_mat wannier0, wannier1;
     eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).col(0));
+    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
     k0[dir[1]] += deltaK;
     eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).col(0));
+    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
     cx_mat wannier2 = wannier1;
 
     u = wannier0.t() * wannier1;
@@ -207,7 +218,7 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
       wannier1 = wannier2;
       k0[dir[1]] = k[dir[1]] + i*deltaK;
       eig_sym(eigVal, eigVec, ham->H(k0));
-      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).col(0));
+      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
       u = u* (wannier1.t() * wannier2);
     }
     u = u * (wannier2.t() * wannier0);
@@ -217,3 +228,15 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
   delete[] k;
   return u;
 }
+
+vec Wilson::nestedWilsonPhases(int * n, int * dir, int m){
+  cx_vec eigVal;
+  vec phase(m/2);
+  eig_gen(eigVal, this->nestedWilsonLoop(n,dir,m));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m/2; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  return sort(phase);
+}
+

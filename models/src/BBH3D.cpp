@@ -160,6 +160,17 @@ void BBH3D::getWannierBands(char * argv0, string fileName, int dir){
   o.wannierBands(*ham, nVec ,10, dir, 4);
 }
 
+void BBH3D::getNestedWannierBands(char * argv0, string fileName){
+  int bC[3] = {1,1,1};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  OData o(argv0, fileName);
+  int dirWilson[2] = {0,1};
+  int nWilson[2] = {20,20};
+
+  o.nestedWannierBands(*ham, 100, 2, nWilson, dirWilson, 4);
+}
+
 /*
    double BBH3D::berryPhase(int n, int dir, double * k0){
    int bC[2] = {1,1};

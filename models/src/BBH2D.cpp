@@ -114,3 +114,14 @@ double BBH2D::getQuadrupoleNested(int nx, int ny, double * k0){
   }
   return quad/(double)n[dir[0]];
 }
+
+void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson){
+  int nPoints[1] = {100};
+  int bC[2] = {2,2};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int size[2] = {nx,ny};
+  ham->setSize(size);
+  OData o(argv0, fileName);
+  o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
+}
