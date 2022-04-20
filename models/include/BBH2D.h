@@ -26,6 +26,7 @@ class BBH2D{
     void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
     //cx_mat getH(double * k = NULL);
     double getQuadrupoleNested(int nx, int ny, double * k0 = NULL);
+    double getQuadrupoleNestedSupercell(int * l, int * n);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
     void test();

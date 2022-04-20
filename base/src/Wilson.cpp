@@ -279,7 +279,7 @@ cx_mat Wilson::wilsonEigVecSupercell(int n, int m, double * k){
 }
 
 
-cx_mat Wilson::nestedWilsonLoopSupercell1(int * n, int * dir, int m, double * k){
+cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int m, int nWBands, double * k){
   double deltaTheta = 2*M_PI/(double)n[dir[1]];
   double * theta = new double[dim];
   double * theta0 = new double[dim];
@@ -299,10 +299,10 @@ cx_mat Wilson::nestedWilsonLoopSupercell1(int * n, int * dir, int m, double * k)
     cx_mat eigVec;
     cx_mat wannier0, wannier1;
     eig_sym(eigVal, eigVec, ham->H(k));
-    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,m/2-1));
+    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,nWBands-1));
     ham->setTwists(theta);
     eig_sym(eigVal, eigVec, ham->H(k));
-    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,m/2-1));
+    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,nWBands-1));
     cx_mat wannier2 = wannier1;
 
     u = wannier0.t() * wannier1;
@@ -312,7 +312,7 @@ cx_mat Wilson::nestedWilsonLoopSupercell1(int * n, int * dir, int m, double * k)
       theta[dir[1]] = theta0[dir[1]] + i*deltaTheta;
       ham->setTwists(theta);
       eig_sym(eigVal, eigVec, ham->H(k));
-      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,m/2-1));
+      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,nWBands-1));
       u = u* (wannier1.t() * wannier2);
     }
     u = u * (wannier2.t() * wannier0);

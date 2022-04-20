@@ -14,13 +14,13 @@ def MultipoleGamma(fname, show: bool, ylab):
     if(show):
         plt.show()
 
-quadrupole = ["QuadrupoleBBH2D_20_20"] 
+quadrupole = ["QuadrupoleBBH2D_20_20","QuadrupoleBBH2D_10_10"] 
 
 octupole = []
 
 for name in quadrupole:
-    MultipoleGamma(name + ".dat", True, r'$q_{xy}$')
+    MultipoleGamma(name + ".dat", False, r'$q_{xy}$')
 
 for name in octupole:
-    MultipoleGamma(name + ".dat", True, r'$o_{xyz}$')
+    MultipoleGamma(name + ".dat", False, r'$o_{xyz}$')
 
