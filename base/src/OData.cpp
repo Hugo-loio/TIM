@@ -230,7 +230,7 @@ void OData::nestedWannierBands(Hamiltonian & ham, int nPoints, int xDir, int * n
   int dim = ham.getNDim();
   double * k = new double[dim];
   for(int i = 0; i < dim; i++){
-    k[i] = -M_PI;
+    k[i] = 0;
   }
   vec phase;
 
@@ -278,7 +278,7 @@ void OData::supercellWannierBands(Hamiltonian & ham, int * nPoints, int nWilson,
     for(int i = 0; i <= nPoints[0]; i++){
       theta[xDir] = -M_PI + i*deltaTheta;
       ham.setTwists(theta);
-      phase = wilson.supercellWilsonPhases(nWilson, nOrbFilled);
+      phase = wilson.wilsonPhasesSupercell(nWilson, nOrbFilled);
       f << theta[xDir] << " " ;
       for(int e = 0; e < size(phase)[0]; e++){
 	f << phase[e] << " ";
@@ -308,7 +308,7 @@ void OData::supercellWannierBands(Hamiltonian & ham, int * nPoints, int nWilson,
       for(int e = 0; e <= nPoints[1]; e++){
 	theta[yDir] = -M_PI + e*deltaThetaY;
 	ham.setTwists(theta);
-	phase = wilson.supercellWilsonPhases(nWilson, nOrbFilled);
+	phase = wilson.wilsonPhasesSupercell(nWilson, nOrbFilled);
 	f << theta[xDir] << " " << theta[yDir] << " " ;
 	for(int j = 0; j < size(phase)[0]; j++){
 	  f << phase[j] << " ";

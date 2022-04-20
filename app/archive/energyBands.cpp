@@ -42,14 +42,11 @@ int main (int arc, char ** argv) {
 
   cout << "3D BBH" << endl;
   BBH3D bbh3D(1,2);
-  double k[3] = {M_PI/2, M_PI/2, M_PI/2};
   bbh3D.getBands(argv[0], "EnergyBandsBBH3D_inter2.dat");
   bbh3D.setInterHop(1);
   bbh3D.getBands(argv[0], "EnergyBandsBBH3D_inter1.dat");
-  //bbh3D.getWannierBands(argv[0], "WannierBandsBBH3D_inter1_x.dat", 0); 
   bbh3D.setInterHop(0.5);
   bbh3D.getBands(argv[0], "EnergyBandsBBH3D_inter0.5.dat");
-  //bbh3D.getWannierBands(argv[0], "WannierBandsBBH3D_inter0.5_x.dat", 0); 
 
   return 0;
 }

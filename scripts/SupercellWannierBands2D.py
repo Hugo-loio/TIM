@@ -22,7 +22,7 @@ names_y = ["SupercellWannierBandsBBH2D_inter2_y"]
 
 
 for name in names_x:
-    SupercellWannierBands(name + ".dat", False, r'$\theta_y$')
+    SupercellWannierBands(name + ".dat", True, r'$\theta_y$')
 
 for name in names_y:
     SupercellWannierBands(name + ".dat", False, r'$\theta_x$')

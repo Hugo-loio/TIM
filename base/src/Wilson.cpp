@@ -99,6 +99,94 @@ vec Wilson::wilsonPhases(int n, int m){
   return sort(phase);
 }
 
+cx_mat Wilson::wilsonEigVec(int n, int m){
+  cx_vec eigVal;
+  cx_mat eigVec;
+  vec phase(m);
+  eig_gen(eigVal, eigVec, this->wilsonLoop(n,m));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  uvec sort = sort_index(phase);
+  cx_mat sortedEigVec(m,m);
+  for(int i = 0; i < m; i++){
+    sortedEigVec.col(i) = eigVec.col(sort[i]);
+  }
+  return sortedEigVec;
+}
+
+cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
+  double deltaK = 2*M_PI/(double)n[dir[1]];
+  double * k = new double[dim];
+  for(int i = 0; i < dim; i++){
+    k[i] = k0[i];
+  }
+  cx_mat u;
+
+  setLoopDir(dir[0]);
+
+  if(ham->getIsSparse()){
+  }
+  else{
+    vec eigVal;
+    cx_mat eigVec;
+    cx_mat wannier0, wannier1;
+    eig_sym(eigVal, eigVec, ham->H(k0));
+    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    k0[dir[1]] += deltaK;
+    eig_sym(eigVal, eigVec, ham->H(k0));
+    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    cx_mat wannier2 = wannier1;
+
+    u = wannier0.t() * wannier1;
+
+    for(int i = 2; i < n[dir[1]]; i++){
+      wannier1 = wannier2;
+      k0[dir[1]] = k[dir[1]] + i*deltaK;
+      eig_sym(eigVal, eigVec, ham->H(k0));
+      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+      u = u* (wannier1.t() * wannier2);
+    }
+    u = u * (wannier2.t() * wannier0);
+  }
+
+  k0[dir[1]] = k[dir[1]];
+  delete[] k;
+  return u;
+}
+
+vec Wilson::nestedWilsonPhases(int * n, int * dir, int m){
+  cx_vec eigVal;
+  vec phase(m/2);
+  eig_gen(eigVal, this->nestedWilsonLoop(n,dir,m));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m/2; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  cout << k0[0] << " " << k0[1] << " " << k0[2] << " " << eigVal[0] << " " << eigVal[1] << endl;
+  return sort(phase);
+}
+
+cx_mat Wilson::nestedWilsonEigVec(int * n, int * dir, int m){
+  cx_vec eigVal;
+  cx_mat eigVec;
+  vec phase(m/2);
+  eig_gen(eigVal, eigVec, this->nestedWilsonLoop(n, dir, m));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m/2; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  uvec sort = sort_index(phase);
+  cx_mat sortedEigVec(m/2,m/2);
+  for(int i = 0; i < m/2; i++){
+    sortedEigVec.col(i) = eigVec.col(sort[i]);
+  }
+  return sortedEigVec;
+}
+
+//Supercell
+
 cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
   double deltaTheta = 2*M_PI/(double)n;
   double * theta = new double[dim];
@@ -152,7 +240,9 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     u = u * (eigVec2.t() * eigVec0);
   }
 
+  ham->setTwists(theta0);
   delete[] theta;
+  delete[] theta0;
   return u;
 }
 
@@ -160,7 +250,7 @@ double Wilson::berryPhaseSupercell(int n, int m, double * k){
   return - log_det(this->wilsonLoopSupercell(n,m,k)).imag();
 }
 
-vec Wilson::supercellWilsonPhases(int n, int m, double * k){
+vec Wilson::wilsonPhasesSupercell(int n, int m, double * k){
   cx_vec eigVal;
   vec phase(m);
   eig_gen(eigVal, this->wilsonLoopSupercell(n,m,k));
@@ -171,11 +261,11 @@ vec Wilson::supercellWilsonPhases(int n, int m, double * k){
   return sort(phase);
 }
 
-cx_mat Wilson::wilsonEigVec(int n, int m){
+cx_mat Wilson::wilsonEigVecSupercell(int n, int m, double * k){
   cx_vec eigVal;
   cx_mat eigVec;
   vec phase(m);
-  eig_gen(eigVal, eigVec, this->wilsonLoop(n,m));
+  eig_gen(eigVal, eigVec, this->wilsonLoopSupercell(n,m,k));
   complex<double> ii(0,1);  
   for(int i = 0; i < m; i++){
     phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
@@ -185,16 +275,19 @@ cx_mat Wilson::wilsonEigVec(int n, int m){
   for(int i = 0; i < m; i++){
     sortedEigVec.col(i) = eigVec.col(sort[i]);
   }
-  //cout << "k: " << k0[0] << " " << k0[1] << "\n " << sortedEigVec << "\n" << eigVec << "\n " << sort << "\n" << phase << endl;
   return sortedEigVec;
 }
 
-cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
-  double deltaK = 2*M_PI/(double)n[dir[1]];
-  double * k = new double[dim];
+
+cx_mat Wilson::nestedWilsonLoopSupercell1(int * n, int * dir, int m, double * k){
+  double deltaTheta = 2*M_PI/(double)n[dir[1]];
+  double * theta = new double[dim];
+  double * theta0 = new double[dim];
   for(int i = 0; i < dim; i++){
-    k[i] = k0[i];
+    theta[i] = ham->getTwists()[i];
+    theta0[i] = ham->getTwists()[i];
   }
+  theta[dir[1]] += deltaTheta;
   cx_mat u;
 
   setLoopDir(dir[0]);
@@ -205,38 +298,29 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
     vec eigVal;
     cx_mat eigVec;
     cx_mat wannier0, wannier1;
-    eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-    k0[dir[1]] += deltaK;
-    eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    eig_sym(eigVal, eigVec, ham->H(k));
+    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,m/2-1));
+    ham->setTwists(theta);
+    eig_sym(eigVal, eigVec, ham->H(k));
+    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,m/2-1));
     cx_mat wannier2 = wannier1;
 
     u = wannier0.t() * wannier1;
 
     for(int i = 2; i < n[dir[1]]; i++){
       wannier1 = wannier2;
-      k0[dir[1]] = k[dir[1]] + i*deltaK;
-      eig_sym(eigVal, eigVec, ham->H(k0));
-      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+      theta[dir[1]] = theta0[dir[1]] + i*deltaTheta;
+      ham->setTwists(theta);
+      eig_sym(eigVal, eigVec, ham->H(k));
+      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,m/2-1));
       u = u* (wannier1.t() * wannier2);
     }
     u = u * (wannier2.t() * wannier0);
   }
 
-  k0[dir[1]] = k[dir[1]];
-  delete[] k;
+  ham->setTwists(theta0);
+
+  delete[] theta;
+  delete[] theta0;
   return u;
 }
-
-vec Wilson::nestedWilsonPhases(int * n, int * dir, int m){
-  cx_vec eigVal;
-  vec phase(m/2);
-  eig_gen(eigVal, this->nestedWilsonLoop(n,dir,m));
-  complex<double> ii(0,1);  
-  for(int i = 0; i < m/2; i++){
-    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
-  }
-  return sort(phase);
-}
-

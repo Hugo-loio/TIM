@@ -125,3 +125,19 @@ void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
   OData o(argv0, fileName);
   o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
 }
+
+void BBH2D::test(){
+  int bC[2] = {1,1};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int n[2] = {40,40};
+  int dir[2] = {0,1};
+  Wilson wilson(ham);
+  double k[2] = {0,0};
+  wilson.setLoopStart(k);
+  cx_vec eigVal;
+  eig_gen(eigVal, wilson.nestedWilsonLoop(n,dir,2));
+
+  complex<double> ii(0,1);  
+  cout << eigVal << " " <<  (-ii*log(eigVal[0])).real()/(2*M_PI) << endl;
+}
