@@ -123,7 +123,7 @@ double BBH2D::getQuadrupoleNestedSupercell(int * l, int * n){
   Wilson wilson(ham);
   int dir[2] = {0,1};
 
-  return abs(log_det(wilson.nestedWilsonLoopSupercell(n, dir, l[0]*l[1]*2, l[1])).imag())/(2*M_PI);
+  return fmod(abs(log_det(wilson.nestedWilsonLoopSupercell(n, dir, l[0]*l[1]*2, l[1])).imag())/(2*M_PI), 1);
 }
 
 void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson){

@@ -14,7 +14,7 @@ def MultipoleGamma(fname, show: bool, ylab):
     if(show):
         plt.show()
 
-quadrupole = ["QuadrupoleBBH2D_20_20","QuadrupoleBBH2D_10_10"] 
+quadrupole = ["QuadrupoleBBH2D_20_20","QuadrupoleBBH2D_10_10", "QuadrupoleBBH2DSupercell_4_4", "QuadrupoleBBH2DSupercellWrong_4_4"] 
 
 octupole = []
 
