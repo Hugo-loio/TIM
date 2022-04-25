@@ -5,6 +5,7 @@
 #include "SSH.h"
 #include "SSH2D.h"
 #include "BBH2D.h"
+#include "BBH3D.h"
 
 using namespace std;
 using namespace arma;
@@ -46,13 +47,19 @@ void scanQuadrupoleBBH2DSupercell(int nPoints, int * l, int * n, char* argv0, st
 
 int main (int arc, char ** argv) {
   cout << "\n2D BBH" << endl;
-  scanQuadrupoleBBH2D(100, 20, 20, argv[0], "QuadrupoleBBH2D_20_20.dat");
-  scanQuadrupoleBBH2D(100, 10, 10, argv[0], "QuadrupoleBBH2D_10_10.dat");
+  //scanQuadrupoleBBH2D(100, 20, 20, argv[0], "QuadrupoleBBH2D_20_20.dat");
+  //scanQuadrupoleBBH2D(100, 10, 10, argv[0], "QuadrupoleBBH2D_10_10.dat");
 
   cout << "Supercell" << endl;
   int l[2] = {4,4};
   int n[2] = {10,10};
-  scanQuadrupoleBBH2DSupercell(100, l, n, argv[0], "QuadrupoleBBH2DSupercell_4_4.dat");
+  //scanQuadrupoleBBH2DSupercell(100, l, n, argv[0], "QuadrupoleBBH2DSupercell_4_4.dat");
+
+  cout << "3D BBH" << endl;
+  BBH3D bbh3D(2,1);
+  cout << "Intracell 2: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
+  bbh3D.setIntraHop(0.5);
+  cout << "Intracell 0.5: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
 
   return 0;
 }

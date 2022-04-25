@@ -173,7 +173,7 @@ cx_mat Wilson::nestedWilsonEigVec(int * n, int * dir, int m){
   cx_mat eigVec;
   vec phase(m/2);
   eig_gen(eigVal, eigVec, this->nestedWilsonLoop(n, dir, m));
-  complex<double> ii(0,1);  
+  complex<double> ii(0,1);
   for(int i = 0; i < m/2; i++){
     phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
   }
@@ -183,6 +183,52 @@ cx_mat Wilson::nestedWilsonEigVec(int * n, int * dir, int m){
     sortedEigVec.col(i) = eigVec.col(sort[i]);
   }
   return sortedEigVec;
+}
+
+cx_mat Wilson::nestedNestedWilsonLoop(int * n, int * dir, int m){
+  double deltaK = 2*M_PI/(double)n[dir[2]];
+  double * k = new double[dim];
+  for(int i = 0; i < dim; i++){
+    k[i] = k0[i];
+  }
+  cx_mat u;
+
+  setLoopDir(dir[0]);
+
+  if(ham->getIsSparse()){
+  }
+  else{
+    vec eigVal;
+    cx_mat eigVec;
+    cx_mat wannier;
+    cx_mat nestedW0, nestedW1;
+    eig_sym(eigVal, eigVec, ham->H(k0));
+    wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    nestedW0 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m)).cols(0,m/4-1);
+    k0[dir[2]] += deltaK;
+    eig_sym(eigVal, eigVec, ham->H(k0));
+    wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    nestedW1 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m)).cols(0,m/4-1);
+    cx_mat nestedW2 = nestedW1;
+
+    u = nestedW0.t() * nestedW1;
+
+    for(int i = 2; i < n[dir[2]]; i++){
+      nestedW1 = nestedW2;
+      k0[dir[2]] = k[dir[2]] + i*deltaK;
+      eig_sym(eigVal, eigVec, ham->H(k0));
+      wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+      nestedW2 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m)).cols(0,m/4-1);
+      u = u* (nestedW1.t() * nestedW2);
+    }
+    u = u * (nestedW2.t() * nestedW0);
+
+    cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVec(n[dir[0]], m)) << " nloop: " << size(nestedWilsonEigVec(n,dir,m)) << " nnloop: " << size(u) << endl;
+  }
+
+  k0[dir[2]] = k[dir[2]];
+  delete[] k;
+  return u;
 }
 
 //Supercell

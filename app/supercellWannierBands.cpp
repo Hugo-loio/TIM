@@ -25,7 +25,7 @@ int main (int arc, char ** argv) {
   // bbh2D.getSupercellWannierBands(argv[0], "SupercellWannierBandsBBH2D_inter1_x.dat", 5, 5, 0);
 
   bbh2D.setInterHop(0.5);
-  //bbh2D.getSupercellWannierBands(argv[0], "SupercellWannierBandsBBH2D_inter0.5_x.dat", 5, 5, 0);
+  bbh2D.getSupercellWannierBands(argv[0], "SupercellWannierBandsBBH2D_inter0.5_x.dat", 4, 4, 0);
 
   return 0;
 }

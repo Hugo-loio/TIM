@@ -171,6 +171,24 @@ void BBH3D::getNestedWannierBands(char * argv0, string fileName){
   o.nestedWannierBands(*ham, 100, 2, nWilson, dirWilson, 4);
 }
 
+double BBH3D::getOctupoleNested(int nx, int ny, int nz, double * k0){
+  int bC[3] = {1,1,1};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int n[3] = {nx,ny,nz};
+  int dir[3] = {0,1,2};
+  Wilson wilson(ham);
+  double k[3] = {0,0,0};
+  if(k0 != NULL){
+    wilson.setLoopStart(k0);
+    k[0] = k0[0];
+    k[1] = k0[1];
+    k[2] = k0[2];
+  }
+
+  return fmod(abs(log_det(wilson.nestedNestedWilsonLoop(n, dir, 4)).imag())/(2*M_PI), 1);
+}
+
 /*
    double BBH3D::berryPhase(int n, int dir, double * k0){
    int bC[2] = {1,1};

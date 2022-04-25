@@ -31,6 +31,8 @@ class OData{
 
     void supercellWannierBands(Hamiltonian & ham, int * nPoints, int nWilson, int dirWilson, int nOrbFilled);
 
+    void supercellNestedWannierBands(Hamiltonian & ham, int nPoints, int xDir, int * nWilson, int * dirWilson, int nOrbFilled);
+
   private:
     ofstream f;
 };

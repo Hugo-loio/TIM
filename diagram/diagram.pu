@@ -35,8 +35,9 @@ package "base" {
   }
 
   class OData{
-    + eBands2D(Hamiltonian &, ...)
-    + eBands3D(Hamiltonian &, ...)
+    + void eBands2D(Hamiltonian &, ...)
+    + void chargeDensity(Hamiltonian &, ...)
+    + void wannierBands(Hamilonian &, ...)
   }
 
   abstract class Hamiltonian{
@@ -48,9 +49,10 @@ package "base" {
 class Wilson {
   + Wilson(Hamiltonian *)
   + cx_mat wilsonLoop()
-  + double berryPhase()
+  + cx_mat nestedWilsonLoop()
+  + cx_mat nestedNestedWilsonLoop()
   + cx_mat wilsonLoopSupercell()
-  + double berryPhaseSupercell()
+  + cx_mat nestedWilsonLoopSupercell()
 }
 
 class DOS #yellow{
@@ -65,14 +67,6 @@ class LocalizationStats #yellow{
 class TBCleanH{
   + TBCleanH(TBModel)
   + void setSparse()
-}
-
-class BoundaryWilsonH #yellow{
-  + BoundaryWilsonH(Hamiltonian *, int dir, int m)
-}
-
-class BoundarySupercellWilsonH #yellow{
-  + BoundarySupercellWilsonH(Hamiltonian *, int dir)
 }
 
 class TBDisorderedH #yellow{
@@ -92,8 +86,6 @@ OData o..Hamiltonian
 
 Hamiltonian <|-- TBCleanH
 Hamiltonian <|-- TBDisorderedH
-Hamiltonian <|-- BoundaryWilsonH
-Hamiltonian <|-- BoundarySupercellWilsonH
 Hamiltonian <|-- BoundaryGreenH
 
 TBCleanH o-- TBModel
