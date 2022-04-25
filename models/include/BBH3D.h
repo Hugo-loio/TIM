@@ -27,6 +27,7 @@ class BBH3D{
     void getNestedWannierBands(char * argv0, string fileName);
     cx_mat getH(double * k = NULL);
     double getOctupoleNested(int nx, int ny, int nz, double * k0 = NULL);
+    void getSupercellNestedWannierBands(char * argv0, string fileName, int * size);
   private:
     TBModel * model;
     TBCleanH * ham;

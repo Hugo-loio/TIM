@@ -323,3 +323,33 @@ void OData::supercellWannierBands(Hamiltonian & ham, int * nPoints, int nWilson,
 
   delete[] theta;
 }
+
+void OData::supercellNestedWannierBands(Hamiltonian & ham, int nPoints, int xDir, int * nWilson, int * dirWilson, int * nOrbFilled){
+  Wilson wilson(&ham);
+  int dim = ham.getNDim();
+  double * theta = new double[dim];
+  for(int i = 0; i < dim; i++){
+    theta[i] = ham.getTwists()[i];
+  }
+  vec phase(nOrbFilled[1]);
+
+
+  if(dim == 3){
+    double deltaTheta = 2*M_PI/(double)nPoints;
+    for(int i = 0; i <= nPoints; i++){
+      theta[xDir] = -M_PI + i*deltaTheta;
+      ham.setTwists(theta);
+      phase = wilson.nestedWilsonPhasesSupercell(nWilson, dirWilson, nOrbFilled);
+      f << theta[xDir] << " " ;
+      for(int e = 0; e < size(phase)[0]; e++){
+	f << phase[e] << " ";
+      }
+      f << endl;
+    }
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << "\nError: can't produce Wannier bands for a system with " << dim << "dimensions." << endl;
+  }
+
+  delete[] theta;
+}

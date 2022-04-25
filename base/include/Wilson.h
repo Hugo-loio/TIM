@@ -30,7 +30,9 @@ class Wilson{
     double berryPhaseSupercell(int n, int m, double * k = NULL);
     vec wilsonPhasesSupercell(int n, int m, double * k = NULL);
     cx_mat wilsonEigVecSupercell(int n, int m, double * k = NULL);
-    cx_mat nestedWilsonLoopSupercell(int * n, int * dir, int m, int nWBands, double * k = NULL);
+    //n[i] theta intervals and m[i] filled states in direction dir[i], dir[i] is order in which the Wilson loops are taken
+    cx_mat nestedWilsonLoopSupercell(int * n, int * dir, int * m, double * k = NULL);
+    vec nestedWilsonPhasesSupercell(int * n, int * dir, int * m, double * k = NULL);
 
   private:
     double * k0;

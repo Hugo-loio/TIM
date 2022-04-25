@@ -325,7 +325,7 @@ cx_mat Wilson::wilsonEigVecSupercell(int n, int m, double * k){
 }
 
 
-cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int m, int nWBands, double * k){
+cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int * m, double * k){
   double deltaTheta = 2*M_PI/(double)n[dir[1]];
   double * theta = new double[dim];
   double * theta0 = new double[dim];
@@ -345,10 +345,10 @@ cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int m, int nWBands,
     cx_mat eigVec;
     cx_mat wannier0, wannier1;
     eig_sym(eigVal, eigVec, ham->H(k));
-    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,nWBands-1));
+    wannier0 = (eigVec.cols(0,m[0]-1))*(wilsonEigVecSupercell(n[dir[0]],m[0],k).cols(0,m[1]-1));
     ham->setTwists(theta);
     eig_sym(eigVal, eigVec, ham->H(k));
-    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,nWBands-1));
+    wannier1 = (eigVec.cols(0,m[0]-1))*(wilsonEigVecSupercell(n[dir[0]],m[0],k).cols(0,m[1]-1));
     cx_mat wannier2 = wannier1;
 
     u = wannier0.t() * wannier1;
@@ -358,7 +358,7 @@ cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int m, int nWBands,
       theta[dir[1]] = theta0[dir[1]] + i*deltaTheta;
       ham->setTwists(theta);
       eig_sym(eigVal, eigVec, ham->H(k));
-      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVecSupercell(n[dir[0]],m,k).cols(0,nWBands-1));
+      wannier2 = (eigVec.cols(0,m[0]-1))*(wilsonEigVecSupercell(n[dir[0]],m[0],k).cols(0,m[1]-1));
       u = u* (wannier1.t() * wannier2);
     }
     u = u * (wannier2.t() * wannier0);
@@ -369,4 +369,15 @@ cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int m, int nWBands,
   delete[] theta;
   delete[] theta0;
   return u;
+}
+
+vec Wilson::nestedWilsonPhasesSupercell(int * n, int * dir, int * m, double * k){
+  cx_vec eigVal;
+  vec phase(m[1]);
+  eig_gen(eigVal, this->nestedWilsonLoopSupercell(n,dir,m,k));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m[1]; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  return sort(phase);
 }

@@ -58,6 +58,7 @@ int main (int arc, char ** argv) {
   cout << "3D BBH" << endl;
   BBH3D bbh3D(2,1);
   cout << "Intracell 2: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
+  cout << "Intracell 2: " << bbh3D.getOctupoleNested(5, 5, 5) << endl;
   bbh3D.setIntraHop(0.5);
   cout << "Intracell 0.5: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
 
