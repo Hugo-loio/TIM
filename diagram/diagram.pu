@@ -53,6 +53,7 @@ class Wilson {
   + cx_mat nestedNestedWilsonLoop()
   + cx_mat wilsonLoopSupercell()
   + cx_mat nestedWilsonLoopSupercell()
+  + cx_mat nestedNestedWilsonLoopSupercell()
 }
 
 class DOS #yellow{

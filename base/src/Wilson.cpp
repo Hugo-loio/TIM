@@ -204,11 +204,11 @@ cx_mat Wilson::nestedNestedWilsonLoop(int * n, int * dir, int m){
     cx_mat nestedW0, nestedW1;
     eig_sym(eigVal, eigVec, ham->H(k0));
     wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-    nestedW0 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m)).cols(0,m/4-1);
+    nestedW0 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m).cols(0,m/4-1));
     k0[dir[2]] += deltaK;
     eig_sym(eigVal, eigVec, ham->H(k0));
     wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-    nestedW1 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m)).cols(0,m/4-1);
+    nestedW1 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m).cols(0,m/4-1));
     cx_mat nestedW2 = nestedW1;
 
     u = nestedW0.t() * nestedW1;
@@ -218,7 +218,7 @@ cx_mat Wilson::nestedNestedWilsonLoop(int * n, int * dir, int m){
       k0[dir[2]] = k[dir[2]] + i*deltaK;
       eig_sym(eigVal, eigVec, ham->H(k0));
       wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-      nestedW2 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m)).cols(0,m/4-1);
+      nestedW2 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m).cols(0,m/4-1));
       u = u* (nestedW1.t() * nestedW2);
     }
     u = u * (nestedW2.t() * nestedW0);
@@ -371,6 +371,23 @@ cx_mat Wilson::nestedWilsonLoopSupercell(int * n, int * dir, int * m, double * k
   return u;
 }
 
+cx_mat Wilson::nestedWilsonEigVecSupercell(int * n, int * dir, int * m, double * k){
+  cx_vec eigVal;
+  cx_mat eigVec;
+  vec phase(m[1]);
+  eig_gen(eigVal, eigVec, this->nestedWilsonLoopSupercell(n,dir,m,k));
+  complex<double> ii(0,1);  
+  for(int i = 0; i < m[1]; i++){
+    phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
+  }
+  uvec sort = sort_index(phase);
+  cx_mat sortedEigVec(m[1],m[1]);
+  for(int i = 0; i < m[1]; i++){
+    sortedEigVec.col(i) = eigVec.col(sort[i]);
+  }
+  return sortedEigVec;
+}
+
 vec Wilson::nestedWilsonPhasesSupercell(int * n, int * dir, int * m, double * k){
   cx_vec eigVal;
   vec phase(m[1]);
@@ -380,4 +397,56 @@ vec Wilson::nestedWilsonPhasesSupercell(int * n, int * dir, int * m, double * k)
     phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
   }
   return sort(phase);
+}
+
+cx_mat Wilson::nestedNestedWilsonLoopSupercell(int * n, int * dir, int * m, double * k){
+  double deltaTheta = 2*M_PI/(double)n[dir[2]];
+  double * theta = new double[dim];
+  double * theta0 = new double[dim];
+  for(int i = 0; i < dim; i++){
+    theta[i] = ham->getTwists()[i];
+    theta0[i] = ham->getTwists()[i];
+  }
+  theta[dir[1]] += deltaTheta;
+  cx_mat u;
+
+  setLoopDir(dir[0]);
+
+  if(ham->getIsSparse()){
+  }
+  else{
+    vec eigVal;
+    cx_mat eigVec;
+    cx_mat wannier;
+    cx_mat nestedW0, nestedW1;
+    eig_sym(eigVal, eigVec, ham->H(k));
+    wannier = (eigVec.cols(0,m[0]-1))*(wilsonEigVecSupercell(n[dir[0]],m[0],k).cols(0,m[1]-1));
+    nestedW0 = (wannier.cols(0,m[1]-1))*(nestedWilsonEigVecSupercell(n,dir,m,k).cols(0,m[2]-1));
+    ham->setTwists(theta);
+    eig_sym(eigVal, eigVec, ham->H(k));
+    wannier = (eigVec.cols(0,m[0]-1))*(wilsonEigVecSupercell(n[dir[0]],m[0],k).cols(0,m[1]-1));
+    nestedW1 = (wannier.cols(0,m[1]-1))*(nestedWilsonEigVecSupercell(n,dir,m,k).cols(0,m[2]-1));
+    cx_mat nestedW2 = nestedW1;
+
+    u = nestedW0.t() * nestedW1;
+
+    for(int i = 2; i < n[dir[2]]; i++){
+      nestedW1 = nestedW2;
+      theta[dir[2]] = theta0[dir[2]] + i*deltaTheta;
+      ham->setTwists(theta);
+      eig_sym(eigVal, eigVec, ham->H(k));
+      wannier = (eigVec.cols(0,m[0]-1))*(wilsonEigVecSupercell(n[dir[0]],m[0],k).cols(0,m[1]-1));
+      nestedW2 = (wannier.cols(0,m[1]-1))*(nestedWilsonEigVecSupercell(n,dir,m,k).cols(0,m[2]-1));
+      u = u* (nestedW1.t() * nestedW2);
+    }
+    u = u * (nestedW2.t() * nestedW0);
+
+    cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVecSupercell(n[dir[0]], m[0],k)) << " nloop: " << size(nestedWilsonEigVecSupercell(n,dir,m,k)) << " nnloop: " << size(u) << endl;
+  }
+
+  ham->setTwists(theta0);
+
+  delete[] theta;
+  delete[] theta0;
+  return u;
 }

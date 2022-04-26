@@ -51,16 +51,22 @@ int main (int arc, char ** argv) {
   //scanQuadrupoleBBH2D(100, 10, 10, argv[0], "QuadrupoleBBH2D_10_10.dat");
 
   cout << "Supercell" << endl;
-  int l[2] = {4,4};
-  int n[2] = {10,10};
-  //scanQuadrupoleBBH2DSupercell(100, l, n, argv[0], "QuadrupoleBBH2DSupercell_4_4.dat");
+  int l2[2] = {4,4};
+  int n2[2] = {10,10};
+  //scanQuadrupoleBBH2DSupercell(100, l2, n2, argv[0], "QuadrupoleBBH2DSupercell_4_4.dat");
 
   cout << "3D BBH" << endl;
   BBH3D bbh3D(2,1);
-  cout << "Intracell 2: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
-  cout << "Intracell 2: " << bbh3D.getOctupoleNested(5, 5, 5) << endl;
+  int l3[3] = {2,2,2};
+  int n3[3] = {5,5,5};
+  cout << "Intracell 2: " << endl;
+  cout << "Octupole k: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
+  cout << "Octupole k: " << bbh3D.getOctupoleNested(5, 5, 5) << endl;
+  cout << "Octupole supercell: " << bbh3D.getOctupoleNestedSupercell(l3, n3) << endl;
   bbh3D.setIntraHop(0.5);
-  cout << "Intracell 0.5: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
+  cout << "Intracell 0.5: " << endl;
+  cout << "Octupole k: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
+  cout << "Octupole supercell: " << bbh3D.getOctupoleNestedSupercell(l3, n3) << endl;
 
   return 0;
 }

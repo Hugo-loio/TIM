@@ -17,12 +17,12 @@ def SupercellWannierBands(fname, show: bool, xlab: str):
     if(show):
         plt.show()
 
-names_x = ["SupercellWannierBandsBBH2D_inter2_x", "SupercellWannierBandsBBH2D_inter1_x", "SupercellWannierBandsBBH2D_inter0.5_x"] 
+names_x = ["SupercellWannierBandsBBH2D_inter2_x", "SupercellWannierBandsBBH2D_inter1.01_x","SupercellWannierBandsBBH2D_inter1_x", "SupercellWannierBandsBBH2D_inter0.99_x", "SupercellWannierBandsBBH2D_inter0.5_x"] 
 names_y = ["SupercellWannierBandsBBH2D_inter2_y"] 
 
 
 for name in names_x:
-    SupercellWannierBands(name + ".dat", True, r'$\theta_y$')
+    SupercellWannierBands(name + ".dat", False, r'$\theta_y$')
 
 for name in names_y:
     SupercellWannierBands(name + ".dat", False, r'$\theta_x$')
