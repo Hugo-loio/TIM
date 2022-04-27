@@ -189,6 +189,29 @@ double BBH3D::getOctupoleNested(int nx, int ny, int nz, double * k0){
   return fmod(abs(log_det(wilson.nestedNestedWilsonLoop(n, dir, 4)).imag())/(2*M_PI), 1);
 }
 
+void BBH3D::getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n){
+  int bC[3] = {2,2,2};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setSize(l);
+  OData o(argv0, fileName);
+  int m[2] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2};
+  int dir[2] = {0,1};
+  o.supercellNestedWannierBands(*ham, 100, 2, n, dir, m);
+}
+
+double BBH3D::getOctupoleNestedSupercell(int * l, int * n){
+  int bc[3] = {2,2,2};
+  ham->setBC(bc);
+  ham->setSize(l);
+  ham->setSparse(false);
+  Wilson wilson(ham);
+  int dir[3] = {0,1,2};
+  int m[3] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2, l[2]};
+
+  return fmod(abs(log_det(wilson.nestedNestedWilsonLoopSupercell(n, dir, m)).imag())/(2*M_PI), 1);
+}
+
 /*
    double BBH3D::berryPhase(int n, int dir, double * k0){
    int bC[2] = {1,1};
