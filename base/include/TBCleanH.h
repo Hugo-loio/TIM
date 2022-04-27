@@ -15,8 +15,6 @@ class TBCleanH : public Hamiltonian{
 
     //Set boundary conditions for each direction: 0 for open, 1 for periodic (goes to reciprocal space), 2 for twisted
     void setBC(int * bC);
-    //nDim twist angle array used in directions with twisted boundary conditions
-    //    void setTwists(double * theta);
     //nDim array that specifies the number of unit cells in each direction (l[i] > 0)    
     void setSize(int * l);
 

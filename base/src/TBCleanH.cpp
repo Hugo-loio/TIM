@@ -67,14 +67,6 @@ void TBCleanH::setSize(int * l){
   calcN();
 }
 
-/*
-   void TBCleanH::setTwists(double * theta){
-   for(int i = 0; i < nDim; i++){
-   this->theta[i] = theta[i];
-   }
-   }
-   */
-
 void TBCleanH::setBC(int * bC){
   nRDim = 0;
   for(int i = 0; i < nDim; i++){
