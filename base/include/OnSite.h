@@ -13,7 +13,7 @@ class OnSite{
     ~OnSite();
 
     const int & getNOrb(){return nOrb;};
-    const complex<double> & getEn(){return en;};
+    complex<double> getEn(){return en;};
     void setEn(complex<double> en){this->en = en;};
 
   private:

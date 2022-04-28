@@ -1,47 +1,17 @@
 #include <iostream>
 #include <armadillo>
 #include "OData.h"
-#include "SSH.h"
-#include "SSH2D.h"
-#include "BBH2D.h"
-#include "BBH3D.h"
+#include "DisorderFunctions.h"
 
 using namespace std;
 using namespace arma;
 
 int main (int arc, char ** argv) {
-  cout << "2D BBH" << endl;
-  BBH2D bbh2D(1,2);
-  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter2.dat", 20, 20, 2);
-  bbh2D.setInterHop(1);
-  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter1.dat", 20, 20, 2);
-  bbh2D.setInterHop(0.5);
-  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.5.dat", 20, 20, 2);
+  for(int i = 0; i < 100; i++){
+    cout << uniform(0,1) << endl;
+  }
 
-  bbh2D.setOnSite(1e-3);
-  bbh2D.setInterHop(2);
-  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter2_delta.dat", 20, 20, 2);
-  bbh2D.setInterHop(1);
-  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter1_delta.dat", 20, 20, 2);
-  bbh2D.setInterHop(0.5);
-  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.5_delta.dat", 20, 20, 2);
-
-  cout << "3D BBH" << endl;
-  BBH3D bbh3D(1,2);
-  int l[3] = {8,8,8};
-  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter2.dat", l, 4);
-  bbh3D.setInterHop(1);
-  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter1.dat", l, 4);
-  bbh3D.setInterHop(0.5);
-  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter0.5.dat", l, 4);
-
-  bbh3D.setOnSite(1e-3);
-  bbh3D.setInterHop(2);
-  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter2_delta.dat", l, 4);
-  bbh3D.setInterHop(1);
-  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter1_delta.dat", l, 4);
-  bbh3D.setInterHop(0.5);
-  bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter0.5_delta.dat", l, 4);
-
+  int * a = new int[0];
+  delete[] a;
   return 0;
 }

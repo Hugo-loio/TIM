@@ -25,7 +25,7 @@ class TBCleanH : public Hamiltonian{
     //Whether the user prefers Sparse matrices or not
     void setSparse(bool);
 
-  private:
+  protected:
     //Information on TB model
     TBModel model;
     int nOrb;
@@ -53,6 +53,7 @@ class TBCleanH : public Hamiltonian{
     //Meshes of unit cells with nDim spatial indexes and one collapsed 1D index 
     int ** nBulk;
     int ** nBound;
+    void delete_meshes();
 
     //Get integer index corresponding to unit cell number vector
     int getN(int * n);

@@ -39,17 +39,33 @@ TBCleanH::TBCleanH(TBModel model) : model(model), Hamiltonian(model.getNDim()){
     }
   } 
   calcVol();
-  calcN();
 }
 
 TBCleanH::~TBCleanH(){
   delete[] bC;
   delete[] l;
   delete[] lAccum;
+  for(int i = 0; i < nDim; i++){
+    delete[] lBound[i];
+  }
   delete[] lBound;
   delete[] rIndex;
-  delete[] nBound;
-  delete[] nBulk;
+  delete_meshes();
+}
+
+void TBCleanH::delete_meshes(){
+  if(nBulk != NULL){
+    for(int i = 0; i < vBulk; i++){
+      delete nBulk[i];
+    }
+    delete[] nBulk;
+  }
+  if(nBound != NULL){
+    for(int i = 0; i < vBound; i++){
+      delete nBound[i];
+    }
+    delete[] nBound;
+  }
 }
 
 void TBCleanH::setSparse(bool val){
@@ -64,7 +80,6 @@ void TBCleanH::setSize(int * l){
   }
   checkSize();
   calcVol();
-  calcN();
 }
 
 void TBCleanH::setBC(int * bC){
@@ -90,7 +105,6 @@ void TBCleanH::setBC(int * bC){
   lAccum = new int[nRDim];
 
   calcVol();
-  calcN();
 }
 
 void TBCleanH::checkSize(){
@@ -112,6 +126,9 @@ void TBCleanH::checkSize(){
 }
 
 void TBCleanH::calcVol(){
+  //Delete meshes before calculating volumes
+  delete_meshes();
+
   //Calculate lAccum
   for(int i = 0; i < nRDim; i++){
     lAccum[i] = 1;
@@ -133,6 +150,9 @@ void TBCleanH::calcVol(){
   if(nRDim != 0){
     vBound = lAccum[nRDim - 1] - vBulk;
   }
+
+  //Calculate meshes
+  calcN();
 }
 
 int TBCleanH::getN(int * n){
@@ -149,13 +169,6 @@ int TBCleanH::getN(int * n){
 }
 
 void TBCleanH::calcN(){
-  if(nBulk != NULL){
-    delete[] nBulk;
-  }
-  if(nBound != NULL){
-    delete[] nBound;
-  }
-
   nBulk = new int * [vBulk];
   nBound = new int * [vBound];
 
@@ -163,6 +176,7 @@ void TBCleanH::calcN(){
   for(int i = 0; i < nRDim; i++){
     point[i] = 0;
   }
+
 
   int e,j;
   int countBulk = 0;
@@ -201,6 +215,7 @@ void TBCleanH::calcN(){
     nBulk[0][0] = 0;
     nBulk[0][1] = 0;
   }
+  delete[] point;
 }
 
 void TBCleanH::nextPoint(int depth, int * point, bool up){
