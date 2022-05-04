@@ -1,5 +1,5 @@
-#ifndef DISORDEREDBBH2D_H
-#define DISORDEREDBBH2D_H
+#ifndef DISORDEREDSOTAI_H
+#define DISORDEREDSOTAI_H
 
 #include "TBDisorderedH.h"
 #include "DisorderFunctions.h"
@@ -7,18 +7,14 @@
 
 using namespace std;
 
-class DisorderedBBH2D{
+class DisorderedSOTAI{
   public:
-    //Intracell hopping t1, intercell hopping t2
-    DisorderedBBH2D(double t1 = 1, double t2 = 2, double delta = 0);
-    ~DisorderedBBH2D();
+    DisorderedSOTAI(double m);
+    ~DisorderedSOTAI();
 
-    void setOnSite(double);
-    void setIntraHop(double);
-    void setInterHop(double);
-    //void setSparse(bool);
+    void setM(double);
 
-    void setProbDisorder(double);
+    void setW(double);
     void generateDisorder();
 
     void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);

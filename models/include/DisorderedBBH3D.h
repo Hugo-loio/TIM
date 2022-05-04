@@ -1,5 +1,5 @@
-#ifndef DISORDEREDBBH2D_H
-#define DISORDEREDBBH2D_H
+#ifndef DISORDEREDBBH3D_H
+#define DISORDEREDBBH3D_H
 
 #include "TBDisorderedH.h"
 #include "DisorderFunctions.h"
@@ -7,11 +7,11 @@
 
 using namespace std;
 
-class DisorderedBBH2D{
+class DisorderedBBH3D{
   public:
     //Intracell hopping t1, intercell hopping t2
-    DisorderedBBH2D(double t1 = 1, double t2 = 2, double delta = 0);
-    ~DisorderedBBH2D();
+    DisorderedBBH3D(double t1 = 1, double t2 = 2, double delta = 0);
+    ~DisorderedBBH3D();
 
     void setOnSite(double);
     void setIntraHop(double);
@@ -22,9 +22,9 @@ class DisorderedBBH2D{
     void generateDisorder();
 
     void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
-    double getQuadrupoleNestedSupercell(int * l, int * n);
 
-    void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
+    double getOctupoleNestedSupercell(int * l, int * n);
+    void getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n);
 
   private:
     TBModel * model;

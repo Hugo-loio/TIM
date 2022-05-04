@@ -70,7 +70,7 @@ class TBCleanH{
   + void setSparse()
 }
 
-class TBDisorderedH #yellow{
+class TBDisorderedH{
   + TBDisorderedH(TBModel)
   + void setSparse()
 }
@@ -86,7 +86,7 @@ LocalizationStats o--Hamiltonian
 OData o..Hamiltonian
 
 Hamiltonian <|-- TBCleanH
-Hamiltonian <|-- TBDisorderedH
+TBCleanH <|-- TBDisorderedH
 Hamiltonian <|-- BoundaryGreenH
 
 TBCleanH o-- TBModel
