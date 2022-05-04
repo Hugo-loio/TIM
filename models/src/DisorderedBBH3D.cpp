@@ -42,7 +42,7 @@ DisorderedBBH3D::DisorderedBBH3D(double t1, double t2, double delta){
   model->setOnSite(5,-delta);
   model->setOnSite(6,delta);
   model->setOnSite(7,delta);
-  ham = new TBCleanH(*model);
+  ham = new TBDisorderedH(*model);
 };
 
 DisorderedBBH3D::~DisorderedBBH3D(){
@@ -60,7 +60,7 @@ void DisorderedBBH3D::setIntraHop(double t1){
     }
   }
   delete ham;
-  ham = new TBCleanH(*model);
+  ham = new TBDisorderedH(*model);
 }
 
 void DisorderedBBH3D::setInterHop(double t2){
@@ -73,7 +73,7 @@ void DisorderedBBH3D::setInterHop(double t2){
     }
   }
   delete ham;
-  ham = new TBCleanH(*model);
+  ham = new TBDisorderedH(*model);
 }
 
 void DisorderedBBH3D::setOnSite(double delta){
@@ -88,45 +88,43 @@ void DisorderedBBH3D::setOnSite(double delta){
 }
 
 
-void DisorderedBBH2D::setProbDisorder(double p){
-  ham->setHopDisorderFunction(&probDisorder2D);
+void DisorderedBBH3D::setProbDisorder(double p){
+  ham->setHopDisorderFunction(&probDisorder3D);
   ham->setHopDisorderWeight(p);
 }
 
-void DisorderedBBH2D::generateDisorder(){
+void DisorderedBBH3D::generateDisorder(){
   ham->generateDisorder();
 }
 
-void DisorderedBBH2D::getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled){
-  int bC[2] = {0,0};
+void DisorderedBBH3D::getChargeDensity(char * argv0, string fileName, int * l, int nOrbFilled){
+  int bC[3] = {0,0,0};
   ham->setBC(bC);
   ham->setSparse(false);
-  int l[2] = {nx, ny};
   ham->setSize(l);
   OData o(argv0, fileName);
-  o.chargeDensity(*ham, 4, nOrbFilled, l);
+  o.chargeDensity(*ham, 8, nOrbFilled, l);
 }
 
-double DisorderedBBH2D::getQuadrupoleNestedSupercell(int * l, int * n){
-  int bc[2] = {2,2};
+void DisorderedBBH3D::getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n){
+  int bC[3] = {2,2,2};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setSize(l);
+  OData o(argv0, fileName);
+  int m[2] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2};
+  int dir[2] = {0,1};
+  o.supercellNestedWannierBands(*ham, 100, 2, n, dir, m);
+}
+
+double DisorderedBBH3D::getOctupoleNestedSupercell(int * l, int * n){
+  int bc[3] = {2,2,2};
   ham->setBC(bc);
   ham->setSize(l);
   ham->setSparse(false);
   Wilson wilson(ham);
-  int dir[2] = {0,1};
-  int m[2] = {l[0]*l[1]*2, l[1]};
+  int dir[3] = {0,1,2};
+  int m[3] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2, l[2]};
 
-
-  return fmod(abs(log_det(wilson.nestedWilsonLoopSupercell(n, dir, m)).imag())/(2*M_PI), 1);
-}
-
-void DisorderedBBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson){
-  int nPoints[1] = {100};
-  int bC[2] = {2,2};
-  ham->setBC(bC);
-  ham->setSparse(false);
-  int size[2] = {nx,ny};
-  ham->setSize(size);
-  OData o(argv0, fileName);
-  o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
+  return fmod(abs(log_det(wilson.nestedNestedWilsonLoopSupercell(n, dir, m)).imag())/(2*M_PI), 1);
 }

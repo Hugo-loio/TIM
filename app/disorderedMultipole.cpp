@@ -1,5 +1,7 @@
 #include <iostream>
 #include "DisorderedBBH2D.h"
+#include "DisorderedBBH3D.h"
+#include "DisorderedSOTAI.h"
 
 using namespace std;
 

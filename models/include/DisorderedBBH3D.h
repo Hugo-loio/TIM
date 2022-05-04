@@ -21,7 +21,7 @@ class DisorderedBBH3D{
     void setProbDisorder(double);
     void generateDisorder();
 
-    void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
+    void getChargeDensity(char * argv0, string fileName, int * l, int nOrbFilled);
 
     double getOctupoleNestedSupercell(int * l, int * n);
     void getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n);

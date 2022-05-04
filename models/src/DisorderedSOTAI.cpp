@@ -13,11 +13,69 @@ DisorderedSOTAI::DisorderedSOTAI(double m){
   model->setHop(1,3, n1, ii*m);
   model->setHop(2,3, n1, -ii*m);
   //Intercell hoppings
-  model->setHop(0,2, n2, t2);
-  model->setHop(3,1, n2, t2);
-  model->setHop(0,3, n3, t2);
-  model->setHop(2,1, n3, -t2);
+  model->setHop(2,0, n2, 1);
+  model->setHop(3,1, n2, -1);
+  model->setHop(1,0, n3, 1);
+  model->setHop(3,2, n3, 1);
   ham = new TBDisorderedH(*model);
+}
+
+DisorderedSOTAI::~DisorderedSOTAI(){
+  delete model;
+  delete ham;
+}
+
+void DisorderedSOTAI::setM(double m){
+  complex<double> ii(0,1);
+  model->getHop(0).setHop(-ii*m);
+  model->getHop(1).setHop(-ii*m);
+  model->getHop(2).setHop(ii*m);
+  model->getHop(3).setHop(-ii*m);
+  delete ham;
+  ham = new TBDisorderedH(*model);
+}
+
+void DisorderedSOTAI::setW(double w){
+  ham->setHopDisorderFunction(&sotaiDisorder);
+  ham->setHopDisorderWeight(w);
+}
+
+void DisorderedSOTAI::generateDisorder(){
+  ham->generateDisorder();
+}
+
+void DisorderedSOTAI::getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled){
+  int bC[2] = {0,0};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int l[2] = {nx, ny};
+  ham->setSize(l);
+  OData o(argv0, fileName);
+  o.chargeDensity(*ham, 4, nOrbFilled, l);
+}
+
+double DisorderedSOTAI::getQuadrupoleNestedSupercell(int * l, int * n){
+  int bc[2] = {2,2};
+  ham->setBC(bc);
+  ham->setSize(l);
+  ham->setSparse(false);
+  Wilson wilson(ham);
+  int dir[2] = {0,1};
+  int m[2] = {l[0]*l[1]*2, l[1]};
+
+
+  return fmod(abs(log_det(wilson.nestedWilsonLoopSupercell(n, dir, m)).imag())/(2*M_PI), 1);
+}
+
+void DisorderedSOTAI::getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson){
+  int nPoints[1] = {100};
+  int bC[2] = {2,2};
+  ham->setBC(bC);
+  ham->setSparse(false);
+  int size[2] = {nx,ny};
+  ham->setSize(size);
+  OData o(argv0, fileName);
+  o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
 }
 
 
