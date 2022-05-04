@@ -12,9 +12,10 @@ using namespace std;
 class SOTAI{
   public:
     //Intracell hopping t1, intercell hopping t2
-    SOTAI(double m);
+    SOTAI(double m, double delta = 0);
     ~SOTAI();
 
+    void setOnSite(double);
     void setM(double);
 
     double berryPhase(int n, int dir = 0, double * k0 = NULL);

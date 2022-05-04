@@ -18,6 +18,7 @@ def ChargeDensity3D(fname, show: bool):
 
     cbar = fig.colorbar(img, shrink = 0.4)
     cbar.set_label("Electron Density")
+    cbar.ax.ticklabel_format(useOffset=False)
 
     ax.view_init(10,30)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 200, bbox_inches='tight')
@@ -27,4 +28,4 @@ def ChargeDensity3D(fname, show: bool):
 names = ["ChargeDensityBBH3D_inter2", "ChargeDensityBBH3D_inter1", "ChargeDensityBBH3D_inter0.5","ChargeDensityBBH3D_inter2_delta", "ChargeDensityBBH3D_inter1_delta", "ChargeDensityBBH3D_inter0.5_delta"] 
 
 for name in names:
-    ChargeDensity3D(name + ".dat", True)
+    ChargeDensity3D(name + ".dat", False)

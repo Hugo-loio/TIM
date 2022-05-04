@@ -6,6 +6,7 @@
 #include "SSH2D.h"
 #include "BBH2D.h"
 #include "BBH3D.h"
+#include "SOTAI.h"
 
 using namespace std;
 using namespace arma;
@@ -27,6 +28,23 @@ void scanQuadrupoleBBH2D(int nPoints, int nx, int ny, char* argv0, string name){
   out.data(data);
 }
 
+void scanQuadrupoleSOTAI(int nPoints, int nx, int ny, char* argv0, string name){
+  OData out(argv0, name);
+  double delta = 2/(double)nPoints;
+  vector<vector<double>> data;
+  vector<double> m;
+  vector<double> quad;
+  SOTAI sotai(2);
+  for(int i = 0; i <= nPoints; i++){
+    m.push_back(i*delta);
+    sotai.setM(i*delta);
+    quad.push_back(sotai.getQuadrupoleNested(nx,ny));
+  }
+  data.push_back(m);
+  data.push_back(quad);
+  out.data(data);
+}
+
 void scanQuadrupoleBBH2DSupercell(int nPoints, int * l, int * n, char* argv0, string name){
   OData out(argv0, name);
   double delta = 2/(double)nPoints;
@@ -40,6 +58,23 @@ void scanQuadrupoleBBH2DSupercell(int nPoints, int * l, int * n, char* argv0, st
     quad.push_back(bbh2D.getQuadrupoleNestedSupercell(l,n));
   }
   data.push_back(t1);
+  data.push_back(quad);
+  out.data(data);
+}
+
+void scanQuadrupoleSOTAISupercell(int nPoints, int * l, int * n, char* argv0, string name){
+  OData out(argv0, name);
+  double delta = 2/(double)nPoints;
+  vector<vector<double>> data;
+  vector<double> m;
+  vector<double> quad;
+  SOTAI sotai(2);
+  for(int i = 0; i <= nPoints; i++){
+    m.push_back(i*delta);
+    sotai.setM(i*delta);
+    quad.push_back(sotai.getQuadrupoleNestedSupercell(l,n));
+  }
+  data.push_back(m);
   data.push_back(quad);
   out.data(data);
 }
@@ -68,5 +103,10 @@ int main (int arc, char ** argv) {
   cout << "Octupole k: " << bbh3D.getOctupoleNested(4, 4, 4) << endl;
   cout << "Octupole supercell: " << bbh3D.getOctupoleNestedSupercell(l3, n3) << endl;
 
+  cout << "SOTAI" << endl;
+  SOTAI sotai(2);
+  scanQuadrupoleSOTAI(100, 10, 10, argv[0], "QuadrupoleSOTAI_10_10.dat");
+  cout << "Supercell" << endl;
+  scanQuadrupoleSOTAISupercell(100, l2, n2, argv[0], "QuadrupoleSOTAISupercell_4_4.dat");
   return 0;
 }

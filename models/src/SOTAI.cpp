@@ -1,7 +1,7 @@
 #include "SOTAI.h"
 #include "OData.h"
 
-SOTAI::SOTAI(double m){
+SOTAI::SOTAI(double m, double delta){
   model = new TBModel(2,4);
   int n1[2] = {0,0};
   int n2[2] = {1,0}; 
@@ -17,6 +17,13 @@ SOTAI::SOTAI(double m){
   model->setHop(3,1, n2, -1);
   model->setHop(1,0, n3, 1);
   model->setHop(3,2, n3, 1);
+  //OnSite
+  if(delta != 0){
+    model->setOnSite(0,-delta);
+    model->setOnSite(1,delta);
+    model->setOnSite(2,delta);
+    model->setOnSite(3,-delta);
+  }
   ham = new TBCleanH(*model);
 };
 
@@ -31,6 +38,23 @@ void SOTAI::setM(double m){
   model->getHop(1).setHop(-ii*m);
   model->getHop(2).setHop(ii*m);
   model->getHop(3).setHop(-ii*m);
+  delete ham;
+  ham = new TBCleanH(*model);
+}
+
+void SOTAI::setOnSite(double delta){
+  if(model->getNOnSite() == 0){
+    model->setOnSite(0,-delta);
+    model->setOnSite(1,delta);
+    model->setOnSite(2,delta);
+    model->setOnSite(3,-delta);
+  }
+  else{
+    model->getOnSite(0).setEn(delta);
+    model->getOnSite(1).setEn(delta);
+    model->getOnSite(2).setEn(-delta);
+    model->getOnSite(3).setEn(-delta);
+  }
   delete ham;
   ham = new TBCleanH(*model);
 }

@@ -52,6 +52,8 @@ void BBH2D::setOnSite(double delta){
   model->getOnSite(1).setEn(delta);
   model->getOnSite(2).setEn(-delta);
   model->getOnSite(3).setEn(-delta);
+  delete ham;
+  ham = new TBCleanH(*model);
 }
 
 void BBH2D::getBands(char * argv0, string fileName, int nx, int ny){

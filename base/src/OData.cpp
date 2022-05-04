@@ -104,6 +104,7 @@ void OData::chargeDensity(Hamiltonian & ham, int nOrb, int nOrbFilled, int * l){
   vec eigVal;
   cx_mat eigVec;
   eig_sym(eigVal, eigVec, ham.H());
+  //cout << eigVal << endl;
   int m;
   double rho;
 

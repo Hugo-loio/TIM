@@ -5,6 +5,7 @@
 #include "SSH2D.h"
 #include "BBH2D.h"
 #include "BBH3D.h"
+#include "SOTAI.h"
 
 using namespace std;
 using namespace arma;
@@ -42,6 +43,19 @@ int main (int arc, char ** argv) {
   bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter1_delta.dat", l, 4);
   bbh3D.setInterHop(0.5);
   bbh3D.getChargeDensity(argv[0], "ChargeDensityBBH3D_inter0.5_delta.dat", l, 4);
+
+  cout << "SOTAI" << endl;
+  SOTAI sotai(2);
+  sotai.setOnSite(1e-3);
+  sotai.getChargeDensity(argv[0], "ChargeDensitySOTAI_m2.dat", 20, 20, 2);
+  sotai.setM(0.5);
+  sotai.getChargeDensity(argv[0], "ChargeDensitySOTAI_m0.5.dat", 20, 20, 2);
+  sotai.setM(1);
+  sotai.getChargeDensity(argv[0], "ChargeDensitySOTAI_m1.dat", 20, 20, 2);
+  sotai.setM(0.99);
+  sotai.getChargeDensity(argv[0], "ChargeDensitySOTAI_m0.99.dat", 20, 20, 2);
+  sotai.setM(1.01);
+  sotai.getChargeDensity(argv[0], "ChargeDensitySOTAI_m1.01.dat", 20, 20, 2);
 
   return 0;
 }

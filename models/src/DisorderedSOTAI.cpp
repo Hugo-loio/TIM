@@ -1,7 +1,7 @@
 #include "DisorderedSOTAI.h"
 #include "OData.h"
 
-DisorderedSOTAI::DisorderedSOTAI(double m){
+DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   model = new TBModel(2,4);
   int n1[2] = {0,0};
   int n2[2] = {1,0}; 
@@ -17,6 +17,13 @@ DisorderedSOTAI::DisorderedSOTAI(double m){
   model->setHop(3,1, n2, -1);
   model->setHop(1,0, n3, 1);
   model->setHop(3,2, n3, 1);
+  //OnSite
+  if(delta != 0){
+    model->setOnSite(0,-delta);
+    model->setOnSite(1,delta);
+    model->setOnSite(2,delta);
+    model->setOnSite(3,-delta);
+  }
   ham = new TBDisorderedH(*model);
 }
 
@@ -34,6 +41,24 @@ void DisorderedSOTAI::setM(double m){
   delete ham;
   ham = new TBDisorderedH(*model);
 }
+
+void DisorderedSOTAI::setOnSite(double delta){
+  if(model->getNOnSite() == 0){
+    model->setOnSite(0,-delta);
+    model->setOnSite(1,delta);
+    model->setOnSite(2,delta);
+    model->setOnSite(3,-delta);
+  }
+  else{
+    model->getOnSite(0).setEn(delta);
+    model->getOnSite(1).setEn(delta);
+    model->getOnSite(2).setEn(-delta);
+    model->getOnSite(3).setEn(-delta);
+  }
+  delete ham;
+  ham = new TBDisorderedH(*model);
+}
+
 
 void DisorderedSOTAI::setW(double w){
   ham->setHopDisorderFunction(&sotaiDisorder);

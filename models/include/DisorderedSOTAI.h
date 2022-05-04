@@ -9,9 +9,10 @@ using namespace std;
 
 class DisorderedSOTAI{
   public:
-    DisorderedSOTAI(double m);
+    DisorderedSOTAI(double m, double delta = 0);
     ~DisorderedSOTAI();
 
+    void setOnSite(double);
     void setM(double);
 
     void setW(double);

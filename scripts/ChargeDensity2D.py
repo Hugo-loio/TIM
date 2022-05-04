@@ -15,13 +15,16 @@ def ChargeDensity2D(fname, show: bool):
 
     ax.set_xticks(np.arange(0, data[0][-1] + 1, 5))
     ax.set_yticks(np.arange(0, data[1][-1] + 1, 5))
+    ax.ticklabel_format(useOffset=False)
 
     ax.view_init(10,30)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 200, bbox_inches='tight')
     if(show):
         plt.show()
 
-names = ["ChargeDensityBBH2D_inter2", "ChargeDensityBBH2D_inter1", "ChargeDensityBBH2D_inter0.5","ChargeDensityBBH2D_inter2_delta", "ChargeDensityBBH2D_inter1_delta", "ChargeDensityBBH2D_inter0.5_delta"] 
+#names = ["ChargeDensityBBH2D_inter2", "ChargeDensityBBH2D_inter1", "ChargeDensityBBH2D_inter0.5","ChargeDensityBBH2D_inter2_delta", "ChargeDensityBBH2D_inter1_delta", "ChargeDensityBBH2D_inter0.5_delta"] 
+
+names = ["ChargeDensitySOTAI_m0.5", "ChargeDensitySOTAI_m2", "ChargeDensitySOTAI_m1.1_w0", "ChargeDensitySOTAI_m1.1_w1", "ChargeDensitySOTAI_m1.1_w2.5", "ChargeDensitySOTAI_m1.1_w3","ChargeDensitySOTAI_m0.5_w0", "ChargeDensitySOTAI_m0.5_w1", "ChargeDensitySOTAI_m0.5_w2", "ChargeDensitySOTAI_m0.5_w3"]
 
 for name in names:
-    ChargeDensity2D(name + ".dat", True)
+    ChargeDensity2D(name + ".dat", False)
