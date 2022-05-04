@@ -10,24 +10,25 @@ endif()
 find_package (Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
+# base library
 file(GLOB base_sources ${PROJECT_SOURCE_DIR}/base/src/*.cpp)
-file(GLOB base_headers ${PROJECT_SOURCE_DIR}/base/include/*.h)
+add_library(base STATIC ${base_sources})
+target_include_directories(base PUBLIC ${PROJECT_SOURCE_DIR}/base/include)
 
+# models library
 file(GLOB models_sources ${PROJECT_SOURCE_DIR}/models/src/*.cpp)
-file(GLOB models_headers ${PROJECT_SOURCE_DIR}/models/include/*.h)
+add_library(models STATIC ${models_sources})
+target_include_directories(models PUBLIC ${PROJECT_SOURCE_DIR}/models/include)
+target_link_libraries(models PRIVATE base)
 
+# create special needed directories
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/data)
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/scripts/plots)
 
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/base/include ${PROJECT_SOURCE_DIR}/models/include)
-
+# compile main functions
 file(GLOB app_sources ${PROJECT_SOURCE_DIR}/app/*.cpp)
-
 foreach(app ${app_sources})
   get_filename_component(exe ${app} NAME_WE)
-
-  add_executable(${exe} ${app} ${base_sources} ${models_sources})
-
-  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES})
-
+  add_executable(${exe} ${app})
+  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES} PRIVATE base PRIVATE models)
 endforeach(app ${app_sources})
