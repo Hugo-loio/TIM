@@ -50,9 +50,9 @@ void SOTAI::setOnSite(double delta){
     model->setOnSite(3,-delta);
   }
   else{
-    model->getOnSite(0).setEn(delta);
+    model->getOnSite(0).setEn(-delta);
     model->getOnSite(1).setEn(delta);
-    model->getOnSite(2).setEn(-delta);
+    model->getOnSite(2).setEn(delta);
     model->getOnSite(3).setEn(-delta);
   }
   delete ham;

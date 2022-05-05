@@ -26,6 +26,10 @@ int main (int arc, char ** argv) {
   bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter1_delta.dat", 20, 20, 2);
   bbh2D.setInterHop(0.5);
   bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.5_delta.dat", 20, 20, 2);
+  bbh2D.setInterHop(0.99);
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter0.99_delta.dat", 20, 20, 2);
+  bbh2D.setInterHop(1.01);
+  bbh2D.getChargeDensity(argv[0], "ChargeDensityBBH2D_inter1.01_delta.dat", 20, 20, 2);
 
   cout << "3D BBH" << endl;
   BBH3D bbh3D(1,2);

@@ -11,7 +11,7 @@ int main (int arc, char ** argv) {
 
   cout << "SOTAI" << endl;
   DisorderedSOTAI sotai(1.1);
-  sotai.setOnSite(1e-2);
+  sotai.setOnSite(1e-3);
   cout << "W = 0" << endl;
   sotai.getChargeDensity(argv[0], "ChargeDensitySOTAI_m1.1_w0.dat", 10, 10, 2);
   sotai.setW(1);
