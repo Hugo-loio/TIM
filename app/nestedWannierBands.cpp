@@ -17,6 +17,6 @@ int main (int arc, char ** argv) {
   bbh3D.getNestedWannierBands(argv[0], "NestedWannierBandsBBH3D_inter0.5_z.dat"); 
 
   BBH2D bbh2D(1,2);
-  bbh2D.test();
+  //bbh2D.test();
   return 0;
 }

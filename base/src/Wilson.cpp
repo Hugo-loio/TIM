@@ -164,7 +164,7 @@ vec Wilson::nestedWilsonPhases(int * n, int * dir, int m){
   for(int i = 0; i < m/2; i++){
     phase[i] = (-ii*log(eigVal[i])).real()/(2*M_PI);
   }
-  cout << k0[0] << " " << k0[1] << " " << k0[2] << " " << eigVal[0] << " " << eigVal[1] << endl;
+  //cout << k0[0] << " " << k0[1] << " " << k0[2] << " " << eigVal[0] << " " << eigVal[1] << endl;
   return sort(phase);
 }
 
