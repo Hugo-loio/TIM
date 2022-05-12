@@ -20,6 +20,7 @@ class SSH{
     double berryPhase(int n);
     double berryPhaseSupercell(int n, int l);
     void getBands(char * arv0, string fileName, int n);
+    double polarization(int l);
   private:
     TBModel * model;
     TBCleanH * ham;

@@ -1,4 +1,5 @@
 #include "SSH.h"
+#include "MultipoleOp.h"
 #include "OData.h"
 
 SSH::SSH(double t1, double t2){
@@ -49,4 +50,15 @@ double SSH::berryPhaseSupercell(int n, int l){
   ham->setSparse(true);
   Wilson wilson(ham);
   return wilson.berryPhaseSupercell(n,1*l);
+}
+
+double SSH::polarization(int l){
+  int bC[1] = {0};
+  int lVec[1] = {l};
+  ham->setBC(bC);
+  ham->setSize(lVec);
+  ham->setSparse(false);
+  MultipoleOp p(ham, lVec, 1, 2);
+  p.setOcc(l);
+  return p.polarization(0);
 }
