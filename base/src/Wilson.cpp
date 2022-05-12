@@ -223,7 +223,7 @@ cx_mat Wilson::nestedNestedWilsonLoop(int * n, int * dir, int m){
     }
     u = u * (nestedW2.t() * nestedW0);
 
-    cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVec(n[dir[0]], m)) << " nloop: " << size(nestedWilsonEigVec(n,dir,m)) << " nnloop: " << size(u) << endl;
+    //cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVec(n[dir[0]], m)) << " nloop: " << size(nestedWilsonEigVec(n,dir,m)) << " nnloop: " << size(u) << endl;
   }
 
   k0[dir[2]] = k[dir[2]];

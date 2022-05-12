@@ -31,6 +31,8 @@ class MultipoleOp{
     int getN(int * n);
     //Recursive function that takes point and changes it to next point in mesh
     void nextPoint(int depth, int * point, bool up);
+    //mod 1 of input, rounding numbers close to 1 to 0
+    double chop(double);
 };
 
 #endif

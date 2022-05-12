@@ -61,6 +61,15 @@ void MultipoleOp::nextPoint(int depth, int * point, bool up){
   }
 }
 
+double MultipoleOp::chop(double d){
+  double res = fmod(abs(d),1);
+  double err = 1e-9;
+  if(res > 1-err){
+    res = 0;
+  }
+  return res;
+}
+
 double MultipoleOp::polarization(int a, double * k){
   int * point = new int[dim];
   for(int i = 0; i < dim; i++){
@@ -68,19 +77,78 @@ double MultipoleOp::polarization(int a, double * k){
   }
   cx_mat psi;
   cx_mat psi_tilde;
+  double p0 = ((double)1/2)*(nOcc/l[a])*(1+l[a]);
   if(!ham->getIsSparse()){
     vec eigVal;
     eig_sym(eigVal, psi, ham->H(k));
     psi = psi.cols(0,nOcc-1);
     psi_tilde = psi;
     int m;
+    complex<double> ii(0,1);
+    complex<double> u;
     for(int i = 0; i < lAccum[dim-1]; i++){
-      complex<double> ii(0,1);
-      complex<double> u = exp(ii*(double)2*M_PI*(double)point[a]/(double)l[a]);
+      u = exp(ii*(double)2*M_PI*(double)point[a]/(double)l[a]);
       m = nOrb*getN(point);
       psi_tilde.rows(m, m + nOrb -1) *= u;
       nextPoint(0, point, false);
     }
   }
-  return fmod((l[a]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag(),1);
+  return chop((l[a]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
+}
+
+double MultipoleOp::quadrupole(int a, int b, double * k){
+  int * point = new int[dim];
+  for(int i = 0; i < dim; i++){
+    point[i] = 0;
+  }
+  cx_mat psi;
+  cx_mat psi_tilde;
+  double p0 = ((double)1/4)*(nOcc/(l[a]*l[b]))*(1+l[a])*(1+l[b]);
+  if(!ham->getIsSparse()){
+    vec eigVal;
+    eig_sym(eigVal, psi, ham->H(k));
+    psi = psi.cols(0,nOcc-1);
+    psi_tilde = psi;
+    int m;
+    complex<double> ii(0,1);
+    double phase;
+    complex<double> u;
+    for(int i = 0; i < lAccum[dim-1]; i++){
+      phase = (double)(point[a]+1)*(point[b]+1)/(double)(l[a]*l[b]);
+      u = exp(ii*(double)2*M_PI*phase);
+      m = nOrb*getN(point);
+      //cout << m << " " << phase << endl;
+      psi_tilde.rows(m, m + nOrb -1) *= u;
+      nextPoint(0, point, false);
+    }
+  }
+  return chop((l[a]*l[b]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
+}
+
+double MultipoleOp::octupole(int a, int b, int c, double * k){
+  int * point = new int[dim];
+  for(int i = 0; i < dim; i++){
+    point[i] = 0;
+  }
+  cx_mat psi;
+  cx_mat psi_tilde;
+  double p0 = ((double)1/8)*(nOcc/(l[a]*l[b]*l[c]))*(1+l[a])*(1+l[b])*(1+l[c]);
+  if(!ham->getIsSparse()){
+    vec eigVal;
+    eig_sym(eigVal, psi, ham->H(k));
+    psi = psi.cols(0,nOcc-1);
+    psi_tilde = psi;
+    int m;
+    complex<double> ii(0,1);
+    double phase;
+    complex<double> u;
+    for(int i = 0; i < lAccum[dim-1]; i++){
+      phase = (double)(point[a]*point[b]*point[c])/(double)(l[a]*l[b]*l[c]);
+      u = exp(ii*(double)2*M_PI*phase);
+      m = nOrb*getN(point);
+      psi_tilde.rows(m, m + nOrb -1) *= u;
+      nextPoint(0, point, false);
+    }
+  }
+  return chop((l[a]*l[b]*l[c]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
 }

@@ -1,5 +1,6 @@
 #include "BBH3D.h"
 #include "OData.h"
+#include "MultipoleOp.h"
 
 BBH3D::BBH3D(double t1, double t2, double delta){
   model = new TBModel(3, 8);
@@ -210,6 +211,16 @@ double BBH3D::getOctupoleNestedSupercell(int * l, int * n){
   int m[3] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2, l[2]};
 
   return fmod(abs(log_det(wilson.nestedNestedWilsonLoopSupercell(n, dir, m)).imag())/(2*M_PI), 1);
+}
+
+double BBH3D::getOctupoleManyBody(int * l){
+  int bC[3] = {0,0,0};
+  ham->setBC(bC);
+  ham->setSize(l);
+  ham->setSparse(false);
+  MultipoleOp o(ham, l, 3, 8);
+  o.setOcc(4*l[0]*l[1]*l[2]);
+  return o.octupole(0,1,2);
 }
 
 /*

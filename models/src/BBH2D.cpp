@@ -1,5 +1,6 @@
 #include "BBH2D.h"
 #include "OData.h"
+#include "MultipoleOp.h"
 
 BBH2D::BBH2D(double t1, double t2, double delta){
   model = new TBModel(2, 4);
@@ -154,4 +155,14 @@ void BBH2D::test(){
 
   complex<double> ii(0,1);  
   cout << eigVal << " " <<  (-ii*log(eigVal[0])).real()/(2*M_PI) << endl;
+}
+
+double BBH2D::getQuadrupoleManyBody(int * l){
+  int bC[2] = {0,0};
+  ham->setBC(bC);
+  ham->setSize(l);
+  ham->setSparse(false);
+  MultipoleOp q(ham, l, 2, 4);
+  q.setOcc(2*l[0]*l[1]);
+  return q.quadrupole(0,1);
 }
