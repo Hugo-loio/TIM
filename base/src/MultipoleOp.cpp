@@ -150,5 +150,6 @@ double MultipoleOp::octupole(int a, int b, int c, double * k){
       nextPoint(0, point, false);
     }
   }
+  //cout << "p0 : " << p0 << endl;
   return chop((l[a]*l[b]*l[c]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
 }

@@ -1,5 +1,6 @@
 #include "SOTAI.h"
 #include "OData.h"
+#include "MultipoleOp.h"
 
 SOTAI::SOTAI(double m, double delta){
   model = new TBModel(2,4);
@@ -141,4 +142,14 @@ void SOTAI::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
   ham->setSize(size);
   OData o(argv0, fileName);
   o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
+}
+
+double SOTAI::getQuadrupoleManyBody(int * l){
+  int bC[2] = {0,0};
+  ham->setBC(bC);
+  ham->setSize(l);
+  ham->setSparse(false);
+  MultipoleOp q(ham, l, 2, 4);
+  q.setOcc(2*l[0]*l[1]);
+  return q.quadrupole(0,1);
 }

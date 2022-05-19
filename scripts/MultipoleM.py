@@ -14,7 +14,8 @@ def MultipoleM(fname, show: bool, ylab):
     if(show):
         plt.show()
 
-quadrupole = ["QuadrupoleSOTAI_10_10", "QuadrupoleSOTAISupercell_4_4"] 
+#quadrupole = ["QuadrupoleSOTAI_10_10", "QuadrupoleSOTAISupercell_4_4"] 
+quadrupole = ["QuadrupoleManyBodySOTAI_10x10"] 
 
 octupole = []
 
