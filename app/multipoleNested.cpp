@@ -82,8 +82,8 @@ void scanQuadrupoleSOTAISupercell(int nPoints, int * l, int * n, char* argv0, st
 
 int main (int arc, char ** argv) {
   cout << "\n2D BBH" << endl;
-  //scanQuadrupoleBBH2D(100, 20, 20, argv[0], "QuadrupoleBBH2D_20_20.dat");
-  //scanQuadrupoleBBH2D(100, 10, 10, argv[0], "QuadrupoleBBH2D_10_10.dat");
+  scanQuadrupoleBBH2D(100, 20, 20, argv[0], "QuadrupoleBBH2D_20_20.dat");
+  scanQuadrupoleBBH2D(100, 10, 10, argv[0], "QuadrupoleBBH2D_10_10.dat");
 
   cout << "Supercell" << endl;
   int l2[2] = {4,4};

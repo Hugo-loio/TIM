@@ -49,6 +49,7 @@ cx_mat Wilson::wilsonLoop(int n, int m){
     eigs_gen(eigVal, eigVec0, ham->spH(k0), m, "sr");
     eigs_gen(eigVal, eigVec1, ham->spH(k), m, "sr");
     cx_mat eigVec2 = eigVec1;
+    u0 = eigVec0;
 
     u = eigVec0.t() * eigVec1;
 
@@ -68,6 +69,7 @@ cx_mat Wilson::wilsonLoop(int n, int m){
     eig_sym(eigVal, eigVec1, ham->H(k));
     eigVec1 = eigVec1.cols(0,m-1);
     cx_mat eigVec2 = eigVec1;
+    u0 = eigVec0;
 
     u = eigVec0.t() * eigVec1;
 
@@ -122,38 +124,38 @@ cx_mat Wilson::nestedWilsonLoop(int * n, int * dir, int m){
   for(int i = 0; i < dim; i++){
     k[i] = k0[i];
   }
-  cx_mat u;
+  cx_mat w;
 
   setLoopDir(dir[0]);
 
   if(ham->getIsSparse()){
   }
   else{
-    vec eigVal;
-    cx_mat eigVec;
     cx_mat wannier0, wannier1;
-    eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier0 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    cx_mat nu = wilsonEigVec(n[dir[0]],m).cols(0,m/2-1);
+
+    wannier0 = u0*nu;
+    w0 = wannier0;
     k0[dir[1]] += deltaK;
-    eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier1 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
+    nu = wilsonEigVec(n[dir[0]],m).cols(0,m/2-1);
+    wannier1 = u0*nu;
     cx_mat wannier2 = wannier1;
 
-    u = wannier0.t() * wannier1;
+    w = wannier0.t() * wannier1;
 
     for(int i = 2; i < n[dir[1]]; i++){
       wannier1 = wannier2;
       k0[dir[1]] = k[dir[1]] + i*deltaK;
-      eig_sym(eigVal, eigVec, ham->H(k0));
-      wannier2 = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-      u = u* (wannier1.t() * wannier2);
+      nu = wilsonEigVec(n[dir[0]],m).cols(0,m/2-1);
+      wannier2 = u0*nu;
+      w = w* (wannier1.t() * wannier2);
     }
-    u = u * (wannier2.t() * wannier0);
+    w = w * (wannier2.t() * wannier0);
   }
 
   k0[dir[1]] = k[dir[1]];
   delete[] k;
-  return u;
+  return w;
 }
 
 vec Wilson::nestedWilsonPhases(int * n, int * dir, int m){
@@ -198,17 +200,13 @@ cx_mat Wilson::nestedNestedWilsonLoop(int * n, int * dir, int m){
   if(ham->getIsSparse()){
   }
   else{
-    vec eigVal;
-    cx_mat eigVec;
     cx_mat wannier;
     cx_mat nestedW0, nestedW1;
-    eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-    nestedW0 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m).cols(0,m/4-1));
+    cx_mat eta = nestedWilsonEigVec(n,dir,m).cols(0,m/4-1);
+    nestedW0 = w0*eta;
     k0[dir[2]] += deltaK;
-    eig_sym(eigVal, eigVec, ham->H(k0));
-    wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-    nestedW1 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m).cols(0,m/4-1));
+    eta = nestedWilsonEigVec(n,dir,m).cols(0,m/4-1);
+    nestedW1 = w0*eta;
     cx_mat nestedW2 = nestedW1;
 
     u = nestedW0.t() * nestedW1;
@@ -216,14 +214,13 @@ cx_mat Wilson::nestedNestedWilsonLoop(int * n, int * dir, int m){
     for(int i = 2; i < n[dir[2]]; i++){
       nestedW1 = nestedW2;
       k0[dir[2]] = k[dir[2]] + i*deltaK;
-      eig_sym(eigVal, eigVec, ham->H(k0));
-      wannier = (eigVec.cols(0,m-1))*(wilsonEigVec(n[dir[0]],m).cols(0,m/2-1));
-      nestedW2 = (wannier.cols(0,m/2-1))*(nestedWilsonEigVec(n,dir,m).cols(0,m/4-1));
+      eta = nestedWilsonEigVec(n,dir,m).cols(0,m/4-1);
+      nestedW2 = w0*eta;
       u = u* (nestedW1.t() * nestedW2);
     }
     u = u * (nestedW2.t() * nestedW0);
 
-    //cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVec(n[dir[0]], m)) << " nloop: " << size(nestedWilsonEigVec(n,dir,m)) << " nnloop: " << size(u) << endl;
+    //cout << "w: " << size(w0) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVec(n[dir[0]], m)) << " nloop: " << size(nestedWilsonEigVec(n,dir,m)) << " nnloop: " << size(u) << endl;
   }
 
   k0[dir[2]] = k[dir[2]];
@@ -251,6 +248,7 @@ cx_mat Wilson::wilsonLoopSupercell(int n, int m, double * k){
     ham->setTwists(theta);
     eigs_gen(eigVal, eigVec1, ham->spH(k), m, "sr");
     cx_mat eigVec2 = eigVec1;
+    u0 = eigVec0;
 
     u = eigVec0.t() * eigVec1;
 
@@ -441,7 +439,7 @@ cx_mat Wilson::nestedNestedWilsonLoopSupercell(int * n, int * dir, int * m, doub
     }
     u = u * (nestedW2.t() * nestedW0);
 
-    cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVecSupercell(n[dir[0]], m[0],k)) << " nloop: " << size(nestedWilsonEigVecSupercell(n,dir,m,k)) << " nnloop: " << size(u) << endl;
+    //cout << "w: " << size(wannier) << " nw: " << size(nestedW0) << " loop: " << size(wilsonEigVecSupercell(n[dir[0]], m[0],k)) << " nloop: " << size(nestedWilsonEigVecSupercell(n,dir,m,k)) << " nnloop: " << size(u) << endl;
   }
 
   ham->setTwists(theta0);

@@ -41,6 +41,8 @@ class Wilson{
     int dir;
     int dim;
     Hamiltonian * ham;
+    cx_mat u0;
+    cx_mat w0;
 };
 
 #endif

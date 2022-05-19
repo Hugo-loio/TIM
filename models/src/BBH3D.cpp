@@ -167,7 +167,7 @@ void BBH3D::getNestedWannierBands(char * argv0, string fileName){
   ham->setSparse(false);
   OData o(argv0, fileName);
   int dirWilson[2] = {0,1};
-  int nWilson[2] = {2,2};
+  int nWilson[2] = {10,10};
 
   o.nestedWannierBands(*ham, 100, 2, nWilson, dirWilson, 4);
 }
