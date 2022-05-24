@@ -1,4 +1,5 @@
 #include "DisorderedSOTAI.h"
+#include "MultipoleOp.h"
 #include "OData.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
@@ -103,5 +104,12 @@ void DisorderedSOTAI::getSupercellWannierBands(char * argv0, string fileName, in
   o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
 }
 
-
-
+double DisorderedSOTAI::getQuadrupoleManyBody(int * l){
+  int bC[2] = {0,0};
+  ham->setBC(bC);
+  ham->setSize(l);
+  ham->setSparse(false);
+  MultipoleOp q(ham, l, 2, 4);
+  q.setOcc(2*l[0]*l[1]);
+  return q.quadrupole(0,1);
+}
