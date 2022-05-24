@@ -145,7 +145,7 @@ void SOTAI::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
 }
 
 double SOTAI::getQuadrupoleManyBody(int * l){
-  int bC[2] = {0,0};
+  int bC[2] = {2,2};
   ham->setBC(bC);
   ham->setSize(l);
   ham->setSparse(false);

@@ -158,7 +158,7 @@ void BBH2D::test(){
 }
 
 double BBH2D::getQuadrupoleManyBody(int * l){
-  int bC[2] = {0,0};
+  int bC[2] = {2,2};
   ham->setBC(bC);
   ham->setSize(l);
   ham->setSparse(false);

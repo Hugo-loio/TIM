@@ -53,7 +53,7 @@ double SSH::berryPhaseSupercell(int n, int l){
 }
 
 double SSH::polarization(int l){
-  int bC[1] = {0};
+  int bC[1] = {2};
   int lVec[1] = {l};
   ham->setBC(bC);
   ham->setSize(lVec);

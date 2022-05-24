@@ -214,7 +214,7 @@ double BBH3D::getOctupoleNestedSupercell(int * l, int * n){
 }
 
 double BBH3D::getOctupoleManyBody(int * l){
-  int bC[3] = {0,0,0};
+  int bC[3] = {2,2,2};
   ham->setBC(bC);
   ham->setSize(l);
   ham->setSparse(false);

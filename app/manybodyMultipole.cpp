@@ -85,7 +85,7 @@ int main (int arc, char ** argv) {
   //scanQuadrupoleBBH2D(100, l2D, argv[0], "QuadrupoleManyBodyBBH2D_10x10.dat");
   //scanQuadrupoleBBH2D(100, l2D2, argv[0], "QuadrupoleManyBodyBBH2D_5x5.dat");
   //scanQuadrupoleBBH2D(100, l2D3, argv[0], "QuadrupoleManyBodyBBH2D_15x15.dat");
-  //scanQuadrupoleBBH2D(100, l2D4, argv[0], "QuadrupoleManyBodyBBH2D_20x20.dat");
+  scanQuadrupoleBBH2D(100, l2D4, argv[0], "QuadrupoleManyBodyBBH2D_20x20.dat");
 
   //BBH3D
   BBH3D bbh3D(2,1);
@@ -101,10 +101,10 @@ int main (int arc, char ** argv) {
   cout << "Many-body: " << bbh3D.getOctupoleManyBody(l3D) << " Nested Wilson: " <<  bbh3D.getOctupoleNested(4,4,4) << endl;
   //scanOctupoleBBH3D(100, l3D, argv[0], "OctupoleManyBodyBBH3D_4x4x4.dat");
   //scanOctupoleBBH3D(100, l3D2, argv[0], "OctupoleManyBodyBBH3D_5x5x5.dat");
-  //scanOctupoleBBH3D(100, l3D3, argv[0], "OctupoleManyBodyBBH3D_6x6x6.dat");
+  scanOctupoleBBH3D(100, l3D3, argv[0], "OctupoleManyBodyBBH3D_6x6x6.dat");
 
   //SOTAI
   cout << "\nSOTAI" << endl;
   //scanQuadrupoleSOTAI(100, l2D, argv[0], "QuadrupoleManyBodySOTAI_10x10.dat");
-  scanQuadrupoleSOTAI(100, l2D4, argv[0], "QuadrupoleManyBodySOTAI_20x20.dat");
+  //scanQuadrupoleSOTAI(100, l2D4, argv[0], "QuadrupoleManyBodySOTAI_20x20.dat");
 }

@@ -3,25 +3,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def average(data):
-    np.average(data[1:], axis=0)
+    return np.average(data[1:], axis=0)
 
-plot_name = ""
-names = []
-labels = []
+plot_name = "phaseDiagramSOTAI"
+names = ["phaseDiagramSOTAI_10x10_m1.1"]#, "phaseDiagramSOTAI_20x20_m1.1"]
+labels = ["L = 10", "L = 20"]
 
 
 fig, ax = plt.subplots()
 
-'''
-for name in names:
-    data = hp.readfile(fname)
+for i in range(0, len(names)):
+    data = hp.readfile(names[i] + ".dat")
+    
+    ax.errorbar(data[0], np.average(data[1:],axis=0), yerr = np.std(data[1:],axis=0), label = labels[i], capsize = 5, linestyle='-')
 
-    for i in range(1,len(data)):
-        ax.plot(data[0],data[i],'.')
+ax.set(xlabel = r'$W$')
+ax.legend()
 
-ax.set(xlabel = r'$\frac{\gamma}{\lambda}$', ylabel = ylab)
-
-fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
-if(show):
-    plt.show()
-    '''
+fig.savefig(hp.plot_dir() + plot_name + ".png", dpi = 200)
+plt.show()
