@@ -7,6 +7,10 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt. ")
 endif()
 
+# Compiler options
+add_compile_options(-std=c++11)
+
+# Armadillo
 find_package (Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
