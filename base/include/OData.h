@@ -14,7 +14,7 @@ class OData{
 
     void line(string line);
     void data(double ** data, int dim, int nPoints);
-    void data(vector<vector<double>> data);
+    void data(vector< vector<double> > data);
 
     //x axis is kx, n number of points
     void eBands2D(Hamiltonian & ham, int n, int dir, double * k);
