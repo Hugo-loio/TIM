@@ -6,7 +6,7 @@ def average(data):
     return np.average(data[1:], axis=0)
 
 plot_name = "phaseDiagramSOTAI"
-names = ["phaseDiagramSOTAI_10x10_m1.1"]#, "phaseDiagramSOTAI_20x20_m1.1"]
+names = ["phaseDiagramSOTAI_10x10_m1.1", "phaseDiagramSOTAI_20x20_m1.1"]
 labels = ["L = 10", "L = 20"]
 
 
