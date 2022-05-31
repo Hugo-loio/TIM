@@ -29,9 +29,9 @@ class TBDisorderedH : public TBCleanH{
     void setHopDisorderWeight(double w){wHop = w;}
     void setOnSiteDisorderWeight(double w){wOnSite = w;}
 
-    //Set matching disordered values
-    void setMatchingHopDisorder(int hop1, int hop2);
-    void setMatchingOnSiteDisorder(int os1, int os2);
+    //Set matching disordered values _1 = _2 * alpha
+    void setMatchingHopDisorder(int hop1, int hop2, complex<double> alpha = 1);
+    void setMatchingOnSiteDisorder(int os1, int os2, complex<double> alpha = 1);
 
     void generateDisorder();
   private:
@@ -50,7 +50,9 @@ class TBDisorderedH : public TBCleanH{
     complex<double> ** onSiteBound;
 
     int * matchHop;
+    complex<double> * alphaHop;
     int * matchOnSite;
+    complex<double> * alphaOnSite;
 
     void delete_arrays();
 };

@@ -10,7 +10,9 @@ TBDisorderedH::TBDisorderedH(TBModel model) : TBCleanH(model){
   onSiteBulk = new complex<double> * [vBulk];
   onSiteBound = new complex<double> * [vBound];
   matchHop = new int[nHop];
-  matchOnSite = new int[nHop];
+  matchOnSite = new int[nOnSite];
+  alphaHop = new complex<double>[nHop];
+  alphaOnSite = new complex<double>[nOnSite];
 
   for(int i = 0; i < vBulk; i++){
     hopBulk[i] = new complex<double>[nHop];
@@ -24,10 +26,12 @@ TBDisorderedH::TBDisorderedH(TBModel model) : TBCleanH(model){
 
   for(int i = 0; i < nHop; i++){
     matchHop[i] = -1;
+    alphaHop[i] = 1;
   }
 
   for(int i = 0; i < nOnSite; i++){
     matchOnSite[i] = -1;
+    alphaOnSite[i] = 1;
   }
 
   generateDisorder();
@@ -38,6 +42,8 @@ TBDisorderedH::~TBDisorderedH(){
 
   delete[] matchHop;
   delete[] matchOnSite;
+  delete[] alphaHop;
+  delete[] alphaOnSite;
 }
 
 void TBDisorderedH::delete_arrays(){
@@ -86,24 +92,29 @@ void TBDisorderedH::setSize(int * l){
   generateDisorder();
 }
 
-void TBDisorderedH::setMatchingHopDisorder(int hop1, int hop2){
+void TBDisorderedH::setMatchingHopDisorder(int hop1, int hop2, complex<double> alpha){
   if(hop1 < nHop && hop2 < nHop){
     if(hop1 < hop2){
       matchHop[hop2] = hop1;
+      alphaHop[hop2] = (complex<double>)1/alpha;
     }
     else if(hop1 > hop2){
       matchHop[hop1] = hop2;
+      alphaHop[hop1] = alpha;
+
     }
   }
 }
 
-void TBDisorderedH::setMatchingOnSiteDisorder(int os1, int os2){
+void TBDisorderedH::setMatchingOnSiteDisorder(int os1, int os2, complex<double> alpha){
   if(os1 < nOnSite && os2 < nOnSite){
     if(os1 < os2){
       matchOnSite[os2] = os1;
+      alphaOnSite[os2] = (complex<double>)1/alpha;
     }
     else if(os1 > os2){
       matchOnSite[os1] = os2;
+      alphaOnSite[os1] = alpha;
     }
   }
 }
@@ -117,7 +128,7 @@ void TBDisorderedH::generateDisorder(){
 	  hopBulk[i][e] = hopFunc(model.getHop(e), wHop);
 	}
 	else{
-	  hopBulk[i][e] = hopBulk[i][matchHop[e]];
+	  hopBulk[i][e] = hopBulk[i][matchHop[e]]*alphaHop[e];
 	}
       }
     }
@@ -127,7 +138,7 @@ void TBDisorderedH::generateDisorder(){
 	  hopBound[i][e] = hopFunc(model.getHop(e), wHop);
 	}
 	else{
-	  hopBound[i][e] = hopBound[i][matchHop[e]];
+	  hopBound[i][e] = hopBound[i][matchHop[e]]*alphaHop[e];
 	}
       }
     }
@@ -152,7 +163,7 @@ void TBDisorderedH::generateDisorder(){
 	  onSiteBulk[i][e] = onSiteFunc(model.getOnSite(e), wOnSite);
 	}
 	else{
-	  onSiteBulk[i][e] = onSiteBulk[i][matchOnSite[e]];
+	  onSiteBulk[i][e] = onSiteBulk[i][matchOnSite[e]]*alphaOnSite[e];
 	}
       }
     }
@@ -162,7 +173,7 @@ void TBDisorderedH::generateDisorder(){
 	  onSiteBound[i][e] = onSiteFunc(model.getOnSite(e), wOnSite);
 	}
 	else{
-	  onSiteBulk[i][e] = onSiteBulk[i][matchOnSite[e]];
+	  onSiteBulk[i][e] = onSiteBulk[i][matchOnSite[e]]*alphaOnSite[e];
 	}
       }
     }

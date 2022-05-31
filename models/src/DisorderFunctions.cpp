@@ -58,7 +58,8 @@ complex<double> sotaiDisorder(Hop & hop, double w){
     }
   }
   if(isIntraHop){
-    return hop.getHop() + w*uniform(-0.5,0.5);
+    complex<double> ii(0,1);
+    return hop.getHop() + ii*w*uniform(-0.5,0.5);
   }
   else{
     return hop.getHop();

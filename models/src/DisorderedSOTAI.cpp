@@ -28,8 +28,8 @@ DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   ham = new TBDisorderedH(*model);
   ham->setHopDisorderFunction(&sotaiDisorder);
   ham->setHopDisorderWeight(w);
-  //ham->setMatchingHopDisorder(1,2);
-  //ham->setMatchingHopDisorder(0,3);
+  ham->setMatchingHopDisorder(1,2,-1);
+  ham->setMatchingHopDisorder(0,3);
 }
 
 DisorderedSOTAI::~DisorderedSOTAI(){
@@ -47,8 +47,8 @@ void DisorderedSOTAI::setM(double m){
   ham = new TBDisorderedH(*model);
   ham->setHopDisorderFunction(&sotaiDisorder);
   ham->setHopDisorderWeight(w);
-  //ham->setMatchingHopDisorder(1,2);
-  //ham->setMatchingHopDisorder(0,3);
+  ham->setMatchingHopDisorder(1,2,-1);
+  ham->setMatchingHopDisorder(0,3);
 }
 
 void DisorderedSOTAI::setOnSite(double delta){
@@ -68,8 +68,8 @@ void DisorderedSOTAI::setOnSite(double delta){
   ham = new TBDisorderedH(*model);
   ham->setHopDisorderFunction(&sotaiDisorder);
   ham->setHopDisorderWeight(w);
-  //ham->setMatchingHopDisorder(1,2);
-  //ham->setMatchingHopDisorder(0,3);
+  ham->setMatchingHopDisorder(1,2,-1);
+  ham->setMatchingHopDisorder(0,3);
 }
 
 
