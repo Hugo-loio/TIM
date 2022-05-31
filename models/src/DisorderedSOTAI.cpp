@@ -26,6 +26,10 @@ DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
     model->setOnSite(3,-delta);
   }
   ham = new TBDisorderedH(*model);
+  ham->setHopDisorderFunction(&sotaiDisorder);
+  ham->setHopDisorderWeight(w);
+  //ham->setMatchingHopDisorder(1,2);
+  //ham->setMatchingHopDisorder(0,3);
 }
 
 DisorderedSOTAI::~DisorderedSOTAI(){
@@ -41,6 +45,10 @@ void DisorderedSOTAI::setM(double m){
   model->getHop(3).setHop(-ii*m);
   delete ham;
   ham = new TBDisorderedH(*model);
+  ham->setHopDisorderFunction(&sotaiDisorder);
+  ham->setHopDisorderWeight(w);
+  //ham->setMatchingHopDisorder(1,2);
+  //ham->setMatchingHopDisorder(0,3);
 }
 
 void DisorderedSOTAI::setOnSite(double delta){
@@ -58,11 +66,15 @@ void DisorderedSOTAI::setOnSite(double delta){
   }
   delete ham;
   ham = new TBDisorderedH(*model);
+  ham->setHopDisorderFunction(&sotaiDisorder);
+  ham->setHopDisorderWeight(w);
+  //ham->setMatchingHopDisorder(1,2);
+  //ham->setMatchingHopDisorder(0,3);
 }
 
 
 void DisorderedSOTAI::setW(double w){
-  ham->setHopDisorderFunction(&sotaiDisorder);
+  this->w = w;
   ham->setHopDisorderWeight(w);
 }
 
@@ -112,4 +124,12 @@ double DisorderedSOTAI::getQuadrupoleManyBody(int * l){
   MultipoleOp q(ham, l, 2, 4);
   q.setOcc(2*l[0]*l[1]);
   return q.quadrupole(0,1);
+}
+
+cx_mat DisorderedSOTAI::getHam(int * l){
+  int bC[2] = {2,2};
+  ham->setBC(bC);
+  ham->setSize(l);
+  ham->setSparse(false);
+  return ham->H(NULL);
 }

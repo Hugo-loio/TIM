@@ -24,9 +24,12 @@ class DisorderedSOTAI{
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
+    cx_mat getHam(int * l);
+
   private:
     TBModel * model;
     TBDisorderedH * ham;
+    double w = 0;
     //BoundaryWilsonH * boundH = NULL;
 };
 

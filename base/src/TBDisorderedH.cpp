@@ -9,6 +9,8 @@ TBDisorderedH::TBDisorderedH(TBModel model) : TBCleanH(model){
   hopBound = new complex<double> * [vBound];
   onSiteBulk = new complex<double> * [vBulk];
   onSiteBound = new complex<double> * [vBound];
+  matchHop = new int[nHop];
+  matchOnSite = new int[nHop];
 
   for(int i = 0; i < vBulk; i++){
     hopBulk[i] = new complex<double>[nHop];
@@ -20,11 +22,22 @@ TBDisorderedH::TBDisorderedH(TBModel model) : TBCleanH(model){
     onSiteBound[i] = new complex<double>[nOnSite];
   }
 
+  for(int i = 0; i < nHop; i++){
+    matchHop[i] = -1;
+  }
+
+  for(int i = 0; i < nOnSite; i++){
+    matchOnSite[i] = -1;
+  }
+
   generateDisorder();
 }
 
 TBDisorderedH::~TBDisorderedH(){
   delete_arrays();
+
+  delete[] matchHop;
+  delete[] matchOnSite;
 }
 
 void TBDisorderedH::delete_arrays(){
@@ -73,17 +86,49 @@ void TBDisorderedH::setSize(int * l){
   generateDisorder();
 }
 
+void TBDisorderedH::setMatchingHopDisorder(int hop1, int hop2){
+  if(hop1 < nHop && hop2 < nHop){
+    if(hop1 < hop2){
+      matchHop[hop2] = hop1;
+    }
+    else if(hop1 > hop2){
+      matchHop[hop1] = hop2;
+    }
+  }
+}
+
+void TBDisorderedH::setMatchingOnSiteDisorder(int os1, int os2){
+  if(os1 < nOnSite && os2 < nOnSite){
+    if(os1 < os2){
+      matchOnSite[os2] = os1;
+    }
+    else if(os1 > os2){
+      matchOnSite[os1] = os2;
+    }
+  }
+}
+
 void TBDisorderedH::generateDisorder(){
   int e;
   if(hopFunc != NULL){
     for(int i = 0; i < vBulk; i++){
       for(e = 0; e < nHop; e++){
-	hopBulk[i][e] = hopFunc(model.getHop(e), wHop);
+	if(matchHop[e] == -1){
+	  hopBulk[i][e] = hopFunc(model.getHop(e), wHop);
+	}
+	else{
+	  hopBulk[i][e] = hopBulk[i][matchHop[e]];
+	}
       }
     }
     for(int i = 0; i < vBound; i++){
       for(e = 0; e < nHop; e++){
-	hopBound[i][e] = hopFunc(model.getHop(e), wHop);
+	if(matchHop[e] == -1){
+	  hopBound[i][e] = hopFunc(model.getHop(e), wHop);
+	}
+	else{
+	  hopBound[i][e] = hopBound[i][matchHop[e]];
+	}
       }
     }
   }
@@ -103,12 +148,22 @@ void TBDisorderedH::generateDisorder(){
   if(onSiteFunc != NULL){
     for(int i = 0; i < vBulk; i++){
       for(e = 0; e < nOnSite; e++){
-	onSiteBulk[i][e] = onSiteFunc(model.getOnSite(e), wOnSite);
+	if(matchOnSite[e] == -1){
+	  onSiteBulk[i][e] = onSiteFunc(model.getOnSite(e), wOnSite);
+	}
+	else{
+	  onSiteBulk[i][e] = onSiteBulk[i][matchOnSite[e]];
+	}
       }
     }
     for(int i = 0; i < vBound; i++){
       for(e = 0; e < nOnSite; e++){
-	onSiteBound[i][e] = onSiteFunc(model.getOnSite(e), wOnSite);
+	if(matchOnSite[e] == -1){
+	  onSiteBound[i][e] = onSiteFunc(model.getOnSite(e), wOnSite);
+	}
+	else{
+	  onSiteBulk[i][e] = onSiteBulk[i][matchOnSite[e]];
+	}
       }
     }
   }
