@@ -37,6 +37,6 @@ int main (int arc, char ** argv) {
   int l2D1[2] = {10,10};
   int l2D2[2] = {20,20};
   cout << "Disordered SOTAI" << endl;
-  scanQuadrupole(20, 10, 1.1, l2D1, argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
-  //scanQuadrupole(20, 10, 1.1, l2D2, argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
+  //scanQuadrupole(20, 10, 1.1, l2D1, argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
+  scanQuadrupole(20, 10, 1.1, l2D2, argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
 }
