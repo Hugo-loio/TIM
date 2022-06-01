@@ -29,7 +29,7 @@ void OData::data(double ** data, int dim, int nPoints){
   }
 }
 
-void OData::data(vector< vector<double> > data){
+void OData::data(vector<vector<double>> data){
   if(data.size() != 0){
     for(int i = 0; i < data[0].size(); i++){
       for(int e = 0; e < data.size(); e++){
