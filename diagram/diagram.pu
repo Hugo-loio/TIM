@@ -4,7 +4,7 @@
 
 skinparam dpi 200
 
-package "base" {
+package "<color:ccc>base</color>" {
 
   class TBModel{
     'Attributes
@@ -59,7 +59,11 @@ class Wilson {
 class DOS #yellow{
 }
 
-class MultipoleOp #yellow{
+class MultipoleOp{
+  + MultipoleOp(Hamiltonian *, ...)
+  + double polarization()
+  + double quadrupole()
+  + double octupole()
 }
 
 class LocalizationStats #yellow{
@@ -96,9 +100,9 @@ TBModel o-- OnSite
 TBModel o-- Hop
 
 legend center
-    | Color | Type |
-    |<#$BOXBG>| Done |
-    |<#yellow>| TODO |
+  | Color | Type |
+  |<#$BOXBG>| Done |
+  |<#yellow>| TODO |
 endlegend
 }
 

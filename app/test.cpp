@@ -16,14 +16,16 @@ int main (int arc, char ** argv) {
      }
      */
 
-  DisorderedSOTAI sotai(2);
+  DisorderedSOTAI sotai(1.1);
   sotai.setW(1);
 
-  int l[2] = {40,40};
+  int l[2] = {10,10};
   vec eigVal;
   cx_mat eigVec;
   //eig_sym(eigVal, eigVec, sotai.getHam(l));
-  sotai.getQuadrupoleManyBody(l);
+  //sotai.getQuadrupoleManyBody(l);
+  //cout << sotai.getHam(l) << endl;
+  sotai.getTopInv(l);
 
   unsigned int n = thread::hardware_concurrency();
   cout << n << " concurrent threads are supported.\n";

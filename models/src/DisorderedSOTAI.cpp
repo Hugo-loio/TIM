@@ -1,5 +1,6 @@
 #include "DisorderedSOTAI.h"
 #include "MultipoleOp.h"
+#include "BoundaryGreenH.h"
 #include "OData.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
@@ -132,4 +133,11 @@ cx_mat DisorderedSOTAI::getHam(int * l){
   ham->setSize(l);
   ham->setSparse(false);
   return ham->H(NULL);
+}
+
+double DisorderedSOTAI::getTopInv(int * l){
+  int bC[2] = {0,0};
+  ham->setBC(bC);
+  ham->setSize(l);
+  BoundaryGreenH(ham, 4, l);
 }

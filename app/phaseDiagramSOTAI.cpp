@@ -104,5 +104,5 @@ int main (int arc, char ** argv) {
   cout << "Disordered SOTAI" << endl;
   //scanQuadrupoleMulti(40, l2D1, argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
   //scanQuadrupoleMulti(40, l2D2, argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
-  scanQuadrupoleMulti(1, l2D3, argv[0], "phaseDiagramSOTAI_30x30_m1.1.dat");
+  //scanQuadrupoleMulti(1, l2D3, argv[0], "phaseDiagramSOTAI_30x30_m1.1.dat");
 }
