@@ -19,7 +19,7 @@ int main (int arc, char ** argv) {
   DisorderedSOTAI sotai(1.1);
   sotai.setW(1);
 
-  int l[2] = {10,10};
+  int l[2] = {2,10};
   vec eigVal;
   cx_mat eigVec;
   //eig_sym(eigVal, eigVec, sotai.getHam(l));

@@ -139,5 +139,9 @@ double DisorderedSOTAI::getTopInv(int * l){
   int bC[2] = {0,0};
   ham->setBC(bC);
   ham->setSize(l);
-  BoundaryGreenH(ham, 4, l);
+  ham->setSparse(true);
+  BoundaryGreenH green(ham, 4, l);
+  int lGreen[1] = {2*l[0]};
+  MultipoleOp p(&green, lGreen, 1, 2); 
+  return p.polarization(0);
 }
