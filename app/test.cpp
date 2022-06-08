@@ -3,6 +3,8 @@
 #include "OData.h"
 #include "DisorderFunctions.h"
 #include "DisorderedSOTAI.h"
+#include <thread>
+#include <cstdlib>
 
 using namespace std;
 using namespace arma;
@@ -14,7 +16,7 @@ int main (int arc, char ** argv) {
      }
      */
 
-  DisorderedSOTAI sotai(2);
+  DisorderedSOTAI sotai(1.1);
   sotai.setW(1);
 
   int l[2] = {5,5};
@@ -22,6 +24,17 @@ int main (int arc, char ** argv) {
 
   OData o(argv[0], "testH.dat");
   o.matrixWeights(h);
+
+  //int l[2] = {2,10};
+  //vec eigVal;
+  //cx_mat eigVec;
+  //eig_sym(eigVal, eigVec, sotai.getHam(l));
+  //sotai.getQuadrupoleManyBody(l);
+  //cout << sotai.getHam(l) << endl;
+  //sotai.getTopInv(l);
+
+  unsigned int n = thread::hardware_concurrency();
+  cout << n << " concurrent threads are supported.\n";
 
   return 0;
 }

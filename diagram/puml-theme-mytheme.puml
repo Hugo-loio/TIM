@@ -77,7 +77,7 @@ skinparam class {
 
 skinparam package {
   BorderColor $BOXBG
-  FontColor $BOXBG
+  FontColor $PRIMARYFONTCOLOR
 }
 
 skinparam legend {

@@ -21,6 +21,7 @@ class DisorderedSOTAI{
     void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
     double getQuadrupoleNestedSupercell(int * l, int * n);
     double getQuadrupoleManyBody(int * l);
+    double getTopInv(int * l);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
