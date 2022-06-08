@@ -17,8 +17,11 @@ int main (int arc, char ** argv) {
   DisorderedSOTAI sotai(2);
   sotai.setW(1);
 
-  int l[2] = {1,1};
-  cout << sotai.getHam(l);
+  int l[2] = {5,5};
+  cx_mat h = sotai.getHam(l);
+
+  OData o(argv[0], "testH.dat");
+  o.matrixWeights(h);
 
   return 0;
 }

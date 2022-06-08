@@ -354,3 +354,15 @@ void OData::supercellNestedWannierBands(Hamiltonian & ham, int nPoints, int xDir
 
   delete[] theta;
 }
+
+void OData::matrixWeights(cx_mat & mat){
+  double w;
+  for(int i = 0; i < size(mat)[0]; i++){
+    for(int e = 0; e < size(mat)[1]; e++){
+      w = abs(mat(i,e));
+      if(w != 0){
+	f << e << " " << i << " " << abs(mat(i,e)) << endl;
+      }
+    }
+  }
+}
