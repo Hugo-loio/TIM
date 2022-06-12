@@ -440,4 +440,3 @@ sp_cx_mat TBCleanH::spH(double * k){
 
   return res;
 }
-
