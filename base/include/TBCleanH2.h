@@ -19,8 +19,8 @@ class TBCleanH2 : public Hamiltonian{
     void setSize(int * l);
 
     //Get Hamiltonian in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
-    cx_mat H(double * k);
-    sp_cx_mat spH(double * k);
+    cx_mat H(double * k = NULL);
+    sp_cx_mat spH(double * k = NULL);
 
     //Whether the user prefers Sparse matrices or not
     void setSparse(bool);
@@ -44,10 +44,6 @@ class TBCleanH2 : public Hamiltonian{
     int * rOrder;
     //Layer coordinates of each orbital
     int ** lOrb;
-    //Index of orbital inside cell subdivision 
-    int * mOrb;
-    //Number of layers per unit cell in each direction
-    int * nu;
     //Index of ordered directions with no PBCs
     int * rIndex;
     //System size
@@ -68,24 +64,19 @@ class TBCleanH2 : public Hamiltonian{
     int ** incNOnSite;
     int ** startOnSite;
     int ** endOnSite;
+    //Index of orbital inside cell subdivision 
+    int * mOrb;
+    //Number of layers per unit cell in each direction
+    int * nu;
+    //Whether the auxiliary pre-calculations have been preformed for the current options
+    bool isUpdated;
     //Number of layers multiplied
     int * nuAccum;
     //Accumulated system size 
     int * lAccum; 
 
-    //Calculate quantities associated with layers
+    //Calculate auxiliary quantities
     void calcAux();
-    //Loops over the lattice to fill hamiltonian
-    /*
-       void latticeLoopHopBulk(cx_mat & ham, int * start, int * end, int hop, complex<double> kPhase);
-       void latticeLoopHopBulk(sp_cx_mat & ham, int * start, int * end, int hop, complex<double> kPhase);
-       void latticeLoopHopBound(cx_mat & ham, int * start, int * end, int hop, complex<double> kPhase);
-       void latticeLoopHopBound(sp_cx_mat & ham, int * start, int * end, int hop, complex<double> kPhase);
-       void latticeLoopOnSite(cx_mat & ham, int * start, int * end, int os);
-       void latticeLoopOnSite(sp_cx_mat & ham, int * start, int * end, int os);
-       */
-    //Sort rIndex based on rOrder
-    void sortRIndex();
     //Get flattened orbital index
     int flatten(int alpha, int * n);
 };

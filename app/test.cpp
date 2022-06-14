@@ -3,6 +3,7 @@
 #include "OData.h"
 #include "DisorderFunctions.h"
 #include "DisorderedSOTAI.h"
+#include "BBH2D.h"
 #include <thread>
 #include <cstdlib>
 
@@ -33,8 +34,11 @@ int main (int arc, char ** argv) {
   //cout << sotai.getHam(l) << endl;
   //sotai.getTopInv(l);
 
-  unsigned int n = thread::hardware_concurrency();
-  cout << n << " concurrent threads are supported.\n";
+  //unsigned int n = thread::hardware_concurrency();
+  //cout << n << " concurrent threads are supported.\n";
+
+  BBH2D bbh;
+  bbh.test();
 
   return 0;
 }

@@ -2,6 +2,7 @@
 #define BBH2D_H
 
 #include "TBCleanH.h"
+#include "TBCleanH2.h"
 #include <armadillo>
 #include <string>
 #include "Wilson.h"
@@ -12,7 +13,7 @@ using namespace std;
 class BBH2D{
   public:
     //Intracell hopping t1, intercell hopping t2
-    BBH2D(double t1 = 1, double t2 = 2, double delta = 0);
+    BBH2D(double t1 = 0.5, double t2 = 1, double delta = 0);
     ~BBH2D();
 
     void setOnSite(double);
@@ -34,7 +35,7 @@ class BBH2D{
 
   private:
     TBModel * model;
-    TBCleanH * ham;
+    TBCleanH2 * ham;
     //BoundaryWilsonH * boundH = NULL;
 };
 

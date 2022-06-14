@@ -60,22 +60,23 @@ TBCleanH2::TBCleanH2(TBModel model) : model(model), Hamiltonian(model.getNDim())
     incNHop[i] = new int[nRDim + 1];
     startHopBulk[i] = new int[nRDim];
     startHopBound[i] = new int[nRDim];
-    endHopBulk[i] = new int[nRDim];
-    endHopBound[i] = new int[nRDim];
+    endHopBulk[i] = new int[nRDim + 1];
+    endHopBound[i] = new int[nRDim + 1];
   }
   for(int i = 0; i < nOnSite; i++){
     incOnSite[i] = new int[nRDim + 1];
     incNOnSite[i] = new int[nRDim + 1];
     startOnSite[i] = new int[nRDim];
-    endOnSite[i] = new int[nRDim];
+    endOnSite[i] = new int[nRDim + 1];
   }
+
 }
 
 TBCleanH2::~TBCleanH2(){
   delete[] bC;
   delete[] l;
   for(int i = 0; i < nOrb; i++){
-    delete[] lOrb;
+    delete[] lOrb[i];
   }
   delete[] lOrb;
   delete[] mOrb;
@@ -137,6 +138,7 @@ void TBCleanH2::setSize(int * l){
       cout << "l[" << i << "] = " << l[i] << endl;
     }
   }
+  isUpdated = false;
 }
 
 void TBCleanH2::setBC(int * bC){
@@ -176,8 +178,8 @@ void TBCleanH2::setBC(int * bC){
     incNHop[i] = new int[nRDim + 1];
     startHopBulk[i] = new int[nRDim];
     startHopBound[i] = new int[nRDim];
-    endHopBulk[i] = new int[nRDim];
-    endHopBound[i] = new int[nRDim];
+    endHopBulk[i] = new int[nRDim + 1];
+    endHopBound[i] = new int[nRDim + 1];
   }
   for(int i = 0; i < nOnSite; i++){
     delete[] incOnSite[i];
@@ -189,17 +191,16 @@ void TBCleanH2::setBC(int * bC){
     incOnSite[i] = new int[nRDim + 1];
     incNOnSite[i] = new int[nRDim + 1];
     startOnSite[i] = new int[nRDim];
-    endOnSite[i] = new int[nRDim];
+    endOnSite[i] = new int[nRDim + 1];
   }
-
-  sortRIndex();
+  isUpdated = false;
 }
 
 void TBCleanH2::setOrder(int * o){
   for(int i = 0; i < nDim; i++){
     rOrder[i] = o[i];
   }
-  sortRIndex();
+  isUpdated = false;
 }
 
 void TBCleanH2::setOrbLayer(int ** l){
@@ -249,40 +250,10 @@ void TBCleanH2::setOrbLayer(int ** l){
     nu[i] = nuTemp[i];
   }
 
-  map<int *, vector<int>> map; //Maps layer coord to orbitals in layer
-
-  for(int i = 0; i < nOrb; i++){
-    if(map.count(l[i]) == 0){
-      vector <int> o;
-      o.push_back(i);
-      map[l[i]] = o;
-    }
-    else{
-      map[l[i]].push_back(i);
-    }
-  }
-
-  for(std::map<int *, vector<int>>::iterator i = map.begin(); i != map.end(); i++){
-    for(int e = 0; e < i->second.size(); e++){
-      mOrb[i->second[e]] = e;
-    }
-  }
 
   delete[] lDist;
   delete[] nuTemp;
-}
-
-void TBCleanH2::sortRIndex(){
-  int tempDir;
-  for(int i = 0; i < nRDim; i++){
-    for(int e = i + 1; e < nRDim; e++){
-      if(rOrder[rIndex[i]] > rOrder[rIndex[e]]){
-	tempDir = rIndex[e];
-	rIndex[e] = rIndex[i];
-	rIndex[i] = tempDir;
-      }
-    }
-  }
+  isUpdated = false;
 }
 
 int TBCleanH2::flatten(int alpha, int * n){
@@ -294,6 +265,50 @@ int TBCleanH2::flatten(int alpha, int * n){
 }
 
 void TBCleanH2::calcAux(){
+  //Sort rIndex
+  int tempDir;
+  for(int i = 0; i < nRDim; i++){
+    for(int e = i + 1; e < nRDim; e++){
+      if(rOrder[rIndex[i]] > rOrder[rIndex[e]]){
+	tempDir = rIndex[e];
+	rIndex[e] = rIndex[i];
+	rIndex[i] = tempDir;
+      }
+    }
+  }
+
+  //Calculate mOrb
+  map<int *, vector<int>> map; //Maps layer coord to orbitals in layer
+  for(int i = 0; i < nOrb; i++){
+    int j = i;
+    for(int e = 0; e < i; e++){
+      bool diff = false;
+      for(int k = 0; k < nRDim; k++){
+	if(lOrb[e][rIndex[k]] != lOrb[i][rIndex[k]]){
+	  diff = true;
+	}
+      }
+      if(!diff){
+	j = e;
+	break;
+      }
+    }
+
+    if(map.count(lOrb[j]) == 0){
+      vector <int> o;
+      o.push_back(i);
+      map[lOrb[j]] = o;
+    }
+    else{
+      map[lOrb[j]].push_back(i);
+    }
+  }
+  for(std::map<int *, vector<int>>::iterator i = map.begin(); i != map.end(); i++){
+    for(int e = 0; e < i->second.size(); e++){
+      mOrb[i->second[e]] = e;
+    }
+  }
+
   //Calculate lAccum
   for(int i = 0; i < nRDim; i++){
     lAccum[i] = 1;
@@ -432,6 +447,8 @@ void TBCleanH2::calcAux(){
     }
     incHop[i][nRDim] = 1;
     incNHop[i][nRDim] = 1;
+    endHopBound[i][nRDim] = 1;
+    endHopBulk[i][nRDim] = 1;
   }
 
   //On-site
@@ -450,12 +467,17 @@ void TBCleanH2::calcAux(){
     }
     incOnSite[i][nRDim] = 1;
     incNOnSite[i][nRDim] = 1;
+    endOnSite[i][nRDim] = 1;
   }
 }
 
 cx_mat TBCleanH2::H(double * k){
-  int size; 
+  if(!isUpdated){
+    calcAux();
+    isUpdated = true;
+  }
 
+  int size; 
   if(nRDim != 0){
     size = nOrb*lAccum[nRDim-1];
   }
@@ -465,12 +487,16 @@ cx_mat TBCleanH2::H(double * k){
   cx_mat res(size, size, fill::zeros);
 
   complex<double> t;
-  int j,n,p;
+  int j,n,p,q,r;
   complex<double> phase;
   complex<double> kPhase;
   complex<double> ii(0,1);
 
   int * i = new int[nRDim + 1];
+  int * b = new int[nRDim + 1];
+  int * start = new int[nRDim];
+  int * end = new int[nRDim + 1];
+  end[nRDim] = 1;
 
   //Hopping terms
   for(int e = 0; e < nHop; e++){
@@ -488,15 +514,23 @@ cx_mat TBCleanH2::H(double * k){
     for(j = 0; j < nRDim; j++){
       i[j] = startHopBulk[e][j];
     }
-    n = i[0];
+    if(nRDim != 0){
+      n = i[0];
+    }
+    else{
+      n = model.getHop(e).getNOrb1();
+    }
     for(j = 1; j < nRDim; j++){
       n += (i[j]*nOrb*lAccum[j])/nu[j];
     }
     i[nRDim] = 0;
 
     while(i[nRDim] == 0){
+      cout << n << " " << nHopBulk[e] << endl;
       res(n, n + nHopBulk[e]) += t;
 
+      i[0] += incHop[e][0];
+      n += incNHop[e][0];
       p = 0;
       while(i[p] > endHopBulk[e][p]){
 	i[p] = startHopBulk[e][p];
@@ -506,36 +540,69 @@ cx_mat TBCleanH2::H(double * k){
     }
 
     //Boundary lattice
+    for(j = 0; j < nRDim + 1; j++){
+      b[j] = 0; //0 if not in boundary, 1 if in boundary for direction rIndex[j]
+    }
 
-    /*
-    //Go through boundary mesh and check BCs
-    for(i = 0; i < vBound; i++){
-    phase = 1;
-    for(j = 0; j < nRDim; j++){
-    h = rIndex[j];
-    newNBound[j] = (nBound[i][j] + model.getHop(e).getN(h) + l[h]) % l[h];
-    if(nBound[i][j] + model.getHop(e).getN(h) > l[h] - 1){
-    switch(bC[h]){
-    case 0 :
-    phase = 0;
-    break;
-    case 2:
-    phase *= exp(-ii*theta[j]);
+    b[0]++;
+    if(nRDim != 0){
+      r = 0;
+      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
+	b[r] = 0;
+	b[++r]++;
+      }
     }
+
+
+    while(b[nRDim] == 0){
+
+      q = 0;
+      phase = 1;
+      for(j = 0; j < nRDim; j++){
+	if(b[j] == 0){
+	  start[j] = startHopBulk[e][j];
+	  end[j] = endHopBulk[e][j];
+	}
+	else{
+	  start[j] = startHopBound[e][j];
+	  end[j] = endHopBound[e][j];
+	  q += pow(2,j);
+	  phase *= exp(-ii*theta[rIndex[j]]);
+	}
+	i[j] = start[j];
+      }
+      i[nRDim] = 0;
+      t = model.getHop(e).getHop()*kPhase*phase;
+
+      n = i[0];
+      for(j = 1; j < nRDim; j++){
+	n += (i[j]*nOrb*lAccum[j])/nu[j];
+      }
+
+
+      while(i[nRDim] == 0){
+	res(n, n + nHopBound[e][q]) += t;
+
+	i[0] += incHop[e][0];
+	n += incNHop[e][0];
+	p = 0;
+	while(i[p] > end[p]){
+	  i[p] = start[p];
+	  i[++p] += incHop[e][p];
+	  n += incNHop[e][p];
+	}
+      }
+
+
+      b[0]++;
+      r = 0;
+      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
+	b[r] = 0;
+	b[++r]++;
+      }
+
     }
-    else if(nBound[i][j] + model.getHop(e).getN(h) < 0){
-    switch(bC[h]){
-    case 0 :
-    phase = 0;
-    break;
-    case 2:
-    phase *= exp(ii*theta[j]);
-    }
-    }
-    }
-    res(model.getHop(e).getNOrb1() + nOrb*nBound[i][nRDim], model.getHop(e).getNOrb2() + nOrb*getN(newNBound)) += kPhase*phase*model.getHop(e).getHop();
-    }
-    */
+
   }
   res = res + res.t();
 
@@ -554,9 +621,10 @@ cx_mat TBCleanH2::H(double * k){
     while(i[nRDim] == 0){
       res(n, n) += model.getOnSite(e).getEn();
 
+      i[0] += incOnSite[e][0];
       p = 0;
-      while(i[p] > endHopBulk[e][p]){
-	i[p] = startHopBulk[e][p];
+      while(i[p] > endOnSite[e][p]){
+	i[p] = startOnSite[e][p];
 	i[++p] += incOnSite[e][p];
 	n += incNOnSite[e][p];
       }
@@ -565,23 +633,23 @@ cx_mat TBCleanH2::H(double * k){
 
 
   delete[] i;
+  delete[] b;
+  delete[] start;
+  delete[] end;
 
   return res;
 }
 
-/*
-   sp_cx_mat TBCleanH2::spH(double * k){
-   int size; 
+sp_cx_mat TBCleanH2::spH(double * k){
+  int size; 
 
-   if(nRDim != 0){
-   size = nOrb*lAccum[nRDim-1];
-   }
-   else{
-   size = nOrb;
-   }
-   sp_cx_mat res(size, size);
+  if(nRDim != 0){
+    size = nOrb*lAccum[nRDim-1];
+  }
+  else{
+    size = nOrb;
+  }
+  sp_cx_mat res(size, size);
 
-
-   return res;
-   }
-   */
+  return res;
+}
