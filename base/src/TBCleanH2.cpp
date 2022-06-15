@@ -22,7 +22,8 @@ TBCleanH2::TBCleanH2(TBModel model) : model(model), Hamiltonian(model.getNDim())
   nHopBulk = new int [nHop];
   nHopBound = new int * [nHop];
   incHop = new int * [nHop];
-  incNHop = new int * [nHop];
+  incNHopBulk = new int * [nHop];
+  incNHopBound = new int * [nHop];
   startHopBulk = new int * [nHop];
   startHopBound = new int * [nHop];
   endHopBulk = new int * [nHop];
@@ -57,7 +58,8 @@ TBCleanH2::TBCleanH2(TBModel model) : model(model), Hamiltonian(model.getNDim())
   for(int i = 0; i < nHop; i++){
     nHopBound[i] = new int[(int)pow(2,nDim)];
     incHop[i] = new int[nRDim + 1];
-    incNHop[i] = new int[nRDim + 1];
+    incNHopBulk[i] = new int[nRDim + 1];
+    incNHopBound[i] = new int[nRDim + 1];
     startHopBulk[i] = new int[nRDim];
     startHopBound[i] = new int[nRDim];
     endHopBulk[i] = new int[nRDim + 1];
@@ -87,7 +89,8 @@ TBCleanH2::~TBCleanH2(){
   for(int i = 0; i < nHop; i++){
     delete[] nHopBound[i];
     delete[] incHop[i];
-    delete[] incNHop[i];
+    delete[] incNHopBulk[i];
+    delete[] incNHopBound[i];
     delete[] startHopBulk[i];
     delete[] startHopBound[i];
     delete[] endHopBulk[i];
@@ -95,7 +98,8 @@ TBCleanH2::~TBCleanH2(){
   }
   delete[] nHopBound;
   delete[] incHop;
-  delete[] incNHop;
+  delete[] incNHopBulk;
+  delete[] incNHopBound;
   delete[] startHopBulk;
   delete[] startHopBound;
   delete[] endHopBulk;
@@ -167,7 +171,8 @@ void TBCleanH2::setBC(int * bC){
 
   for(int i = 0; i < nHop; i++){
     delete[] incHop[i];
-    delete[] incNHop[i];
+    delete[] incNHopBulk[i];
+    delete[] incNHopBound[i];
     delete[] startHopBulk[i];
     delete[] startHopBound[i];
     delete[] endHopBulk[i];
@@ -175,7 +180,8 @@ void TBCleanH2::setBC(int * bC){
   }
   for(int i = 0; i < nHop; i++){
     incHop[i] = new int[nRDim + 1];
-    incNHop[i] = new int[nRDim + 1];
+    incNHopBound[i] = new int[nRDim + 1];
+    incNHopBulk[i] = new int[nRDim + 1];
     startHopBulk[i] = new int[nRDim];
     startHopBound[i] = new int[nRDim];
     endHopBulk[i] = new int[nRDim + 1];
@@ -259,8 +265,14 @@ void TBCleanH2::setOrbLayer(int ** l){
 int TBCleanH2::flatten(int alpha, int * n){
   int res = mOrb[alpha];
   for(int i = 0; i < nRDim; i++){
-    res += ((nOrb*n[rIndex[i]] + (nOrb*lOrb[alpha][rIndex[i]])/nu[rIndex[i]])*lAccum[i])/nuAccum[i];
+    if(i == 0){
+      res += (nOrb*n[rIndex[i]] + (nOrb*lOrb[alpha][rIndex[i]])/nu[rIndex[i]])/nuAccum[i];
+    }
+    else{
+      res += ((nOrb*n[rIndex[i]] + (nOrb*lOrb[alpha][rIndex[i]])/nu[rIndex[i]])*lAccum[i - 1])/nuAccum[i];
+    }
   }
+  //cout << "flatten " << alpha << " " << n[0] << " " << n[1] << " " << lAccum[0] << " " << res << endl;
   return res;
 }
 
@@ -369,29 +381,38 @@ void TBCleanH2::calcAux(){
     for(int e = 0; e < nDim + 1; e++){
       boundOpt[e] = 0;
     }
+    boundOpt[0]++;
+    nHopBound[i][0] = nHopBulk[i];
     int p;
-    bool isBound = false;
+    bool isBound;
     int index;
     while(boundOpt[nDim] != 1){
 
+      isBound = true;
       index = 0;
       for(int e = 0; e < nDim; e++){
 	nAux[e] = 0;
 	n = model.getHop(i).getN()[e];
-	index += e*pow(2,e);
+	index += boundOpt[e]*pow(2,e);
 	if(boundOpt[e] == 1){
 	  if(n != 0){
-	    isBound = true;
 	    if(n > 0){
 	      nAux[e] = l[e] - 1;
 	    }
 	    nAux2[e] = (nAux[e] + n + l[e]) % l[e];
+	  }
+	  else{
+	    isBound = false;
 	  }
 	}
       } 
 
       if(isBound){
 	nHopBound[i][index] = flatten(model.getHop(i).getNOrb2(), nAux2) - flatten(model.getHop(i).getNOrb1(), nAux);
+	//cout << "index: " << index << endl;
+	for(int j = 0; j < nDim; j++){
+	  //cout << nAux2[j] << " " << nAux[j] << endl;
+	}
       }
       else{
 	nHopBound[i][index] = nHopBulk[i];
@@ -417,36 +438,53 @@ void TBCleanH2::calcAux(){
   for(int i = 0; i < nHop; i++){
     int nOrb1 = model.getHop(i).getNOrb1();
     int nH;
+    int nL;
+    if(nRDim != 0){
+      nL = nuAccum[0]*nu[rIndex[0]];
+    }
     for(int e = 0; e < nRDim; e++){
-      nH = model.getHop(i).getN()[e];
-      incHop[i][e] = mOrb[nOrb1] + lOrb[nOrb1][rIndex[e]]*nOrb/nuAccum[nRDim - 1];
-      if(n < 0){
-	startHopBulk[i][e] = (1-nH)*incHop[i][e];
-	startHopBound[i][e] = incHop[i][e];
-	endHopBound[i][e] = -nH*incHop[i][e];
-	endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nuAccum[nRDim -1] - incHop[i][e];
+      nH = model.getHop(i).getN()[rIndex[e]];
+      incHop[i][e] = (nOrb*nu[rIndex[e]])/nL;
+      if(nH < 0){
+	startHopBulk[i][e] = mOrb[nOrb1] + lOrb[nOrb1][rIndex[e]]*nOrb/nL - nH*incHop[i][e];
+	startHopBound[i][e] = mOrb[nOrb1] + lOrb[nOrb1][rIndex[e]]*nOrb/nL;
+	endHopBound[i][e] = startHopBound[i][e] - (nH+1)*incHop[i][e];
+	endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nL - (incHop[i][e] - startHopBound[i][e]);
       }
-      else if(n > 0){
-	startHopBulk[i][e] = incHop[i][e];
-	startHopBound[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nuAccum[nRDim -1] - (nH - 1)*incHop[i][e];
-	endHopBound[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nuAccum[nRDim -1] - incHop[i][e];
-	endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nuAccum[nRDim -1] - nH*incHop[i][e];
+      else if(nH > 0){
+	startHopBulk[i][e] = mOrb[nOrb1] + lOrb[nOrb1][rIndex[e]]*nOrb/nL;
+	startHopBound[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nL - nH*incHop[i][e] + startHopBulk[i][e];
+	endHopBound[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nL - (incHop[i][e] - startHopBulk[i][e]);
+	endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nL - (nH + 1)*incHop[i][e] + startHopBulk[i][e];
       }
       else{
-	startHopBulk[i][e] = incHop[i][e];
-	endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nuAccum[nRDim -1] - incHop[i][e];
+	startHopBulk[i][e] = mOrb[nOrb1] + lOrb[nOrb1][rIndex[e]]*nOrb/nL;
+	endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nL - (incHop[i][e] - startHopBulk[i][e]);
 	startHopBound[i][e] = 0;
 	endHopBound[i][e] = 0;
       }
       if(e == 0){
-	incNHop[i][e] = incHop[i][e];
+	incNHopBulk[i][e] = incHop[i][e];
+	incNHopBound[i][e] = incHop[i][e];
       }
       else{
-	incNHop[i][e] = incHop[i][e]*lAccum[e]*nOrb/nu[e];
+	incNHopBulk[i][e] = incHop[i][e]*lAccum[e-1]*nOrb/nuAccum[e-1];
+	incNHopBulk[i][e] -= endHopBulk[i][e-1] - startHopBulk[i][e-1];
+	incNHopBound[i][e] = incHop[i][e]*lAccum[e-1]*nOrb/nuAccum[e-1];
+	incNHopBulk[i][e] -= endHopBound[i][e-1] - startHopBound[i][e-1];
+	if(e == 1){
+	  incNHopBulk[i][e] -= incHop[i][e-1];
+	  incNHopBound[i][e] -= incHop[i][e-1];
+	}
+	else{
+	  incNHopBulk[i][e] -= incHop[i][e-1]*lAccum[e-2]*nOrb/nuAccum[e-2];
+	  incNHopBound[i][e] -= incHop[i][e-1]*lAccum[e-2]*nOrb/nuAccum[e-2];
+	}
       }
     }
     incHop[i][nRDim] = 1;
-    incNHop[i][nRDim] = 1;
+    incNHopBulk[i][nRDim] = 1;
+    incNHopBound[i][nRDim] = 1;
     endHopBound[i][nRDim] = 1;
     endHopBulk[i][nRDim] = 1;
   }
@@ -454,15 +492,26 @@ void TBCleanH2::calcAux(){
   //On-site
   for(int i = 0; i < nOnSite; i++){
     int orb = model.getOnSite(i).getNOrb();
+    int nL;
+    if(nRDim != 0){
+      nL = nuAccum[0]*nu[rIndex[0]];
+    }
     for(int e = 0; e < nRDim; e++){
-      incOnSite[i][e] = mOrb[orb] + lOrb[orb][rIndex[e]]*nOrb/nuAccum[nRDim - 1];
-      startOnSite[i][e] = incOnSite[i][e];
-      endHopBulk[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nuAccum[nRDim -1] - incOnSite[i][e];
+      incOnSite[i][e] = (nOrb*nu[rIndex[e]])/nL;
+      startOnSite[i][e] = mOrb[orb] + lOrb[orb][rIndex[e]]*nOrb/nL;
+      endOnSite[i][e] = (l[rIndex[e]]*nOrb*nu[rIndex[e]])/nL - incOnSite[i][e] + startOnSite[i][e];
       if(e == 0){
 	incNOnSite[i][e] = incOnSite[i][e];
       }
       else{
-	incNOnSite[i][e] = incOnSite[i][e]*lAccum[e]*nOrb/nu[e];
+	incNOnSite[i][e] = incOnSite[i][e]*lAccum[e-1]*nOrb/nuAccum[e-1];
+	incNOnSite[i][e] -= endOnSite[i][e-1] - startOnSite[i][e-1];
+	if(e == 1){
+	  incNOnSite[i][e] -= incHop[i][e-1];
+	}
+	else{
+	  incNOnSite[i][e] -= incHop[i][e-1]*lAccum[e-2]*nOrb/nuAccum[e-2];
+	}
       }
     }
     incOnSite[i][nRDim] = 1;
@@ -510,9 +559,12 @@ cx_mat TBCleanH2::H(double * k){
 
     t = model.getHop(e).getHop()*kPhase;
 
+    //cout << "bulk" << endl;
+
     //Bulk lattice
     for(j = 0; j < nRDim; j++){
       i[j] = startHopBulk[e][j];
+      //cout << startHopBulk[e][j] << " " << endHopBulk[e][j] << endl;
     }
     if(nRDim != 0){
       n = i[0];
@@ -521,21 +573,21 @@ cx_mat TBCleanH2::H(double * k){
       n = model.getHop(e).getNOrb1();
     }
     for(j = 1; j < nRDim; j++){
-      n += (i[j]*nOrb*lAccum[j])/nu[j];
+      n += (i[j]*nOrb*lAccum[j-1])/nuAccum[j-1];
     }
     i[nRDim] = 0;
 
     while(i[nRDim] == 0){
-      cout << n << " " << nHopBulk[e] << endl;
+      //cout << n << " " << nHopBulk[e] << " " << incHop[e][0] << " " << incHop[e][1] << " " << incNHopBulk[e][0] << " " << incNHopBulk[e][1] << endl;
       res(n, n + nHopBulk[e]) += t;
 
       i[0] += incHop[e][0];
-      n += incNHop[e][0];
+      n += incNHopBulk[e][0];
       p = 0;
       while(i[p] > endHopBulk[e][p]){
 	i[p] = startHopBulk[e][p];
 	i[++p] += incHop[e][p];
-	n += incNHop[e][p];
+	n += incNHopBulk[e][p];
       }
     }
 
@@ -550,11 +602,15 @@ cx_mat TBCleanH2::H(double * k){
       while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
 	b[r] = 0;
 	b[++r]++;
+	if(r == nRDim){
+	  break;
+	}
       }
     }
 
-
     while(b[nRDim] == 0){
+
+      //cout << "boundary" << endl;
 
       q = 0;
       phase = 1;
@@ -576,20 +632,22 @@ cx_mat TBCleanH2::H(double * k){
 
       n = i[0];
       for(j = 1; j < nRDim; j++){
-	n += (i[j]*nOrb*lAccum[j])/nu[j];
+	n += (i[j]*nOrb*lAccum[j-1])/nuAccum[j-1];
       }
 
 
       while(i[nRDim] == 0){
+	//cout << n << " " << nHopBound[e][q] << " " << incHop[e][0] << " " << incHop[e][1] << " " << incNHopBound[e][0] << " " << incNHopBound[e][1] << " " << q << endl;
+
 	res(n, n + nHopBound[e][q]) += t;
 
 	i[0] += incHop[e][0];
-	n += incNHop[e][0];
+	n += incNHopBound[e][0];
 	p = 0;
 	while(i[p] > end[p]){
 	  i[p] = start[p];
 	  i[++p] += incHop[e][p];
-	  n += incNHop[e][p];
+	  n += incNHopBound[e][p];
 	}
       }
 
@@ -599,8 +657,10 @@ cx_mat TBCleanH2::H(double * k){
       while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
 	b[r] = 0;
 	b[++r]++;
+	if(r == nRDim){
+	  break;
+	}
       }
-
     }
 
   }
@@ -611,17 +671,20 @@ cx_mat TBCleanH2::H(double * k){
 
     for(j = 0; j < nRDim; j++){
       i[j] = startOnSite[e][j];
+      cout << i[j] << endl;
     }
     n = i[0];
     for(j = 1; j < nRDim; j++){
-      n += (i[j]*nOrb*lAccum[j])/nu[j];
+      n += (i[j]*nOrb*lAccum[j-1])/nuAccum[j-1];
     }
     i[nRDim] = 0;
 
     while(i[nRDim] == 0){
+      cout << n << " " << incOnSite[e][0] << " " << incOnSite[e][1] << " " << incNOnSite[e][0] << " " << incNOnSite[e][1] << endl;
       res(n, n) += model.getOnSite(e).getEn();
 
       i[0] += incOnSite[e][0];
+      n += incNOnSite[e][0];
       p = 0;
       while(i[p] > endOnSite[e][p]){
 	i[p] = startOnSite[e][p];

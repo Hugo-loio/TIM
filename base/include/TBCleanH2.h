@@ -56,6 +56,8 @@ class TBCleanH2 : public Hamiltonian{
     int ** nHopBound;
     int ** incHop;
     int ** incNHop;
+    int ** incNHopBulk;
+    int ** incNHopBound;
     int ** startHopBulk;
     int ** startHopBound;
     int ** endHopBulk;
@@ -70,7 +72,7 @@ class TBCleanH2 : public Hamiltonian{
     int * nu;
     //Whether the auxiliary pre-calculations have been preformed for the current options
     bool isUpdated;
-    //Number of layers multiplied
+    //Number of layers multiplied (definition in notes)
     int * nuAccum;
     //Accumulated system size 
     int * lAccum; 

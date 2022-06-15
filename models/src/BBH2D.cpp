@@ -141,8 +141,8 @@ void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
   o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
 }
 
-void BBH2D::test(){
-  int bC[2] = {1,0};
+void BBH2D::test(char * argv0){
+  int bC[2] = {2,0};
   //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
   int ** layers = new int * [4];
   for(int i = 0; i < 4; i++){
@@ -164,7 +164,11 @@ void BBH2D::test(){
   ham->setSparse(false);
   ham->setOrbLayer(layers);
 
-  cout << ham->H(k) << endl;
+  cx_mat h = ham->H(k);
+  //cout << ham->H(k) << endl;
+
+  OData o(argv0, "testH.dat");
+  o.matrixWeights(h);
 
   for(int i = 0; i < 4; i++){
     delete[] layers[i];

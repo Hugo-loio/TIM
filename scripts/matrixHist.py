@@ -23,4 +23,4 @@ def matrixHist(fname, show: bool, size: int, bsize: int):
 names = ["testH"]
 
 for name in names:
-    matrixHist(name + ".dat", True, 100, 20)
+    matrixHist(name + ".dat", True, 16, 4)

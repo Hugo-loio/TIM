@@ -24,7 +24,7 @@ int main (int arc, char ** argv) {
   cx_mat h = sotai.getHam(l);
 
   OData o(argv[0], "testH.dat");
-  o.matrixWeights(h);
+  //o.matrixWeights(h);
 
   //int l[2] = {2,10};
   //vec eigVal;
@@ -37,8 +37,8 @@ int main (int arc, char ** argv) {
   //unsigned int n = thread::hardware_concurrency();
   //cout << n << " concurrent threads are supported.\n";
 
-  BBH2D bbh;
-  bbh.test();
+  BBH2D bbh(0.5,1,0.1);
+  bbh.test(argv[0]);
 
   return 0;
 }

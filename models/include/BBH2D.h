@@ -31,7 +31,7 @@ class BBH2D{
     double getQuadrupoleManyBody(int * l);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
-    void test();
+    void test(char * argv0);
 
   private:
     TBModel * model;
