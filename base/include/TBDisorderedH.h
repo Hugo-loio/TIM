@@ -1,12 +1,12 @@
 #ifndef TBDISORDEREDH_H
 #define TBDISORDEREDH_H
 
-#include "TBCleanH.h"
+#include "TBCleanHOld.h"
 
 using namespace arma;
 using namespace std;
 
-class TBDisorderedH : public TBCleanH{
+class TBDisorderedH : public TBCleanHOld{
   public:
     TBDisorderedH(TBModel model);
     ~TBDisorderedH();

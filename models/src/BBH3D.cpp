@@ -223,6 +223,59 @@ double BBH3D::getOctupoleManyBody(int * l){
   return o.octupole(0,1,2);
 }
 
+void BBH3D::test(char * argv0){
+  int bC[3] = {0,2,1};
+  //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
+  int ** layers = new int * [8];
+  for(int i = 0; i < 8; i++){
+    layers[i] = new int[3];
+  }
+  layers[0][0] = 1;
+  layers[0][1] = 1;
+  layers[0][2] = 1;
+  layers[1][0] = 0;
+  layers[1][1] = 0;
+  layers[1][2] = 1;
+  layers[2][0] = 0;
+  layers[2][1] = 1;
+  layers[2][2] = 1;
+  layers[3][0] = 1;
+  layers[3][1] = 0;
+  layers[3][2] = 1;
+  layers[4][0] = 1;
+  layers[4][1] = 1;
+  layers[4][2] = 0;
+  layers[5][0] = 0;
+  layers[5][1] = 0;
+  layers[5][2] = 0;
+  layers[6][0] = 0;
+  layers[6][1] = 1;
+  layers[6][2] = 0;
+  layers[7][0] = 1;
+  layers[7][1] = 0;
+  layers[7][2] = 0;
+  double k[3] = {M_PI/2,M_PI/2,M_PI/2};
+  int l[3] = {2,2,2};
+  int order[3] = {1,0,2};
+
+  ham->setSize(l);
+  ham->setBC(bC);
+  ham->setSparse(false);
+  //ham->setOrbLayer(layers);
+  ham->setOrder(order);
+
+  cx_mat h = ham->H(k);
+  //cout << h << endl;
+
+  OData o(argv0, "testH.dat");
+  o.matrixWeights(h);
+
+  for(int i = 0; i < 4; i++){
+    delete[] layers[i];
+  }
+  delete[] layers;
+}
+
 /*
    double BBH3D::berryPhase(int n, int dir, double * k0){
    int bC[2] = {1,1};

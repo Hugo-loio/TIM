@@ -88,7 +88,7 @@ int main (int arc, char ** argv) {
   cout << "Supercell" << endl;
   int l2[2] = {4,4};
   int n2[2] = {10,10};
-  //scanQuadrupoleBBH2DSupercell(100, l2, n2, argv[0], "QuadrupoleBBH2DSupercell_4_4.dat");
+  scanQuadrupoleBBH2DSupercell(100, l2, n2, argv[0], "QuadrupoleBBH2DSupercell_4_4.dat");
 
   cout << "3D BBH" << endl;
   BBH3D bbh3D(2,1);

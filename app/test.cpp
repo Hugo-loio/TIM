@@ -4,6 +4,7 @@
 #include "DisorderFunctions.h"
 #include "DisorderedSOTAI.h"
 #include "BBH2D.h"
+#include "BBH3D.h"
 #include <thread>
 #include <cstdlib>
 
@@ -37,7 +38,7 @@ int main (int arc, char ** argv) {
   //unsigned int n = thread::hardware_concurrency();
   //cout << n << " concurrent threads are supported.\n";
 
-  BBH2D bbh(0.5,1,0.1);
+  BBH3D bbh(0.5,1,0.1);
   bbh.test(argv[0]);
 
   return 0;

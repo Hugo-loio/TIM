@@ -22,7 +22,7 @@ BBH2D::BBH2D(double t1, double t2, double delta){
   model->setOnSite(1,delta);
   model->setOnSite(2,-delta);
   model->setOnSite(3,-delta);
-  ham = new TBCleanH2(*model);
+  ham = new TBCleanH(*model);
 };
 
 BBH2D::~BBH2D(){
@@ -36,7 +36,7 @@ void BBH2D::setIntraHop(double t1){
   model->getHop(2).setHop(-t1);
   model->getHop(3).setHop(t1);
   delete ham;
-  ham = new TBCleanH2(*model);
+  ham = new TBCleanH(*model);
 }
 
 void BBH2D::setInterHop(double t2){
@@ -45,7 +45,7 @@ void BBH2D::setInterHop(double t2){
   model->getHop(6).setHop(t2);
   model->getHop(7).setHop(-t2);
   delete ham;
-  ham = new TBCleanH2(*model);
+  ham = new TBCleanH(*model);
 }
 
 void BBH2D::setOnSite(double delta){
@@ -54,7 +54,7 @@ void BBH2D::setOnSite(double delta){
   model->getOnSite(2).setEn(-delta);
   model->getOnSite(3).setEn(-delta);
   delete ham;
-  ham = new TBCleanH2(*model);
+  ham = new TBCleanH(*model);
 }
 
 void BBH2D::getBands(char * argv0, string fileName, int nx, int ny){
@@ -142,7 +142,7 @@ void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
 }
 
 void BBH2D::test(char * argv0){
-  int bC[2] = {2,0};
+  int bC[2] = {1,0};
   //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
   int ** layers = new int * [4];
   for(int i = 0; i < 4; i++){
@@ -158,14 +158,16 @@ void BBH2D::test(char * argv0){
   layers[3][1] = 0;
   double k[2] = {M_PI/2,-M_PI/2};
   int l[2] = {2,2};
+  int order[2] = {1,0};
 
   ham->setSize(l);
   ham->setBC(bC);
   ham->setSparse(false);
   ham->setOrbLayer(layers);
+  ham->setOrder(order);
 
   cx_mat h = ham->H(k);
-  //cout << ham->H(k) << endl;
+  cout << h << endl;
 
   OData o(argv0, "testH.dat");
   o.matrixWeights(h);

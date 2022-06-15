@@ -12,7 +12,7 @@ using namespace std;
 class BBH3D{
   public:
     //Intracell hopping t1, intercell hopping t2
-    BBH3D(double t1 = 1, double t2 = 2, double delta = 0);
+    BBH3D(double t1 = 0.5, double t2 = 1, double delta = 0);
     ~BBH3D();
 
     void setIntraHop(double);
@@ -30,6 +30,7 @@ class BBH3D{
     void getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n);
     double getOctupoleNestedSupercell(int * l, int * n);
     double getOctupoleManyBody(int * l);
+    void test(char * argv0);
   private:
     TBModel * model;
     TBCleanH * ham;

@@ -2,7 +2,6 @@
 #define BBH2D_H
 
 #include "TBCleanH.h"
-#include "TBCleanH2.h"
 #include <armadillo>
 #include <string>
 #include "Wilson.h"
@@ -35,7 +34,7 @@ class BBH2D{
 
   private:
     TBModel * model;
-    TBCleanH2 * ham;
+    TBCleanH * ham;
     //BoundaryWilsonH * boundH = NULL;
 };
 

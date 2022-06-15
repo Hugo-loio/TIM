@@ -19,11 +19,17 @@ class TBCleanH : public Hamiltonian{
     void setSize(int * l);
 
     //Get Hamiltonian in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
-    cx_mat H(double * k);
-    sp_cx_mat spH(double * k);
+    cx_mat H(double * k = NULL);
+    sp_cx_mat spH(double * k = NULL);
 
     //Whether the user prefers Sparse matrices or not
     void setSparse(bool);
+
+    //Order of the spatial directions in the Hamiltonian matrix
+    void setOrder(int * o);
+
+    //Orbital layer coordinate within unit cell
+    void setOrbLayer(int ** l);
 
   protected:
     //Information on TB model
@@ -34,37 +40,46 @@ class TBCleanH : public Hamiltonian{
 
     //Number of directions with no PBCs
     int nRDim;
-    //Index of directions with no PBCs
+    //Order of directions
+    int * rOrder;
+    //Layer coordinates of each orbital
+    int ** lOrb;
+    //Index of ordered directions with no PBCs
     int * rIndex;
     //System size
     int * l;
-    //Size of boundary (depends on the max neighbour order of the hopping terms)
-    int ** lBound;
-    //Accumulated system size [Lx, LxLy, ...] (only in directions with no PCBs)
-    int * lAccum; 
-    //Boundary volume 
-    int vBound;
-    //Bulk volume
-    int vBulk;
     //Boundary conditions
     int * bC;
-    //Twists for twisted boundary conditions
-    //    double * theta;
-    //Meshes of unit cells with nDim spatial indexes and one collapsed 1D index 
-    int ** nBulk;
-    int ** nBound;
-    void delete_meshes();
 
-    //Get integer index corresponding to unit cell number vector
-    int getN(int * n);
-    //Generate meshes of unit cells
-    void calcN();
-    //Recursive function that takes point and changes it to next point in mesh
-    void nextPoint(int depth, int * point, bool up);
-    //Check is system size is big enough for given hopping terms (increase size if it isn't)
-    void checkSize();
-    //Calculate volumes
-    void calcVol();
+    //Auxilary pre-calculations (boost performance)
+    int * nHopBulk;
+    int ** nHopBound;
+    int * inc;
+    int ** incNHopBulk;
+    int *** incNHopBound;
+    int ** startHopBulk;
+    int ** startHopBound;
+    int ** endHopBulk;
+    int ** endHopBound;
+    //int ** incOnSite;
+    int ** incNOnSite;
+    int ** startOnSite;
+    int ** endOnSite;
+    //Index of orbital inside cell subdivision 
+    int * mOrb;
+    //Number of layers per unit cell in each direction
+    int * nu;
+    //Whether the auxiliary pre-calculations have been preformed for the current options
+    bool isUpdated = false;
+    //Number of layers multiplied (definition in notes)
+    int * nuAccum;
+    //Accumulated system size 
+    int * lAccum; 
+
+    //Calculate auxiliary quantities
+    void calcAux();
+    //Get flattened orbital index
+    int flatten(int alpha, int * n);
 };
 
 #endif

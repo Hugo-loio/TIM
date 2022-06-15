@@ -4,7 +4,7 @@
 using namespace arma;
 using namespace std;
 
-TBDisorderedH::TBDisorderedH(TBModel model) : TBCleanH(model){
+TBDisorderedH::TBDisorderedH(TBModel model) : TBCleanHOld(model){
   hopBulk = new complex<double> * [vBulk];
   hopBound = new complex<double> * [vBound];
   onSiteBulk = new complex<double> * [vBulk];
@@ -80,14 +80,14 @@ void TBDisorderedH::resize(){
 
 void TBDisorderedH::setBC(int * bC){
   delete_arrays();
-  TBCleanH::setBC(bC);
+  TBCleanHOld::setBC(bC);
   resize();
   generateDisorder();
 }
 
 void TBDisorderedH::setSize(int * l){
   delete_arrays();
-  TBCleanH::setSize(l);
+  TBCleanHOld::setSize(l);
   resize();
   generateDisorder();
 }
