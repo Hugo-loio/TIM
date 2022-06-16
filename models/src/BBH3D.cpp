@@ -224,7 +224,7 @@ double BBH3D::getOctupoleManyBody(int * l){
 }
 
 void BBH3D::test(char * argv0){
-  int bC[3] = {0,2,1};
+  int bC[3] = {2,2,0};
   //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
   int ** layers = new int * [8];
   for(int i = 0; i < 8; i++){
@@ -255,19 +255,19 @@ void BBH3D::test(char * argv0){
   layers[7][1] = 0;
   layers[7][2] = 0;
   double k[3] = {M_PI/2,M_PI/2,M_PI/2};
-  int l[3] = {2,2,2};
-  int order[3] = {1,0,2};
+  int l[3] = {4,4,4};
+  int order[3] = {0,1,2};
 
   ham->setSize(l);
   ham->setBC(bC);
   ham->setSparse(false);
-  //ham->setOrbLayer(layers);
+  ham->setOrbLayer(layers);
   ham->setOrder(order);
 
   cx_mat h = ham->H(k);
   //cout << h << endl;
 
-  OData o(argv0, "testH.dat");
+  OData o(argv0, "hamBBH3D_4x4x4_PBCxy.dat");
   o.matrixWeights(h);
 
   for(int i = 0; i < 4; i++){

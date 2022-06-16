@@ -21,6 +21,7 @@ class TBCleanH : public Hamiltonian{
     //Get Hamiltonian in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
     cx_mat H(double * k = NULL);
     sp_cx_mat spH(double * k = NULL);
+    cx_mat blockH(int line, int col, double * k = NULL);
 
     //Whether the user prefers Sparse matrices or not
     void setSparse(bool);
@@ -30,6 +31,9 @@ class TBCleanH : public Hamiltonian{
 
     //Orbital layer coordinate within unit cell
     void setOrbLayer(int ** l);
+
+    //Dimensionality  of the layers associated with each block
+    void setBlockDim(int bDim);
 
   protected:
     //Information on TB model
@@ -50,8 +54,10 @@ class TBCleanH : public Hamiltonian{
     int * l;
     //Boundary conditions
     int * bC;
+    //Dimensions  of the layers in each block (nRDim > bDim) 
+    int bDim;
 
-    //Auxilary pre-calculations (boost performance)
+    //Auxiliary pre-calculations (boost performance)
     int * nHopBulk;
     int ** nHopBound;
     int * inc;

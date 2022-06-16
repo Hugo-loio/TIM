@@ -164,6 +164,8 @@ void TBCleanH::setBC(int * bC){
     }
   }
 
+  bDim = nRDim - 1;
+
   delete[] lAccum;
   delete[] nuAccum;
   delete[] inc;
@@ -789,6 +791,11 @@ cx_mat TBCleanH::H(double * k){
 }
 
 sp_cx_mat TBCleanH::spH(double * k){
+  if(!isUpdated){
+    calcAux();
+    isUpdated = true;
+  }
+
   int size; 
 
   if(nRDim != 0){
@@ -799,5 +806,234 @@ sp_cx_mat TBCleanH::spH(double * k){
   }
   sp_cx_mat res(size, size);
 
+  complex<double> t;
+  int j,n,p,q,r;
+  complex<double> phase;
+  complex<double> kPhase;
+  complex<double> ii(0,1);
+
+  int * i = new int[nRDim + 1];
+  int * b = new int[nRDim + 1];
+  int * start = new int[nRDim];
+  int * end = new int[nRDim + 1];
+  end[nRDim] = 1;
+
+  //Hopping terms
+  for(int e = 0; e < nHop; e++){
+    kPhase = 1;
+    for(j = 0; j < nDim; j++){
+      if(bC[j] == 1){
+	//Extra phase due to k space hamiltonian
+	kPhase *= exp(ii*k[j]*(double)model.getHop(e).getN(j));
+      }
+    }
+
+    t = model.getHop(e).getHop()*kPhase;
+
+    //cout << "bulk" << endl;
+
+    //Bulk lattice
+    for(j = 0; j < nRDim; j++){
+      i[j] = startHopBulk[e][j];
+      //cout << "Aqui: " << e << " " << startHopBulk[e][j] << " " << endHopBulk[e][j] << endl;
+    }
+    if(nRDim != 0){
+      n = i[0];
+    }
+    else{
+      n = model.getHop(e).getNOrb1();
+    }
+    for(j = 1; j < nRDim; j++){
+      n += (i[j]*nOrb*lAccum[j-1])/nuAccum[j-1];
+    }
+    i[nRDim] = 0;
+
+    while(i[nRDim] == 0){
+      //cout << n << " " << nHopBulk[e] << " " << inc[0] << " " << inc[1] << " " << incNHopBulk[e][0] << " " << incNHopBulk[e][1] << " " << incNHopBulk[e][2] << endl;
+      res(n, n + nHopBulk[e]) += t;
+
+      i[0] += inc[0];
+      n += incNHopBulk[e][0];
+      p = 0;
+      while(i[p] > endHopBulk[e][p]){
+	i[p] = startHopBulk[e][p];
+	i[++p] += inc[p];
+	n += incNHopBulk[e][p];
+      }
+    }
+
+    //cout << "boundary" << endl;
+
+    //Boundary lattice
+    for(j = 0; j < nRDim + 1; j++){
+      b[j] = 0; //0 if not in boundary, 1 if in boundary for direction rIndex[j]
+    }
+
+    b[0]++;
+    if(nRDim != 0){
+      r = 0;
+      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
+	b[r] = 0;
+	b[++r]++;
+	if(r == nRDim){
+	  break;
+	}
+      }
+    }
+
+    while(b[nRDim] == 0){
+
+      q = 0;
+      phase = 1;
+      for(j = 0; j < nRDim; j++){
+	if(b[j] == 0){
+	  start[j] = startHopBulk[e][j];
+	  end[j] = endHopBulk[e][j];
+	}
+	else{
+	  start[j] = startHopBound[e][j];
+	  end[j] = endHopBound[e][j];
+	  q += pow(2,rIndex[j]);
+	  phase *= exp(-ii*theta[rIndex[j]]);
+	}
+	i[j] = start[j];
+      }
+      i[nRDim] = 0;
+      t = model.getHop(e).getHop()*kPhase*phase;
+
+      n = i[0];
+      for(j = 1; j < nRDim; j++){
+	n += (i[j]*nOrb*lAccum[j-1])/nuAccum[j-1];
+      }
+
+      for(j = 0; j < nRDim; j++){
+	//cout << start[j] << " " << end[j] << endl;
+      }
+
+      while(i[nRDim] == 0){
+	//cout << n << " " << nHopBound[e][q] << " " << inc[0] << " " << inc[1] << " " << incNHopBound[e][q][0] << " " << incNHopBound[e][q][1] << " " << incNHopBound[e][q][2] << " " << q << endl;
+
+	res(n, n + nHopBound[e][q]) += t;
+
+	i[0] += inc[0];
+	n += incNHopBound[e][q][0];
+	p = 0;
+	while(i[p] > end[p]){
+	  i[p] = start[p];
+	  i[++p] += inc[p];
+	  n += incNHopBound[e][q][p];
+	}
+      }
+
+
+      b[0]++;
+      r = 0;
+      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
+	b[r] = 0;
+	b[++r]++;
+	if(r == nRDim){
+	  break;
+	}
+      }
+    }
+
+  }
+  res = res + res.t();
+
+  //On-site terms
+  //cout << "On-Site" << endl;
+
+  for(int e = 0; e < nOnSite; e++){
+
+    for(j = 0; j < nRDim; j++){
+      i[j] = startOnSite[e][j];
+      //cout << i[j] << " " << endOnSite[e][j] << endl;
+    }
+    n = i[0];
+    for(j = 1; j < nRDim; j++){
+      n += (i[j]*nOrb*lAccum[j-1])/nuAccum[j-1];
+    }
+    i[nRDim] = 0;
+
+    while(i[nRDim] == 0){
+      //cout << n << " " << inc[0] << " " << inc[1] << " " << incNOnSite[e][0] << " " << incNOnSite[e][1] << endl;
+      res(n, n) += model.getOnSite(e).getEn();
+
+      i[0] += inc[0];
+      n += incNOnSite[e][0];
+      p = 0;
+      while(i[p] > endOnSite[e][p]){
+	i[p] = startOnSite[e][p];
+	i[++p] += inc[p];
+	n += incNOnSite[e][p];
+      }
+    }
+  }
+
+  delete[] i;
+  delete[] b;
+  delete[] start;
+  delete[] end;
+
   return res;
 }
+
+void TBCleanH::setBlockDim(int bDim){
+  if(bDim >= 0 && bDim < nRDim){
+    this->bDim = bDim;
+  }
+}
+
+cx_mat TBCleanH::blockH(int line, int col, double * k){
+  if(!isUpdated){
+    calcAux();
+    isUpdated = true;
+  }
+
+  int size; 
+  if(nRDim == 0){
+    cout << "__PRETTY_FUNCTION__" << " can't divide systems in spatial layers, returning empty matrix" << endl;
+    return cx_mat(0,0);
+  }
+  else{ 
+    int nL = nuAccum[0]*nu[rIndex[0]];
+    if(bDim == 0){
+      size = nOrb/nL;
+    }
+    else{
+      size = l[rIndex[0]]*(nOrb/nuAccum[0]);
+      for(int i = 1; i < bDim; i++){
+	size *= l[rIndex[i]]*nu[rIndex[i]];
+      }
+    }
+  }
+  cx_mat res(size, size, fill::zeros);
+
+  int * diffL = new int[nRDim - bDim];
+  int * nVec = new int[nRDim];
+  int * lVec = new int[nRDim];
+
+  bool transpose = false;
+  if(col < line){
+    int temp = col;
+    col = line;
+    line = temp;
+    transpose = true;
+  }
+
+  diffL[0] = (col-line) % l[rIndex[bDim]]*nu[rIndex[bDim]];
+  for(int i = 1; i < nRDim-bDim; i++){
+    diffL[i] = (col - line - diffL[i-1])/(l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]);
+    if(bDim + i < nRDim){
+      diffL[i] = diffL[i] % l[rIndex[bDim + i]]*nu[rIndex[bDim + i]];
+    }
+  }
+
+  vector<int> h;
+
+  delete diffL;
+  delete nVec;
+  delete lVec;
+  return res;
+}
+

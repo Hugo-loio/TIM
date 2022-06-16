@@ -24,7 +24,7 @@ int main (int arc, char ** argv) {
   int l[2] = {5,5};
   cx_mat h = sotai.getHam(l);
 
-  OData o(argv[0], "testH.dat");
+  //OData o(argv[0], "testH.dat");
   //o.matrixWeights(h);
 
   //int l[2] = {2,10};
