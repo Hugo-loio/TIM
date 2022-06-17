@@ -270,7 +270,8 @@ void BBH3D::test(char * argv0){
   //OData o(argv0, "hamBBH3D_4x4x4_PBCxy.dat");
   //o.matrixWeights(h);
 
-  ham->blockH(0,1);
+  ham->setBlockDim(1);
+  ham->blockH(0,7);
 
   for(int i = 0; i < 4; i++){
     delete[] layers[i];

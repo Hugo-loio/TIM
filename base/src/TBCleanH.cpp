@@ -1010,6 +1010,7 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   cx_mat res(size, size, fill::zeros);
 
   int * startNL = new int[nRDim - bDim];
+  int * startL = new int[nRDim - bDim];
   int * diffNL = new int[nRDim - bDim];
   int * diffN = new int[nRDim - bDim];
   int * diffL = new int[nRDim - bDim];
@@ -1034,15 +1035,14 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     }
   }
 
-  int startL;
   for(int i = 0; i < nRDim - bDim; i++){
-    startL = startNL[i] % nu[rIndex[bDim + i]];
-    diffN[i] = (startL + diffNL[i])/nu[rIndex[bDim + i]];
+    startL[i] = startNL[i] % nu[rIndex[bDim + i]];
+    diffN[i] = (startL[i] + diffNL[i])/nu[rIndex[bDim + i]];
     diffL[i] = diffNL[i] % nu[rIndex[bDim + i]];
-    if((startL + diffL[i]) % nu[rIndex[bDim + i]] < startL){
+    if((startL[i] + diffL[i]) % nu[rIndex[bDim + i]] < startL[i]){
       diffL[i] = -diffL[i];
     }
-    //cout << "n " << diffN[i] << " l " << diffL[i] << " nl " << diffNL[i] << " " << l[rIndex[bDim + i]] << endl;
+    cout << "n " << diffN[i] << " l " << diffL[i] << " nl " << diffNL[i] << " " << l[rIndex[bDim + i]] << endl;
   }
 
   cout << "size " << size << endl;
@@ -1051,19 +1051,19 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   bool isHopHerm;
   vector<int> h;
   vector<int> hHerm; //Conjugate transpose the matrix comming from these
+  int n, l1, l2;
   for(int e = 0; e < nHop; e++){
     isHop = true;
     isHopHerm = true;
     for(int i = 0; i < nRDim - bDim; i++){
-      cout << model.getHop(e).getN(rIndex[bDim + i]) << " " << lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]] - lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]] << endl;
-      if(model.getHop(e).getN(rIndex[bDim + i]) != diffN[i] ||
-	  (lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]] - 
-	   lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]]) != diffL[i]){
+      n = model.getHop(e).getN(rIndex[bDim + i]);
+      l2 = lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]];
+      l1 = lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]];
+      cout << e << " " << i << " " << n << " " << l2 - l1 << endl;
+      if(n != diffN[i] || (l2 - l1) != diffL[i] || l1 != startL[i]){
 	isHop = false;
       }
-      if(model.getHop(e).getN(rIndex[bDim + i]) != - diffN[i] ||
-	  (lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]] - 
-	   lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]]) != - diffL[i]){
+      if(n != - diffN[i] || (l2 - l1) != - diffL[i] || l2 != startL[i]){
 	isHopHerm = false;
       }
     }
@@ -1076,17 +1076,20 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   }
 
   for(int i = 0; i < h.size(); i++){
-    cout << h[i] << endl;
+    cout << "h: " << h[i] << endl;
   }
 
   for(int i = 0; i < hHerm.size(); i++){
-    cout << "Herm: " << hHerm[i] << endl;
+    cout << "hHerm: " << hHerm[i] << endl;
   }
 
   delete diffL;
   delete diffN;
   delete diffNL;
+  delete startNL;
+  delete startL;
 
+  //TODO: until here some things can be precalculated to increase efficiency
 
 
   return res;
