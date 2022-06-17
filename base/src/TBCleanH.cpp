@@ -1009,10 +1009,12 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   }
   cx_mat res(size, size, fill::zeros);
 
+  int * startNL = new int[nRDim - bDim];
+  int * diffNL = new int[nRDim - bDim];
+  int * diffN = new int[nRDim - bDim];
   int * diffL = new int[nRDim - bDim];
-  int * nVec = new int[nRDim];
-  int * lVec = new int[nRDim];
 
+  //This might not be necessary
   bool transpose = false;
   if(col < line){
     int temp = col;
@@ -1021,19 +1023,72 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     transpose = true;
   }
 
-  diffL[0] = (col-line) % l[rIndex[bDim]]*nu[rIndex[bDim]];
+  diffNL[0] = (col-line) % (l[rIndex[bDim]]*nu[rIndex[bDim]]);
+  startNL[0] = line % (l[rIndex[nDim]]*nu[rIndex[bDim]]);
   for(int i = 1; i < nRDim-bDim; i++){
-    diffL[i] = (col - line - diffL[i-1])/(l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]);
+    diffNL[i] = (col - line - diffNL[i-1])/((l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]));
+    startNL[i] = line/((l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]));
     if(bDim + i < nRDim){
-      diffL[i] = diffL[i] % l[rIndex[bDim + i]]*nu[rIndex[bDim + i]];
+      diffNL[i] = diffNL[i] % (l[rIndex[bDim + i]]*nu[rIndex[bDim + i]]);
+      startNL[i] = startNL[i] % (l[rIndex[bDim + i]]*nu[rIndex[bDim + i]]);
     }
   }
 
+  int startL;
+  for(int i = 0; i < nRDim - bDim; i++){
+    startL = startNL[i] % nu[rIndex[bDim + i]];
+    diffN[i] = (startL + diffNL[i])/nu[rIndex[bDim + i]];
+    diffL[i] = diffNL[i] % nu[rIndex[bDim + i]];
+    if((startL + diffL[i]) % nu[rIndex[bDim + i]] < startL){
+      diffL[i] = -diffL[i];
+    }
+    //cout << "n " << diffN[i] << " l " << diffL[i] << " nl " << diffNL[i] << " " << l[rIndex[bDim + i]] << endl;
+  }
+
+  cout << "size " << size << endl;
+
+  bool isHop;
+  bool isHopHerm;
   vector<int> h;
+  vector<int> hHerm; //Conjugate transpose the matrix comming from these
+  for(int e = 0; e < nHop; e++){
+    isHop = true;
+    isHopHerm = true;
+    for(int i = 0; i < nRDim - bDim; i++){
+      cout << model.getHop(e).getN(rIndex[bDim + i]) << " " << lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]] - lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]] << endl;
+      if(model.getHop(e).getN(rIndex[bDim + i]) != diffN[i] ||
+	  (lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]] - 
+	   lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]]) != diffL[i]){
+	isHop = false;
+      }
+      if(model.getHop(e).getN(rIndex[bDim + i]) != - diffN[i] ||
+	  (lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]] - 
+	   lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]]) != - diffL[i]){
+	isHopHerm = false;
+      }
+    }
+    if(isHop == true){
+      h.push_back(e);
+    }
+    else if(isHopHerm == true){
+      hHerm.push_back(e);
+    }
+  }
+
+  for(int i = 0; i < h.size(); i++){
+    cout << h[i] << endl;
+  }
+
+  for(int i = 0; i < hHerm.size(); i++){
+    cout << "Herm: " << hHerm[i] << endl;
+  }
 
   delete diffL;
-  delete nVec;
-  delete lVec;
+  delete diffN;
+  delete diffNL;
+
+
+
   return res;
 }
 

@@ -21,6 +21,7 @@ class TBCleanH : public Hamiltonian{
     //Get Hamiltonian in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
     cx_mat H(double * k = NULL);
     sp_cx_mat spH(double * k = NULL);
+    //Using open boundary conditions for the directions not included in the blocks
     cx_mat blockH(int line, int col, double * k = NULL);
 
     //Whether the user prefers Sparse matrices or not

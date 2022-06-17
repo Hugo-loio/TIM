@@ -267,8 +267,10 @@ void BBH3D::test(char * argv0){
   cx_mat h = ham->H(k);
   //cout << h << endl;
 
-  OData o(argv0, "hamBBH3D_4x4x4_PBCxy.dat");
-  o.matrixWeights(h);
+  //OData o(argv0, "hamBBH3D_4x4x4_PBCxy.dat");
+  //o.matrixWeights(h);
+
+  ham->blockH(0,1);
 
   for(int i = 0; i < 4; i++){
     delete[] layers[i];
