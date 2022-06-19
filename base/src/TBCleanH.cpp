@@ -1025,6 +1025,9 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
 	size *= l[rIndex[i]]*nu[rIndex[i]];
       }
     }
+    if(size*(col+1) > nOrb*lAccum[nRDim-1] || size*(line+1) > nOrb*lAccum[nRDim - 1]){
+      return cx_mat(size,size, fill::zeros);
+    }
   }
   cx_mat res(size, size, fill::zeros);
 
@@ -1061,10 +1064,7 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     if((startL[i] + diffL[i]) % nu[rIndex[bDim + i]] < startL[i]){
       diffL[i] = -diffL[i];
     }
-    cout << "n " << diffN[i] << " l " << diffL[i] << " nl " << diffNL[i] << " " << l[rIndex[bDim + i]] << endl;
   }
-
-  cout << "size " << size << endl;
 
   bool isHop;
   bool isHopHerm;
@@ -1078,7 +1078,6 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
       n = model.getHop(e).getN(rIndex[bDim + i]);
       l2 = lOrb[model.getHop(e).getNOrb2()][rIndex[bDim + i]];
       l1 = lOrb[model.getHop(e).getNOrb1()][rIndex[bDim + i]];
-      cout << e << " " << i << " " << n << " " << l2 - l1 << endl;
       if(n != diffN[i] || (l2 - l1) != diffL[i] || l1 != startL[i]){
 	isHop = false;
       }
@@ -1094,6 +1093,7 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     }
   }
 
+  /*
   for(int i = 0; i < h.size(); i++){
     cout << "h: " << h[i] << endl;
   }
@@ -1101,6 +1101,35 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   for(int i = 0; i < hHerm.size(); i++){
     cout << "hHerm: " << hHerm[i] << endl;
   }
+  */
+
+  int sub1 = (col-line)*size;
+  int sub2 = startL[0]*size;
+  for(int i = 1; i < nRDim - bDim; i++){
+    sub2 += startL[i]*size*l[rIndex[bDim + i - 1]]*nu[rIndex[bDim + i - 1]];
+  }
+
+  vector<int> os;
+  bool isOS;
+  if(sub1 == 0){
+    for(int e = 0; e < nOrb; e++){
+      isOS = true;
+      for(int i = 0; i < nRDim - bDim; i++){
+	if(lOrb[e][rIndex[i + bDim]] != startL[i]){
+	  isOS = false;
+	}
+      }
+      if(isOS){
+	os.push_back(e);
+      }
+    }
+  }
+
+  /*
+  for(int i = 0; i < os.size(); i++){
+    cout << "os: " << os[i] << endl;
+  }
+  */
 
   delete diffL;
   delete diffN;
@@ -1122,9 +1151,6 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   int * end = new int[bDim + 1];
   end[bDim] = 1;
 
-  int sub = (col-line)*size;
-
-
   //Hopping terms (hermitian conjugate)
   for(int m = 0; m < hHerm.size(); m++){
     int e = hHerm[m];
@@ -1141,21 +1167,22 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     //Bulk lattice
     for(j = 0; j < bDim; j++){
       i[j] = startHopUCBulk[e][j];
+      end[j] = endHopUCBulk[e][j];
     }
     for(j = bDim; j <= nRDim; j++){
       i[j] = 0;
     }
 
-    n = flatten2(model.getHop(e).getNOrb1(), i);
+    n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
+    i[bDim] = startHopUCBulk[e][nRDim];
 
     while(i[bDim] == 0){
-      cout << n << " "  << n-sub << " " << n + nHopBulk[e] << endl;
-      res(n - sub, n + nHopBulk[e]) += t;
+      res(n - sub1, n + nHopBulk[e]) += t;
 
       i[0] += 1;
       n += incNHopBulk[e][0];
       p = 0;
-      while(i[p] > endHopUCBulk[e][p]){
+      while(i[p] > end[p]){
 	i[p] = startHopUCBulk[e][p];
 	i[++p] += 1;
 	n += incNHopBulk[e][p];
@@ -1202,11 +1229,11 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
 
       t = model.getHop(e).getHop()*kPhase*phase;
 
-      n = flatten2(model.getHop(e).getNOrb1(), i);
+      n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
 
       while(i[bDim] == 0){
 
-	res(n, n + nHopBound[e][q]) += t;
+	res(n - sub1, n + nHopBound[e][q]) += t;
 
 	i[0] += 1;
 	n += incNHopBound[e][q][0];
@@ -1250,24 +1277,28 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     //Bulk lattice
     for(j = 0; j < bDim; j++){
       i[j] = startHopUCBulk[e][j];
+      end[j] = endHopUCBulk[e][j];
     }
     for(j = bDim; j <= nRDim; j++){
       i[j] = 0;
     }
 
-    n = flatten2(model.getHop(e).getNOrb1(), i);
+    n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
+    i[bDim] = startHopUCBulk[e][nRDim];
 
     while(i[bDim] == 0){
-      cout << e << " " << n << " " << sub << " " << nHopBulk[e] << endl;
-      res(n, n + nHopBulk[e] - sub) += t;
+      res(n, n + nHopBulk[e] - sub1) += t;
 
       i[0] += 1;
       n += incNHopBulk[e][0];
       p = 0;
-      while(i[p] > endHopUCBulk[e][p]){
+      while(i[p] > end[p]){
 	i[p] = startHopUCBulk[e][p];
 	i[++p] += 1;
 	n += incNHopBulk[e][p];
+	if(p == bDim){
+	  break;
+	}
       }
     }
 
@@ -1311,11 +1342,10 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
 
       t = model.getHop(e).getHop()*kPhase*phase;
 
-      n = flatten2(model.getHop(e).getNOrb1(), i);
+      n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
 
       while(i[bDim] == 0){
-
-	res(n, n + nHopBound[e][q]) += t;
+	res(n, n + nHopBound[e][q] - sub1) += t;
 
 	i[0] += 1;
 	n += incNHopBound[e][q][0];
@@ -1342,35 +1372,37 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   }
 
   if(transpose){
+    res = res.t();
+  }
+  if(sub1 == 0){
     res = res + res.t();
   }
 
   //On-site terms
 
-  if(sub == 0){
-    for(int e = 0; e < nRDim; e++){
-      end[e] = l[rIndex[e]] - 1;
+  for(int e = 0; e < bDim; e++){
+    end[e] = l[rIndex[e]] - 1;
+  }
+
+  for(int m = 0; m < os.size(); m++){
+    int e = os[m];
+
+    for(j = 0; j < nRDim; j++){
+      i[j] = 0;
     }
+    n = flatten2(model.getOnSite(e).getNOrb(), i) - sub2;
+    i[nRDim] = 0;
 
-    for(int e = 0; e < nOnSite; e++){
+    while(i[bDim] == 0){
+      res(n, n) += model.getOnSite(e).getEn();
 
-      for(j = 0; j < nRDim; j++){
-	i[j] = 0;
-      }
-      n = flatten2(model.getOnSite(e).getNOrb(), i);
-      i[nRDim] = 0;
-
-      while(i[bDim] == 0){
-	res(n, n) += model.getOnSite(e).getEn();
-
-	i[0] += 1;
-	n += incNOnSite[e][0];
-	p = 0;
-	while(i[p] > end[p]){
-	  i[p] = 0;
-	  i[++p] += 1;
-	  n += incNOnSite[e][p];
-	}
+      i[0] += 1;
+      n += incNOnSite[e][0];
+      p = 0;
+      while(i[p] > end[p]){
+	i[p] = 0;
+	i[++p] += 1;
+	n += incNOnSite[e][p];
       }
     }
   }

@@ -19,14 +19,16 @@ def matrixHist(fname, show: bool, size: int, bsize: int):
     #ax.colorbar()
     if(show):
         plt.show()
+    plt.close()
 
 names = ["testH"]
+
 names2 = ["testH2"]
 
 names1 = ["hamBBH3D_4x4x4_noPBC", "hamBBH3D_4x4x4_PBCxy", "hamBBH3D_4x4x4_PBCx", "hamBBH3D_4x4x4_PBCy"]
 
 for name in names:
-    matrixHist(name + ".dat", True, 16, 1)
+    matrixHist(name + ".dat", False, 64, 1)
 
 for name in names2:
     matrixHist(name + ".dat", True, 4, 1)

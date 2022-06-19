@@ -172,7 +172,7 @@ void BBH2D::test(char * argv0){
   OData o(argv0, "testH.dat");
   o.matrixWeights(h);
 
-  cx_mat h2 = ham->blockH(1,2);
+  cx_mat h2 = ham->blockH(3,1);
   cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);

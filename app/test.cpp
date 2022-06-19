@@ -61,10 +61,10 @@ int main (int arc, char ** argv) {
   //cout << n << " concurrent threads are supported.\n";
 
   BBH3D bbh3(0.5,1,3);
-  //bbh3.test(argv[0]);
+  bbh3.test(argv[0]);
 
   BBH2D bbh2(0.5,1,0.1);
-  bbh2.test(argv[0]);
+  //bbh2.test(argv[0]);
 
   /*
   A a;
