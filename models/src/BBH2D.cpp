@@ -142,7 +142,7 @@ void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
 }
 
 void BBH2D::test(char * argv0){
-  int bC[2] = {1,0};
+  int bC[2] = {0,0};
   //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
   int ** layers = new int * [4];
   for(int i = 0; i < 4; i++){
@@ -171,6 +171,11 @@ void BBH2D::test(char * argv0){
 
   OData o(argv0, "testH.dat");
   o.matrixWeights(h);
+
+  cx_mat h2 = ham->blockH(1,2);
+  cout << h2 << endl;
+  OData o2(argv0, "testH2.dat");
+  o2.matrixWeights(h2);
 
   for(int i = 0; i < 4; i++){
     delete[] layers[i];

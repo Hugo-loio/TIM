@@ -255,7 +255,7 @@ void BBH3D::test(char * argv0){
   layers[7][1] = 0;
   layers[7][2] = 0;
   double k[3] = {M_PI/2,M_PI/2,M_PI/2};
-  int l[3] = {4,4,4};
+  int l[3] = {1,1,1};
   int order[3] = {0,1,2};
 
   ham->setSize(l);
@@ -267,11 +267,11 @@ void BBH3D::test(char * argv0){
   cx_mat h = ham->H(k);
   //cout << h << endl;
 
-  //OData o(argv0, "hamBBH3D_4x4x4_PBCxy.dat");
-  //o.matrixWeights(h);
+  OData o(argv0, "testH.dat");
+  o.matrixWeights(h);
 
   ham->setBlockDim(1);
-  ham->blockH(0,7);
+  //ham->blockH(0,7);
 
   for(int i = 0; i < 4; i++){
     delete[] layers[i];

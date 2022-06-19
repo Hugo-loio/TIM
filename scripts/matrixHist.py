@@ -21,11 +21,15 @@ def matrixHist(fname, show: bool, size: int, bsize: int):
         plt.show()
 
 names = ["testH"]
+names2 = ["testH2"]
 
 names1 = ["hamBBH3D_4x4x4_noPBC", "hamBBH3D_4x4x4_PBCxy", "hamBBH3D_4x4x4_PBCx", "hamBBH3D_4x4x4_PBCy"]
 
 for name in names:
-    matrixHist(name + ".dat", True, 512, 8)
+    matrixHist(name + ".dat", True, 16, 1)
+
+for name in names2:
+    matrixHist(name + ".dat", True, 4, 1)
 
 for name in names1:
     matrixHist(name + ".dat", False, 512, 8)

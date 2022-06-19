@@ -64,11 +64,16 @@ class TBCleanH : public Hamiltonian{
     int * inc;
     int ** incNHopBulk;
     int *** incNHopBound;
+    // For lattice with sites
     int ** startHopBulk;
     int ** startHopBound;
     int ** endHopBulk;
     int ** endHopBound;
-    //int ** incOnSite;
+    // For unit cells
+    int ** startHopUCBulk;
+    int ** startHopUCBound;
+    int ** endHopUCBulk;
+    int ** endHopUCBound;
     int ** incNOnSite;
     int ** startOnSite;
     int ** endOnSite;
@@ -87,6 +92,8 @@ class TBCleanH : public Hamiltonian{
     void calcAux();
     //Get flattened orbital index
     int flatten(int alpha, int * n);
+    // for already sorted n
+    int flatten2(int alpha, int * n);
 };
 
 #endif
