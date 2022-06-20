@@ -13,6 +13,7 @@ MultipoleOp::MultipoleOp(Hamiltonian * ham, int * l,int dim, int nOrb) : ham(ham
   for(int i = 1; i < dim; i++){
     lAccum[i] = lAccum[i-1]*l[i];
   }
+  nOcc = lAccum[dim-1]*nOrb/2;
 }
 
 MultipoleOp::~MultipoleOp(){

@@ -43,8 +43,6 @@ int main (int arc, char ** argv) {
   DisorderedSOTAI sotai(1.1);
   sotai.setW(1);
 
-  int l[2] = {5,5};
-  cx_mat h = sotai.getHam(l);
 
   //OData o(argv[0], "testH.dat");
   //o.matrixWeights(h);
@@ -61,10 +59,12 @@ int main (int arc, char ** argv) {
   //cout << n << " concurrent threads are supported.\n";
 
   BBH3D bbh3(0.5,1,3);
-  bbh3.test(argv[0]);
+  //bbh3.test(argv[0]);
 
-  BBH2D bbh2(0.5,1,0.1);
-  //bbh2.test(argv[0]);
+  BBH2D bbh2(0.9,1);
+  int l[2] = {100,100};
+  cout << bbh2.getBoundPolarization(l,0) << endl;
+  //cout << bbh2.getBoundPolarization(l,1) << endl;
 
   /*
   A a;

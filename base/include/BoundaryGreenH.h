@@ -8,13 +8,13 @@ using namespace std;
 
 class BoundaryGreenH : public Hamiltonian{
   public:
-    BoundaryGreenH(Hamiltonian * ham, int nOrb, int * l);
+    BoundaryGreenH(Hamiltonian * ham, int blockSize, int nLayers);
     ~BoundaryGreenH();
 
-    cx_mat boundaryGreenFunc(double * k);
-    cx_mat H(double * k);
+    cx_mat boundaryGreenFunc(double * k = NULL);
+    cx_mat H(double * k = NULL);
     //Dummy sparse option
-    sp_cx_mat spH(double * k){return sp_cx_mat();};
+    sp_cx_mat spH(double * k = NULL){return sp_cx_mat(H(k));};
     cx_mat blockH(int line, int col, double * k = NULL){return cx_mat();};
 
   private:

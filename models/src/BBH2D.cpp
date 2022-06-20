@@ -1,6 +1,7 @@
 #include "BBH2D.h"
 #include "OData.h"
 #include "MultipoleOp.h"
+#include "BoundaryGreenH.h"
 
 BBH2D::BBH2D(double t1, double t2, double delta){
   model = new TBModel(2, 4);
@@ -191,4 +192,37 @@ double BBH2D::getQuadrupoleManyBody(int * l){
   MultipoleOp q(ham, l, 2, 4);
   q.setOcc(2*l[0]*l[1]);
   return q.quadrupole(0,1);
+}
+
+double BBH2D::getBoundPolarization(int * l, int dir){
+  int ** layers = new int * [4];
+  for(int i = 0; i < 4; i++){
+    layers[i] = new int[2];
+  }
+  layers[0][0] = 1;
+  layers[0][1] = 1;
+  layers[1][0] = 0;
+  layers[1][1] = 0;
+  layers[2][0] = 0;
+  layers[2][1] = 1;
+  layers[3][0] = 1;
+  layers[3][1] = 0;
+  int order[2] = {0,1};
+  int bC[2] = {2,0};
+  if(dir == 1){
+    bC[0] = 0;
+    bC[1] = 2;
+    order[0] = 1;
+    order[1] = 0;
+  }
+  ham->setOrbLayer(layers);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSize(l);
+  ham->setSparse(false);
+  BoundaryGreenH green(ham, l[order[0]]*2, l[order[1]]*2);
+  
+  int lBound[1] = {l[order[0]]};
+  MultipoleOp o(&green, lBound, 1, 2);
+  return o.polarization(0);
 }
