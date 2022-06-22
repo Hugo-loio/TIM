@@ -29,6 +29,7 @@ class BBH2D{
     double getQuadrupoleNestedSupercell(int * l, int * n);
     double getQuadrupoleManyBody(int * l);
     double getBoundPolarization(int * l, int dir);
+    void getBoundaryHam(int * l, int dir, char * argv0, string fileName);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
     void test(char * argv0);

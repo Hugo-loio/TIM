@@ -1,6 +1,7 @@
 #include "BBH3D.h"
 #include "OData.h"
 #include "MultipoleOp.h"
+#include "BoundaryGreenH.h"
 
 BBH3D::BBH3D(double t1, double t2, double delta){
   model = new TBModel(3, 8);
@@ -224,7 +225,7 @@ double BBH3D::getOctupoleManyBody(int * l){
 }
 
 void BBH3D::test(char * argv0){
-  int bC[3] = {0,0,2};
+  int bC[3] = {0,0,0};
   //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
   int ** layers = new int * [8];
   for(int i = 0; i < 8; i++){
@@ -254,9 +255,11 @@ void BBH3D::test(char * argv0){
   layers[7][0] = 1;
   layers[7][1] = 0;
   layers[7][2] = 0;
+
   double k[3] = {M_PI/2,M_PI/2,M_PI/2};
   int l[3] = {2,2,2};
-  int order[3] = {2,1,0};
+  int order[3] = {2,0,1};
+  //int order[3] = {0,2,1};
 
   ham->setSize(l);
   ham->setBC(bC);
@@ -270,10 +273,10 @@ void BBH3D::test(char * argv0){
   OData o(argv0, "testH.dat");
   o.matrixWeights(h);
 
-  ham->setBlockDim(1);
+  ham->setBlockDim(2);
   //ham->blockH(0,7);
 
-  cx_mat h2 = ham->blockH(11,15);
+  cx_mat h2 = ham->blockH(0,0);
   //cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);
@@ -284,16 +287,121 @@ void BBH3D::test(char * argv0){
   delete[] layers;
 }
 
-/*
-   double BBH3D::berryPhase(int n, int dir, double * k0){
-   int bC[2] = {1,1};
-   ham->setBC(bC);
-   ham->setSparse(false);
-   Wilson wilson(ham);
-   wilson.setLoopDir(dir);
-   if(k0 != NULL){
-   wilson.setLoopStart(k0);
-   }
-   return wilson.berryPhase(n, 1);
-   }
-   */
+double BBH3D::getBoundQuadrupole(int * l, int dir){
+  int bC[3] = {0,0,0};
+
+  int order[3] = {0,1,2};
+  int ** layers = new int * [8];
+  for(int i = 0; i < 8; i++){
+    layers[i] = new int[3];
+  }
+  int a,b;
+  if(dir == 0){
+    layers[0][0] = 1;
+    layers[0][1] = 0;
+    layers[0][2] = 0;
+    layers[1][0] = 0;
+    layers[1][1] = 0;
+    layers[1][2] = 0;
+    layers[2][0] = 0;
+    layers[2][1] = 0;
+    layers[2][2] = 0;
+    layers[3][0] = 1;
+    layers[3][1] = 0;
+    layers[3][2] = 0;
+    layers[4][0] = 1;
+    layers[4][1] = 0;
+    layers[4][2] = 0;
+    layers[5][0] = 0;
+    layers[5][1] = 0;
+    layers[5][2] = 0;
+    layers[6][0] = 0;
+    layers[6][1] = 0;
+    layers[6][2] = 0;
+    layers[7][0] = 1;
+    layers[7][1] = 0;
+    layers[7][2] = 0;
+    order[0] = 2;
+    order[1] = 0;
+    order[2] = 1;
+    bC[1] = 2;
+    bC[2] = 2;
+  }
+  else if(dir == 1){
+    layers[0][0] = 0;
+    layers[0][1] = 1;
+    layers[0][2] = 0;
+    layers[1][0] = 0;
+    layers[1][1] = 0;
+    layers[1][2] = 0;
+    layers[2][0] = 0;
+    layers[2][1] = 1;
+    layers[2][2] = 0;
+    layers[3][0] = 0;
+    layers[3][1] = 0;
+    layers[3][2] = 0;
+    layers[4][0] = 0;
+    layers[4][1] = 1;
+    layers[4][2] = 0;
+    layers[5][0] = 0;
+    layers[5][1] = 0;
+    layers[5][2] = 0;
+    layers[6][0] = 0;
+    layers[6][1] = 1;
+    layers[6][2] = 0;
+    layers[7][0] = 0;
+    layers[7][1] = 0;
+    layers[7][2] = 0;
+    order[0] = 0;
+    order[1] = 2;
+    order[2] = 1;
+    bC[0] = 2;
+    bC[2] = 2;
+  }
+  else{
+    layers[0][0] = 0;
+    layers[0][1] = 0;
+    layers[0][2] = 1;
+    layers[1][0] = 0;
+    layers[1][1] = 0;
+    layers[1][2] = 1;
+    layers[2][0] = 0;
+    layers[2][1] = 0;
+    layers[2][2] = 1;
+    layers[3][0] = 0;
+    layers[3][1] = 0;
+    layers[3][2] = 1;
+    layers[4][0] = 0;
+    layers[4][1] = 0;
+    layers[4][2] = 0;
+    layers[5][0] = 0;
+    layers[5][1] = 0;
+    layers[5][2] = 0;
+    layers[6][0] = 0;
+    layers[6][1] = 0;
+    layers[6][2] = 0;
+    layers[7][0] = 0;
+    layers[7][1] = 0;
+    layers[7][2] = 0;
+    bC[0] = 2;
+    bC[1] = 2;
+  }
+
+  ham->setSize(l);
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setOrbLayer(layers);
+  ham->setOrder(order);
+
+  BoundaryGreenH green(ham, l[order[0]]*l[order[1]]*4, l[order[2]]*2);
+  int lBound[2] = {l[order[0]], l[order[1]]};
+  MultipoleOp o(&green, lBound, 2, 4);
+
+  for(int i = 0; i < 4; i++){
+    delete[] layers[i];
+  }
+  delete[] layers;
+
+  return o.quadrupole(0,1);
+}
+

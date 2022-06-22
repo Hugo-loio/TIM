@@ -59,11 +59,11 @@ int main (int arc, char ** argv) {
   //cout << n << " concurrent threads are supported.\n";
 
   BBH3D bbh3(0.5,1,3);
-  //bbh3.test(argv[0]);
+  bbh3.test(argv[0]);
 
-  BBH2D bbh2(0.9,1);
+  BBH2D bbh2(0.7,1);
   int l[2] = {100,100};
-  cout << bbh2.getBoundPolarization(l,0) << endl;
+  //cout << bbh2.getBoundPolarization(l,0) << endl;
   //cout << bbh2.getBoundPolarization(l,1) << endl;
 
   /*

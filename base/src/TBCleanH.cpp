@@ -1094,14 +1094,14 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   }
 
   /*
-  for(int i = 0; i < h.size(); i++){
-    cout << "h: " << h[i] << endl;
-  }
+     for(int i = 0; i < h.size(); i++){
+     cout << "h: " << h[i] << endl;
+     }
 
-  for(int i = 0; i < hHerm.size(); i++){
-    cout << "hHerm: " << hHerm[i] << endl;
-  }
-  */
+     for(int i = 0; i < hHerm.size(); i++){
+     cout << "hHerm: " << hHerm[i] << endl;
+     }
+     */
 
   int sub1 = (col-line)*size;
   int sub2 = startL[0]*size;
@@ -1126,10 +1126,10 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   }
 
   /*
-  for(int i = 0; i < os.size(); i++){
-    cout << "os: " << os[i] << endl;
-  }
-  */
+     for(int i = 0; i < os.size(); i++){
+     cout << "os: " << os[i] << endl;
+     }
+     */
 
   delete diffL;
   delete diffN;

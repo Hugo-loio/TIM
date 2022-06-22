@@ -30,6 +30,8 @@ class BBH3D{
     void getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n);
     double getOctupoleNestedSupercell(int * l, int * n);
     double getOctupoleManyBody(int * l);
+    double getBoundQuadrupole(int * l, int dir);
+    void getBoundaryHam(int * l, int dir);
     void test(char * argv0);
   private:
     TBModel * model;
