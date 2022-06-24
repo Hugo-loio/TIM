@@ -226,35 +226,7 @@ double BBH3D::getOctupoleManyBody(int * l){
 
 void BBH3D::test(char * argv0){
   int bC[3] = {0,0,0};
-  //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
-  int ** layers = new int * [8];
-  for(int i = 0; i < 8; i++){
-    layers[i] = new int[3];
-  }
-  layers[0][0] = 1;
-  layers[0][1] = 1;
-  layers[0][2] = 1;
-  layers[1][0] = 0;
-  layers[1][1] = 0;
-  layers[1][2] = 1;
-  layers[2][0] = 0;
-  layers[2][1] = 1;
-  layers[2][2] = 1;
-  layers[3][0] = 1;
-  layers[3][1] = 0;
-  layers[3][2] = 1;
-  layers[4][0] = 1;
-  layers[4][1] = 1;
-  layers[4][2] = 0;
-  layers[5][0] = 0;
-  layers[5][1] = 0;
-  layers[5][2] = 0;
-  layers[6][0] = 0;
-  layers[6][1] = 1;
-  layers[6][2] = 0;
-  layers[7][0] = 1;
-  layers[7][1] = 0;
-  layers[7][2] = 0;
+  bool layerDir[3] = {true, true, true};
 
   double k[3] = {M_PI/2,M_PI/2,M_PI/2};
   int l[3] = {2,2,2};
@@ -264,7 +236,7 @@ void BBH3D::test(char * argv0){
   ham->setSize(l);
   ham->setBC(bC);
   ham->setSparse(false);
-  ham->setOrbLayer(layers);
+  setLayers(layerDir);
   ham->setOrder(order);
 
   cx_mat h = ham->H(k);
@@ -280,47 +252,16 @@ void BBH3D::test(char * argv0){
   //cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);
-
-  for(int i = 0; i < 4; i++){
-    delete[] layers[i];
-  }
-  delete[] layers;
 }
 
 double BBH3D::getBoundQuadrupole(int * l, int dir){
   int bC[3] = {0,0,0};
 
   int order[3] = {0,1,2};
-  int ** layers = new int * [8];
-  for(int i = 0; i < 8; i++){
-    layers[i] = new int[3];
-  }
+  bool layerDir[3] = {false,false,false};
+  layerDir[dir] = true;
   int a,b;
   if(dir == 0){
-    layers[0][0] = 1;
-    layers[0][1] = 0;
-    layers[0][2] = 0;
-    layers[1][0] = 0;
-    layers[1][1] = 0;
-    layers[1][2] = 0;
-    layers[2][0] = 0;
-    layers[2][1] = 0;
-    layers[2][2] = 0;
-    layers[3][0] = 1;
-    layers[3][1] = 0;
-    layers[3][2] = 0;
-    layers[4][0] = 1;
-    layers[4][1] = 0;
-    layers[4][2] = 0;
-    layers[5][0] = 0;
-    layers[5][1] = 0;
-    layers[5][2] = 0;
-    layers[6][0] = 0;
-    layers[6][1] = 0;
-    layers[6][2] = 0;
-    layers[7][0] = 1;
-    layers[7][1] = 0;
-    layers[7][2] = 0;
     order[0] = 2;
     order[1] = 0;
     order[2] = 1;
@@ -328,30 +269,6 @@ double BBH3D::getBoundQuadrupole(int * l, int dir){
     bC[2] = 2;
   }
   else if(dir == 1){
-    layers[0][0] = 0;
-    layers[0][1] = 1;
-    layers[0][2] = 0;
-    layers[1][0] = 0;
-    layers[1][1] = 0;
-    layers[1][2] = 0;
-    layers[2][0] = 0;
-    layers[2][1] = 1;
-    layers[2][2] = 0;
-    layers[3][0] = 0;
-    layers[3][1] = 0;
-    layers[3][2] = 0;
-    layers[4][0] = 0;
-    layers[4][1] = 1;
-    layers[4][2] = 0;
-    layers[5][0] = 0;
-    layers[5][1] = 0;
-    layers[5][2] = 0;
-    layers[6][0] = 0;
-    layers[6][1] = 1;
-    layers[6][2] = 0;
-    layers[7][0] = 0;
-    layers[7][1] = 0;
-    layers[7][2] = 0;
     order[0] = 0;
     order[1] = 2;
     order[2] = 1;
@@ -359,30 +276,6 @@ double BBH3D::getBoundQuadrupole(int * l, int dir){
     bC[2] = 2;
   }
   else{
-    layers[0][0] = 0;
-    layers[0][1] = 0;
-    layers[0][2] = 1;
-    layers[1][0] = 0;
-    layers[1][1] = 0;
-    layers[1][2] = 1;
-    layers[2][0] = 0;
-    layers[2][1] = 0;
-    layers[2][2] = 1;
-    layers[3][0] = 0;
-    layers[3][1] = 0;
-    layers[3][2] = 1;
-    layers[4][0] = 0;
-    layers[4][1] = 0;
-    layers[4][2] = 0;
-    layers[5][0] = 0;
-    layers[5][1] = 0;
-    layers[5][2] = 0;
-    layers[6][0] = 0;
-    layers[6][1] = 0;
-    layers[6][2] = 0;
-    layers[7][0] = 0;
-    layers[7][1] = 0;
-    layers[7][2] = 0;
     bC[0] = 2;
     bC[1] = 2;
   }
@@ -390,18 +283,49 @@ double BBH3D::getBoundQuadrupole(int * l, int dir){
   ham->setSize(l);
   ham->setBC(bC);
   ham->setSparse(false);
-  ham->setOrbLayer(layers);
+  setLayers(layerDir);
   ham->setOrder(order);
 
   BoundaryGreenH green(ham, l[order[0]]*l[order[1]]*4, l[order[2]]*2);
   int lBound[2] = {l[order[0]], l[order[1]]};
   MultipoleOp o(&green, lBound, 2, 4);
 
+  return o.quadrupole(0,1);
+}
+
+void BBH3D::setLayers(bool * layerDir){
+  int ** layers = new int * [8];
+  for(int i = 0; i < 8; i++){
+    layers[i] = new int[3];
+    for(int e = 0; e < 3; e++){
+      layers[i][e] = 0;
+    }
+  }
+  
+  if(layerDir[0]){
+    layers[0][0] = 1;
+    layers[3][0] = 1;
+    layers[4][0] = 1;
+    layers[7][0] = 1;
+  }
+  if(layerDir[1]){
+    layers[0][1] = 1;
+    layers[2][1] = 1;
+    layers[4][1] = 1;
+    layers[6][1] = 1;
+  }
+  if(layerDir[2]){
+    layers[0][2] = 1;
+    layers[1][2] = 1;
+    layers[2][2] = 1;
+    layers[3][2] = 1;
+  }
+
+  ham->setOrbLayer(layers);
+
   for(int i = 0; i < 4; i++){
     delete[] layers[i];
   }
   delete[] layers;
-
-  return o.quadrupole(0,1);
 }
 

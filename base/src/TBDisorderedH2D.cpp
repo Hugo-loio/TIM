@@ -719,7 +719,7 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
 	i[j] = 0;
       }
 
-      t = model.getHop(e).getHop()*kPhase*phase;
+      t = model.getHop(e).getHop()*phase;
 
       n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
 
@@ -756,15 +756,8 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
   //Hopping terms 
   for(int m = 0; m < h.size(); m++){
     int e = h[m];
-    kPhase = 1;
-    for(j = 0; j < nDim; j++){
-      if(bC[j] == 1){
-	//Extra phase due to k space hamiltonian
-	kPhase *= exp(ii*k[j]*(double)model.getHop(e).getN(j));
-      }
-    }
 
-    t = model.getHop(e).getHop()*kPhase;
+    t = model.getHop(e).getHop();
 
     //Bulk lattice
     for(j = 0; j < bDim; j++){
@@ -832,7 +825,7 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
 	i[j] = 0;
       }
 
-      t = model.getHop(e).getHop()*kPhase*phase;
+      t = model.getHop(e).getHop()*phase;
 
       n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
 

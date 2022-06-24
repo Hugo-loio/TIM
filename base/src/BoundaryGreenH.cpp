@@ -20,9 +20,19 @@ cx_mat BoundaryGreenH::boundaryGreenFunc(double * k){
     v = ham->blockH(i-1,i,k);
     res = (-ham->blockH(i,i,k) - v*res*(v.t())).i();
   }
-  return res;
+  if(lowerBound){
+    return res.submat(blockSize - lowerBlockSize -1, blockSize - lowerBlockSize - 1, blockSize - 1, blockSize - 1);
+  }
+  else{
+    return res;
+  }
 }
 
 cx_mat BoundaryGreenH::H(double * k){
   return boundaryGreenFunc(k).i();
+}
+
+void BoundaryGreenH::setLowerBound(bool lowerBound, int blockSize){
+  this->lowerBound = lowerBound;
+  lowerBlockSize = blockSize;
 }

@@ -35,10 +35,10 @@ for name in names:
 
 for name in names2:
     matrixHist(name + ".dat", False, 16, 1)
+    '''
 
 for name in names1:
     matrixHist(name + ".dat", False, 512, 8)
-    '''
 
 for name in boundaryHam1:
     matrixHist(name + ".dat", True, 20, 1)

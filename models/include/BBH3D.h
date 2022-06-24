@@ -19,6 +19,7 @@ class BBH3D{
     void setInterHop(double);
     void setOnSite(double);
     //void setSparse(bool);
+    void setLayers(bool * layerDir);
 
     //double berryPhase(int n, int dir = 0, double * k0 = NULL);
     void getBands(char * argv0, string fileName);
@@ -31,7 +32,8 @@ class BBH3D{
     double getOctupoleNestedSupercell(int * l, int * n);
     double getOctupoleManyBody(int * l);
     double getBoundQuadrupole(int * l, int dir);
-    void getBoundaryHam(int * l, int dir);
+    double getBoundPolarization(int * l, int dir);
+    void getBoundaryHam(int * l, int dir, char * argv0, string fileName);
     void test(char * argv0);
   private:
     TBModel * model;

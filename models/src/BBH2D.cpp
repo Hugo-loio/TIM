@@ -144,27 +144,15 @@ void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
 
 void BBH2D::test(char * argv0){
   int bC[2] = {0,0};
-  //int layers[4][2] = {{1,1},{0,0},{0,1},{1,0}};
-  int ** layers = new int * [4];
-  for(int i = 0; i < 4; i++){
-    layers[i] = new int[2];
-  }
-  layers[0][0] = 1;
-  layers[0][1] = 1;
-  layers[1][0] = 0;
-  layers[1][1] = 0;
-  layers[2][0] = 0;
-  layers[2][1] = 1;
-  layers[3][0] = 1;
-  layers[3][1] = 0;
   double k[2] = {M_PI/2,-M_PI/2};
   int l[2] = {2,2};
   int order[2] = {1,0};
 
+  bool layerDir[2] = {true, true};
+  setLayers(layerDir);
   ham->setSize(l);
   ham->setBC(bC);
   ham->setSparse(false);
-  ham->setOrbLayer(layers);
   ham->setOrder(order);
 
   cx_mat h = ham->H(k);
@@ -177,11 +165,6 @@ void BBH2D::test(char * argv0){
   cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);
-
-  for(int i = 0; i < 4; i++){
-    delete[] layers[i];
-  }
-  delete[] layers;
 }
 
 double BBH2D::getQuadrupoleManyBody(int * l){
@@ -195,18 +178,6 @@ double BBH2D::getQuadrupoleManyBody(int * l){
 }
 
 double BBH2D::getBoundPolarization(int * l, int dir){
-  int ** layers = new int * [4];
-  for(int i = 0; i < 4; i++){
-    layers[i] = new int[2];
-  }
-  layers[0][0] = 1;
-  layers[0][1] = 1;
-  layers[1][0] = 0;
-  layers[1][1] = 0;
-  layers[2][0] = 0;
-  layers[2][1] = 1;
-  layers[3][0] = 1;
-  layers[3][1] = 0;
   int order[2] = {0,1};
   int bC[2] = {2,0};
   if(dir == 1){
@@ -215,7 +186,8 @@ double BBH2D::getBoundPolarization(int * l, int dir){
     order[0] = 1;
     order[1] = 0;
   }
-  ham->setOrbLayer(layers);
+  bool layerDir[2] = {true, true};
+  setLayers(layerDir);
   ham->setOrder(order);
   ham->setBC(bC);
   ham->setSize(l);
@@ -225,36 +197,21 @@ double BBH2D::getBoundPolarization(int * l, int dir){
   int lBound[1] = {l[order[0]]};
   MultipoleOp o(&green, lBound, 1, 2);
 
-  for(int i = 0; i < 4; i++){
-    delete[] layers[i];
-  }
-  delete[] layers;
-  
   return o.polarization(0);
 }
 
 void BBH2D::getBoundaryHam(int * l, int dir, char * argv0, string fileName){
-  int ** layers = new int * [4];
-  for(int i = 0; i < 4; i++){
-    layers[i] = new int[2];
-  }
-  layers[0][0] = 1;
-  layers[0][1] = 1;
-  layers[1][0] = 0;
-  layers[1][1] = 0;
-  layers[2][0] = 0;
-  layers[2][1] = 1;
-  layers[3][0] = 1;
-  layers[3][1] = 0;
   int order[2] = {0,1};
   int bC[2] = {2,0};
+  bool layerDir[2] = {true, true};
   if(dir == 1){
     bC[0] = 0;
     bC[1] = 2;
     order[0] = 1;
     order[1] = 0;
   }
-  ham->setOrbLayer(layers);
+
+  setLayers(layerDir);
   ham->setOrder(order);
   ham->setBC(bC);
   ham->setSize(l);
@@ -266,6 +223,26 @@ void BBH2D::getBoundaryHam(int * l, int dir, char * argv0, string fileName){
 
   OData o(argv0, fileName);
   o.matrixWeights(h);
+}
+
+void BBH2D::setLayers(bool * layerDir){
+  int ** layers = new int * [4];
+  for(int i = 0; i < 4; i++){
+    layers[i] = new int[2];
+    for(int e = 0; e < 2; e++){
+      layers[i][e] = 0;
+    }
+  }
+  if(layerDir[0]){
+    layers[0][0] = 1;
+    layers[3][0] = 1;
+  }
+  if(layerDir[1]){
+    layers[0][1] = 1;
+    layers[2][1] = 1;
+  }
+
+  ham->setOrbLayer(layers);
 
   for(int i = 0; i < 4; i++){
     delete[] layers[i];

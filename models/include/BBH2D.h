@@ -18,6 +18,7 @@ class BBH2D{
     void setOnSite(double);
     void setIntraHop(double);
     void setInterHop(double);
+    void setLayers(bool * layerDir);
     //void setSparse(bool);
 
     double berryPhase(int n, int dir = 0, double * k0 = NULL);
