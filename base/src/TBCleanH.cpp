@@ -62,12 +62,12 @@ TBCleanH::TBCleanH(TBModel model) : model(model), Hamiltonian(model.getNDim()){
     nHopBound[i] = new int[(int)pow(2,nDim)];
     incNHopBulk[i] = new int[nRDim + 1];
     incNHopBound[i] = new int * [(int)pow(2,nDim)];
-    startHopBulk[i] = new int[nRDim];
-    startHopBound[i] = new int[nRDim];
+    startHopBulk[i] = new int[nRDim + 1];
+    startHopBound[i] = new int[nRDim + 1];
     endHopBulk[i] = new int[nRDim + 1];
     endHopBound[i] = new int[nRDim + 1];
     startHopUCBulk[i] = new int [nRDim + 1];
-    startHopUCBound[i] = new int [nRDim];
+    startHopUCBound[i] = new int [nRDim + 1];
     endHopUCBulk[i] = new int [nRDim + 1];
     endHopUCBound[i] = new int [nRDim + 1];
     for(int e = 0; e < pow(2,nDim); e++){
@@ -76,7 +76,7 @@ TBCleanH::TBCleanH(TBModel model) : model(model), Hamiltonian(model.getNDim()){
   }
   for(int i = 0; i < nOnSite; i++){
     incNOnSite[i] = new int[nRDim + 1];
-    startOnSite[i] = new int[nRDim];
+    startOnSite[i] = new int[nRDim + 1];
     endOnSite[i] = new int[nRDim + 1];
   }
 
@@ -203,12 +203,12 @@ void TBCleanH::setBC(int * bC){
   }
   for(int i = 0; i < nHop; i++){
     incNHopBulk[i] = new int[nRDim + 1];
-    startHopBulk[i] = new int[nRDim];
-    startHopBound[i] = new int[nRDim];
+    startHopBulk[i] = new int[nRDim + 1];
+    startHopBound[i] = new int[nRDim + 1];
     endHopBulk[i] = new int[nRDim + 1];
     endHopBound[i] = new int[nRDim + 1];
     startHopUCBulk[i] = new int [nRDim + 1];
-    startHopUCBound[i] = new int [nRDim];
+    startHopUCBound[i] = new int [nRDim + 1];
     endHopUCBulk[i] = new int [nRDim + 1];
     endHopUCBound[i] = new int [nRDim + 1];
     for(int e = 0; e < pow(2,nDim); e++){
@@ -222,7 +222,7 @@ void TBCleanH::setBC(int * bC){
   }
   for(int i = 0; i < nOnSite; i++){
     incNOnSite[i] = new int[nRDim + 1];
-    startOnSite[i] = new int[nRDim];
+    startOnSite[i] = new int[nRDim + 1];
     endOnSite[i] = new int[nRDim + 1];
   }
   isUpdated = false;
@@ -608,9 +608,12 @@ void TBCleanH::calcAux(){
     incNHopBulk[i][nRDim] = 1;
     endHopBound[i][nRDim] = 1;
     endHopBulk[i][nRDim] = 1;
+    startHopBound[i][nRDim] = 0;
+    startHopBulk[i][nRDim] = 0;
 
     //Limits in unit cells
     startHopUCBulk[i][nRDim] = 0;
+    startHopUCBound[i][nRDim] = 0;
     for(int e = 0; e < nRDim; e++){
       nH = model.getHop(i).getN()[rIndex[e]];
       if(abs(nH) >= l[rIndex[e]]){
@@ -666,6 +669,7 @@ void TBCleanH::calcAux(){
     }
     incNOnSite[i][nRDim] = 1;
     endOnSite[i][nRDim] = 1;
+    startOnSite[i][nRDim] = 0;
   }
 }
 
@@ -692,7 +696,7 @@ cx_mat TBCleanH::H(double * k){
 
   int * i = new int[nRDim + 1];
   int * b = new int[nRDim + 1];
-  int * start = new int[nRDim];
+  int * start = new int[nRDim + 1];
   int * end = new int[nRDim + 1];
   end[nRDim] = 1;
 
@@ -715,6 +719,7 @@ cx_mat TBCleanH::H(double * k){
 
     n = flatten2(model.getHop(e).getNOrb1(), i);
 
+    fill(res, t, n, incNHopBulk[e], startHopUCBulk[e], endHopBulk[e], nRDim, 0, nHopBulk[e]);
     while(i[nRDim] == 0){
       res(n, n + nHopBulk[e]) += t;
 
@@ -1047,7 +1052,7 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   }
 
   diffNL[0] = (col-line) % (l[rIndex[bDim]]*nu[rIndex[bDim]]);
-  startNL[0] = line % (l[rIndex[nDim]]*nu[rIndex[bDim]]);
+  startNL[0] = line % (l[rIndex[bDim]]*nu[rIndex[bDim]]);
   for(int i = 1; i < nRDim-bDim; i++){
     diffNL[i] = (col - line - diffNL[i-1])/((l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]));
     startNL[i] = line/((l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]));
@@ -1415,3 +1420,22 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   return res;
 }
 
+void TBCleanH::fill(cx_mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI, int addJ){
+  int * i = new int[dim + 1];
+  for(int j = 0; j < dim + 1; j++){
+    i[j] = start[j];
+  }
+  while(i[dim] == start[dim]){
+    res(n + addI, n + addJ) += w;
+
+    i[0] += 1;
+    n += incN[0];
+    p = 0;
+    while(i[p] > end[p]){
+      i[p] = 0;
+      i[++p] += 1;
+      n += incN[p];
+    }
+  }
+  delete[] i;
+}

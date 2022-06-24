@@ -58,7 +58,7 @@ int main (int arc, char ** argv) {
   //unsigned int n = thread::hardware_concurrency();
   //cout << n << " concurrent threads are supported.\n";
 
-  BBH3D bbh3(0.5,1,3);
+  BBH3D bbh3(0.5,1);
   bbh3.test(argv[0]);
 
   BBH2D bbh2(0.7,1);
@@ -67,9 +67,9 @@ int main (int arc, char ** argv) {
   //cout << bbh2.getBoundPolarization(l,1) << endl;
 
   /*
-  A a;
-  B b;
-  b.func();
-  */
+     A a;
+     B b;
+     b.func();
+     */
   return 0;
 }

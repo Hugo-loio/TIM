@@ -527,6 +527,7 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
   cx_mat res(size, size, fill::zeros);
 
   int * startNL = new int[nRDim - bDim];
+  int * startN = new int[nRDim - bDim];
   int * startL = new int[nRDim - bDim];
   int * diffNL = new int[nRDim - bDim];
   int * diffN = new int[nRDim - bDim];
@@ -541,7 +542,7 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
   }
 
   diffNL[0] = (col-line) % (l[rIndex[bDim]]*nu[rIndex[bDim]]);
-  startNL[0] = line % (l[rIndex[nDim]]*nu[rIndex[bDim]]);
+  startNL[0] = line % (l[rIndex[bDim]]*nu[rIndex[bDim]]);
   for(int i = 1; i < nRDim-bDim; i++){
     diffNL[i] = (col - line - diffNL[i-1])/((l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]));
     startNL[i] = line/((l[rIndex[bDim + i -1]]*nu[rIndex[bDim + i - 1]]));
@@ -553,6 +554,7 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
 
   for(int i = 0; i < nRDim - bDim; i++){
     startL[i] = startNL[i] % nu[rIndex[bDim + i]];
+    startN[i] = startNL[i]/nu[rIndex[bDim + i]];
     diffN[i] = (startL[i] + diffNL[i])/nu[rIndex[bDim + i]];
     diffL[i] = diffNL[i] % nu[rIndex[bDim + i]];
     if((startL[i] + diffL[i]) % nu[rIndex[bDim + i]] < startL[i]){
@@ -612,8 +614,8 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
   delete diffL;
   delete diffN;
   delete diffNL;
-  delete startNL;
   delete startL;
+  delete startNL;
 
   //TODO: until here some things can be precalculated to increase efficiency
 
@@ -666,8 +668,10 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
       }
     }
     else{
-      while(i[bDim] == 0){
-	//TODO
+      for(j = bDim; j <= nRDim; j++){
+	i[j] = startN[j-bDim];
+      }
+      while(i[bDim] == startN[0]){
 	res(n - sub1, n + nHopBulk[e]) += disHop[indexDisHop[e]][i[rOrder[0]]][i[rOrder[1]]];
 
 	i[0] += 1;
@@ -896,6 +900,7 @@ cx_mat TBDisorderedH2D::blockH(int line, int col, double * k){
   delete[] b;
   delete[] start;
   delete[] end;
+  delete[] startN;
 
   return res;
 }

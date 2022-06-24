@@ -225,13 +225,12 @@ double BBH3D::getOctupoleManyBody(int * l){
 }
 
 void BBH3D::test(char * argv0){
-  int bC[3] = {0,0,0};
+  int bC[3] = {2,0,0};
   bool layerDir[3] = {true, true, true};
 
   double k[3] = {M_PI/2,M_PI/2,M_PI/2};
-  int l[3] = {2,2,2};
-  int order[3] = {2,0,1};
-  //int order[3] = {0,2,1};
+  int l[3] = {4,4,4};
+  int order[3] = {0,1,2};
 
   ham->setSize(l);
   ham->setBC(bC);
@@ -242,16 +241,18 @@ void BBH3D::test(char * argv0){
   cx_mat h = ham->H(k);
   //cout << h << endl;
 
-  OData o(argv0, "testH.dat");
-  o.matrixWeights(h);
+  //OData o(argv0, "testH.dat");
+  //o.matrixWeights(h);
 
   ham->setBlockDim(2);
   //ham->blockH(0,7);
 
-  cx_mat h2 = ham->blockH(0,0);
+  cx_mat h2 = ham->blockH(2,2);
+  /*
   //cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);
+  */
 }
 
 double BBH3D::getBoundQuadrupole(int * l, int dir){
@@ -301,7 +302,7 @@ void BBH3D::setLayers(bool * layerDir){
       layers[i][e] = 0;
     }
   }
-  
+
   if(layerDir[0]){
     layers[0][0] = 1;
     layers[3][0] = 1;
