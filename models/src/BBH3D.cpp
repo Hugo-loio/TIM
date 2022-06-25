@@ -241,18 +241,16 @@ void BBH3D::test(char * argv0){
   cx_mat h = ham->H(k);
   //cout << h << endl;
 
-  //OData o(argv0, "testH.dat");
-  //o.matrixWeights(h);
+  OData o(argv0, "testH.dat");
+  o.matrixWeights(h);
 
   ham->setBlockDim(2);
   //ham->blockH(0,7);
 
-  cx_mat h2 = ham->blockH(2,2);
-  /*
+  cx_mat h2 = ham->blockH(5,4);
   //cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);
-  */
 }
 
 double BBH3D::getBoundQuadrupole(int * l, int dir){

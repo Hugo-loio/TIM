@@ -688,151 +688,7 @@ cx_mat TBCleanH::H(double * k){
   }
   cx_mat res(size, size, fill::zeros);
 
-  complex<double> t;
-  int j,n,p,q,r;
-  complex<double> phase;
-  complex<double> kPhase;
-  complex<double> ii(0,1);
-
-  int * i = new int[nRDim + 1];
-  int * b = new int[nRDim + 1];
-  int * start = new int[nRDim + 1];
-  int * end = new int[nRDim + 1];
-  end[nRDim] = 1;
-
-  //Hopping terms
-  for(int e = 0; e < nHop; e++){
-    kPhase = 1;
-    for(j = 0; j < nDim; j++){
-      if(bC[j] == 1){
-	//Extra phase due to k space hamiltonian
-	kPhase *= exp(ii*k[j]*(double)model.getHop(e).getN(j));
-      }
-    }
-
-    t = model.getHop(e).getHop()*kPhase;
-
-    //Bulk lattice
-    for(j = 0; j <= nRDim; j++){
-      i[j] = startHopUCBulk[e][j];
-    }
-
-    n = flatten2(model.getHop(e).getNOrb1(), i);
-
-    fill(res, t, n, incNHopBulk[e], startHopUCBulk[e], endHopBulk[e], nRDim, 0, nHopBulk[e]);
-    while(i[nRDim] == 0){
-      res(n, n + nHopBulk[e]) += t;
-
-      i[0] += 1;
-      n += incNHopBulk[e][0];
-      p = 0;
-      while(i[p] > endHopUCBulk[e][p]){
-	i[p] = startHopUCBulk[e][p];
-	i[++p] += 1;
-	n += incNHopBulk[e][p];
-      }
-    }
-
-    //Boundary lattice
-    for(j = 0; j < nRDim + 1; j++){
-      b[j] = 0; //0 if not in boundary, 1 if in boundary for direction rIndex[j]
-    }
-
-    b[0]++;
-    if(nRDim != 0){
-      r = 0;
-      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
-	b[r] = 0;
-	b[++r]++;
-	if(r == nRDim){
-	  break;
-	}
-      }
-    }
-
-    while(b[nRDim] == 0){
-
-      q = 0;
-      phase = 1;
-      for(j = 0; j < nRDim; j++){
-	if(b[j] == 0){
-	  start[j] = startHopUCBulk[e][j];
-	  end[j] = endHopUCBulk[e][j];
-	}
-	else{
-	  start[j] = startHopUCBound[e][j];
-	  end[j] = endHopUCBound[e][j];
-	  q += pow(2,rIndex[j]);
-	  phase *= exp(-ii*theta[rIndex[j]]);
-	}
-	i[j] = start[j];
-      }
-      i[nRDim] = 0;
-
-      t = model.getHop(e).getHop()*kPhase*phase;
-
-      n = flatten2(model.getHop(e).getNOrb1(), i);
-
-      while(i[nRDim] == 0){
-	res(n, n + nHopBound[e][q]) += t;
-
-	i[0] += 1;
-	n += incNHopBound[e][q][0];
-	p = 0;
-	while(i[p] > end[p]){
-	  i[p] = start[p];
-	  i[++p] += 1;
-	  n += incNHopBound[e][q][p];
-	}
-      }
-
-
-      b[0]++;
-      r = 0;
-      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
-	b[r] = 0;
-	b[++r]++;
-	if(r == nRDim){
-	  break;
-	}
-      }
-    }
-
-  }
-  res = res + res.t();
-
-  //On-site terms
-
-  for(int e = 0; e < nRDim; e++){
-    end[e] = l[rIndex[e]] - 1;
-  }
-
-  for(int e = 0; e < nOnSite; e++){
-
-    for(j = 0; j < nRDim; j++){
-      i[j] = 0;
-    }
-    n = flatten2(model.getOnSite(e).getNOrb(), i);
-    i[nRDim] = 0;
-
-    while(i[nRDim] == 0){
-      res(n, n) += model.getOnSite(e).getEn();
-
-      i[0] += 1;
-      n += incNOnSite[e][0];
-      p = 0;
-      while(i[p] > end[p]){
-	i[p] = 0;
-	i[++p] += 1;
-	n += incNOnSite[e][p];
-      }
-    }
-  }
-
-  delete[] i;
-  delete[] b;
-  delete[] start;
-  delete[] end;
+  fillH<cx_mat>(res, k);
 
   return res;
 }
@@ -853,17 +709,23 @@ sp_cx_mat TBCleanH::spH(double * k){
   }
   sp_cx_mat res(size, size);
 
+  fillH<sp_cx_mat>(res, k);
+
+  return res;
+}
+
+template <class mat> void TBCleanH::fillH(mat & res, double * k){
   complex<double> t;
   int j,n,p,q,r;
   complex<double> phase;
   complex<double> kPhase;
   complex<double> ii(0,1);
 
-  int * i = new int[nRDim + 1];
   int * b = new int[nRDim + 1];
-  int * start = new int[nRDim];
+  int * start = new int[nRDim + 1];
   int * end = new int[nRDim + 1];
   end[nRDim] = 1;
+  start[nRDim] = 0;
 
   //Hopping terms
   for(int e = 0; e < nHop; e++){
@@ -878,23 +740,10 @@ sp_cx_mat TBCleanH::spH(double * k){
     t = model.getHop(e).getHop()*kPhase;
 
     //Bulk lattice
-    for(j = 0; j <= nRDim; j++){
-      i[j] = startHopUCBulk[e][j];
-    }
+    n = flatten2(model.getHop(e).getNOrb1(), startHopUCBulk[e]);
 
-    n = flatten2(model.getHop(e).getNOrb1(), i);
-
-    while(i[nRDim] == 0){
-      res(n, n + nHopBulk[e]) += t;
-
-      i[0] += 1;
-      n += incNHopBulk[e][0];
-      p = 0;
-      while(i[p] > endHopUCBulk[e][p]){
-	i[p] = startHopUCBulk[e][p];
-	i[++p] += 1;
-	n += incNHopBulk[e][p];
-      }
+    if(startHopUCBulk[e][nRDim] != 1){
+      fill<mat>(res, t, n, incNHopBulk[e], startHopUCBulk[e], endHopUCBulk[e], nRDim, 0, nHopBulk[e]);
     }
 
     //Boundary lattice
@@ -929,28 +778,13 @@ sp_cx_mat TBCleanH::spH(double * k){
 	  q += pow(2,rIndex[j]);
 	  phase *= exp(-ii*theta[rIndex[j]]);
 	}
-	i[j] = start[j];
       }
-      i[nRDim] = 0;
 
       t = model.getHop(e).getHop()*kPhase*phase;
 
-      n = flatten2(model.getHop(e).getNOrb1(), i);
+      n = flatten2(model.getHop(e).getNOrb1(), start);
 
-      while(i[nRDim] == 0){
-
-	res(n, n + nHopBound[e][q]) += t;
-
-	i[0] += 1;
-	n += incNHopBound[e][q][0];
-	p = 0;
-	while(i[p] > end[p]){
-	  i[p] = start[p];
-	  i[++p] += 1;
-	  n += incNHopBound[e][q][p];
-	}
-      }
-
+      fill<mat>(res, t, n, incNHopBound[e][q], start, end, nRDim, 0, nHopBound[e][q]);
 
       b[0]++;
       r = 0;
@@ -972,34 +806,18 @@ sp_cx_mat TBCleanH::spH(double * k){
     end[e] = l[rIndex[e]] - 1;
   }
 
-  for(int e = 0; e < nOnSite; e++){
-
-    for(j = 0; j < nRDim; j++){
-      i[j] = 0;
-    }
-    n = flatten2(model.getOnSite(e).getNOrb(), i);
-    i[nRDim] = 0;
-
-    while(i[nRDim] == 0){
-      res(n, n) += model.getOnSite(e).getEn();
-
-      i[0] += 1;
-      n += incNOnSite[e][0];
-      p = 0;
-      while(i[p] > end[p]){
-	i[p] = 0;
-	i[++p] += 1;
-	n += incNOnSite[e][p];
-      }
-    }
+  for(j = 0; j < nRDim; j++){
+    start[j] = 0;
   }
 
-  delete[] i;
+  for(int e = 0; e < nOnSite; e++){
+    n = flatten2(model.getOnSite(e).getNOrb(), start);
+    fill<mat>(res, model.getOnSite(e).getEn(), n, incNOnSite[e], start, end, nRDim);
+  }
+
   delete[] b;
   delete[] start;
   delete[] end;
-
-  return res;
 }
 
 void TBCleanH::setBlockDim(int bDim){
@@ -1016,7 +834,7 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
 
   int size; 
   if(nRDim == 0){
-    cout << "__PRETTY_FUNCTION__" << " can't divide systems in spatial layers, returning empty matrix" << endl;
+    cout << __PRETTY_FUNCTION__ << " can't divide systems in spatial layers, returning empty matrix" << endl;
     return cx_mat(0,0);
   }
   else{ 
@@ -1098,16 +916,6 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     }
   }
 
-  /*
-     for(int i = 0; i < h.size(); i++){
-     cout << "h: " << h[i] << endl;
-     }
-
-     for(int i = 0; i < hHerm.size(); i++){
-     cout << "hHerm: " << hHerm[i] << endl;
-     }
-     */
-
   int sub1 = (col-line)*size;
   int sub2 = startL[0]*size;
   for(int i = 1; i < nRDim - bDim; i++){
@@ -1130,12 +938,6 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     }
   }
 
-  /*
-     for(int i = 0; i < os.size(); i++){
-     cout << "os: " << os[i] << endl;
-     }
-     */
-
   delete diffL;
   delete diffN;
   delete diffNL;
@@ -1145,130 +947,30 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   //TODO: until here some things can be precalculated to increase efficiency
 
   complex<double> t;
-  int j,p,q,r;
+  int e,j,p,q,r;
   complex<double> phase;
   complex<double> kPhase;
   complex<double> ii(0,1);
 
-  int * i = new int[nRDim + 1];
   int * b = new int[bDim + 1];
-  int * start = new int[bDim];
+  int * start = new int[nRDim];
   int * end = new int[bDim + 1];
   end[bDim] = 1;
-
-  //Hopping terms (hermitian conjugate)
-  for(int m = 0; m < hHerm.size(); m++){
-    int e = hHerm[m];
-    kPhase = 1;
-    for(j = 0; j < nDim; j++){
-      if(bC[j] == 1){
-	//Extra phase due to k space hamiltonian
-	kPhase *= exp(ii*k[j]*(double)model.getHop(e).getN(j));
-      }
-    }
-
-    t = model.getHop(e).getHop()*kPhase;
-
-    //Bulk lattice
-    for(j = 0; j < bDim; j++){
-      i[j] = startHopUCBulk[e][j];
-      end[j] = endHopUCBulk[e][j];
-    }
-    for(j = bDim; j <= nRDim; j++){
-      i[j] = 0;
-    }
-
-    n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
-    i[bDim] = startHopUCBulk[e][nRDim];
-
-    while(i[bDim] == 0){
-      res(n - sub1, n + nHopBulk[e]) += t;
-
-      i[0] += 1;
-      n += incNHopBulk[e][0];
-      p = 0;
-      while(i[p] > end[p]){
-	i[p] = startHopUCBulk[e][p];
-	i[++p] += 1;
-	n += incNHopBulk[e][p];
-      }
-    }
-
-    //Boundary lattice
-    for(j = 0; j < bDim + 1; j++){
-      b[j] = 0; //0 if not in boundary, 1 if in boundary for direction rIndex[j]
-    }
-
-    b[0]++;
-    if(bDim != 0){
-      r = 0;
-      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
-	b[r] = 0;
-	b[++r]++;
-	if(r == bDim){
-	  break;
-	}
-      }
-    }
-
-    while(b[bDim] == 0){
-
-      q = 0;
-      phase = 1;
-      for(j = 0; j < bDim; j++){
-	if(b[j] == 0){
-	  start[j] = startHopUCBulk[e][j];
-	  end[j] = endHopUCBulk[e][j];
-	}
-	else{
-	  start[j] = startHopUCBound[e][j];
-	  end[j] = endHopUCBound[e][j];
-	  q += pow(2,rIndex[j]);
-	  phase *= exp(-ii*theta[rIndex[j]]);
-	}
-	i[j] = start[j];
-      }
-      for(j = bDim; j <= nRDim; j++){
-	i[j] = 0;
-      }
-
-      t = model.getHop(e).getHop()*kPhase*phase;
-
-      n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
-
-      while(i[bDim] == 0){
-
-	res(n - sub1, n + nHopBound[e][q]) += t;
-
-	i[0] += 1;
-	n += incNHopBound[e][q][0];
-	p = 0;
-	while(i[p] > end[p]){
-	  i[p] = start[p];
-	  i[++p] += 1;
-	  n += incNHopBound[e][q][p];
-	}
-      }
-
-
-      b[0]++;
-      r = 0;
-      while(b[r] > 1 || model.getHop(e).getN(rIndex[r]) == 0 || bC[rIndex[r]] == 0){
-	b[r] = 0;
-	b[++r]++;
-	if(r == bDim){
-	  break;
-	}
-      }
-    }
-
+  for(j = bDim; j < nRDim; j++){
+    start[j] = 0;
   }
 
-  res = res.t();
+  int nHops = hHerm.size() + h.size();
+  int nHermHops = hHerm.size();
 
-  //Hopping terms 
-  for(int m = 0; m < h.size(); m++){
-    int e = h[m];
+  //Hopping terms
+  for(int i = 0; i < nHops; i++){
+    if(i < nHermHops){
+      e = hHerm[i];
+    }
+    else{
+      e = h[i - nHermHops];
+    }
     kPhase = 1;
     for(j = 0; j < nDim; j++){
       if(bC[j] == 1){
@@ -1280,30 +982,19 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     t = model.getHop(e).getHop()*kPhase;
 
     //Bulk lattice
-    for(j = 0; j < bDim; j++){
-      i[j] = startHopUCBulk[e][j];
-      end[j] = endHopUCBulk[e][j];
-    }
-    for(j = bDim; j <= nRDim; j++){
-      i[j] = 0;
-    }
+    if(startHopUCBulk[e][nRDim] != 1){
+      for(j = 0; j < bDim; j++){
+	start[j] = startHopUCBulk[e][j];
+	end[j] = endHopUCBulk[e][j];
+      }
 
-    n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
-    i[bDim] = startHopUCBulk[e][nRDim];
+      n = flatten2(model.getHop(e).getNOrb1(), start) - sub2;
 
-    while(i[bDim] == 0){
-      res(n, n + nHopBulk[e] - sub1) += t;
-
-      i[0] += 1;
-      n += incNHopBulk[e][0];
-      p = 0;
-      while(i[p] > end[p]){
-	i[p] = startHopUCBulk[e][p];
-	i[++p] += 1;
-	n += incNHopBulk[e][p];
-	if(p == bDim){
-	  break;
-	}
+      if(i < nHermHops){
+	fill<cx_mat>(res, t, n, incNHopBulk[e], startHopUCBulk[e], end, bDim, -sub1, nHopBulk[e]);
+      }
+      else{
+	fill<cx_mat>(res, t, n, incNHopBulk[e], startHopUCBulk[e], end, bDim, 0, nHopBulk[e] - sub1);
       }
     }
 
@@ -1339,29 +1030,18 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
 	  q += pow(2,rIndex[j]);
 	  phase *= exp(-ii*theta[rIndex[j]]);
 	}
-	i[j] = start[j];
-      }
-      for(j = bDim; j <= nRDim; j++){
-	i[j] = 0;
       }
 
       t = model.getHop(e).getHop()*kPhase*phase;
 
-      n = flatten2(model.getHop(e).getNOrb1(), i) - sub2;
+      n = flatten2(model.getHop(e).getNOrb1(), start) - sub2;
 
-      while(i[bDim] == 0){
-	res(n, n + nHopBound[e][q] - sub1) += t;
-
-	i[0] += 1;
-	n += incNHopBound[e][q][0];
-	p = 0;
-	while(i[p] > end[p]){
-	  i[p] = start[p];
-	  i[++p] += 1;
-	  n += incNHopBound[e][q][p];
-	}
+      if(i < nHermHops){
+	fill<cx_mat>(res, t, n, incNHopBound[e][q], start, end, bDim, -sub1, nHopBound[e][q]);
       }
-
+      else{
+	fill<cx_mat>(res, t, n, incNHopBound[e][q], start, end, bDim, 0, nHopBound[e][q] - sub1);
+      }
 
       b[0]++;
       r = 0;
@@ -1374,6 +1054,9 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
       }
     }
 
+    if(i == nHermHops - 1){
+      res = res.t();
+    }
   }
 
   if(transpose){
@@ -1389,30 +1072,16 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
     end[e] = l[rIndex[e]] - 1;
   }
 
-  for(int m = 0; m < os.size(); m++){
-    int e = os[m];
-
-    for(j = 0; j < nRDim; j++){
-      i[j] = 0;
-    }
-    n = flatten2(model.getOnSite(e).getNOrb(), i) - sub2;
-    i[nRDim] = 0;
-
-    while(i[bDim] == 0){
-      res(n, n) += model.getOnSite(e).getEn();
-
-      i[0] += 1;
-      n += incNOnSite[e][0];
-      p = 0;
-      while(i[p] > end[p]){
-	i[p] = 0;
-	i[++p] += 1;
-	n += incNOnSite[e][p];
-      }
-    }
+  for(j = 0; j < bDim; j++){
+    start[j] = 0;
   }
 
-  delete[] i;
+  for(int m = 0; m < os.size(); m++){
+    int e = os[m];
+    n = flatten2(model.getOnSite(e).getNOrb(), start) - sub2;
+    fill<cx_mat>(res, model.getOnSite(e).getEn(), n, incNOnSite[e], start, end, bDim);
+  }
+
   delete[] b;
   delete[] start;
   delete[] end;
@@ -1420,11 +1089,12 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   return res;
 }
 
-void TBCleanH::fill(cx_mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI, int addJ){
+template <class mat> void TBCleanH::fill(mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI, int addJ){
   int * i = new int[dim + 1];
   for(int j = 0; j < dim + 1; j++){
     i[j] = start[j];
   }
+  int p;
   while(i[dim] == start[dim]){
     res(n + addI, n + addJ) += w;
 
@@ -1432,7 +1102,7 @@ void TBCleanH::fill(cx_mat & res, complex<double> w, int n, int * incN, int * st
     n += incN[0];
     p = 0;
     while(i[p] > end[p]){
-      i[p] = 0;
+      i[p] = start[p];
       i[++p] += 1;
       n += incN[p];
     }

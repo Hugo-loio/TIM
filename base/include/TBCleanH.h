@@ -95,7 +95,8 @@ class TBCleanH : public Hamiltonian{
     // for already sorted n
     int flatten2(int alpha, int * n);
 
-    void fill(cx_mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI = 0, int addJ = 0);
+    template <class mat> void fillH(mat & res, double * k);
+    template <class mat> void fill(mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI = 0, int addJ = 0);
 };
 
 #endif
