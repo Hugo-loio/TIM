@@ -30,10 +30,11 @@ names1 = ["hamBBH3D_4x4x4_noPBC", "hamBBH3D_4x4x4_PBCxy", "hamBBH3D_4x4x4_PBCx",
 boundaryHamBBH2D = ["BoundaryHamxBBH2D_10x10_intra0.5", "BoundaryHamyBBH2D_10x10_intra0.5","BoundaryHamxBBH2D_10x10_intra2", "BoundaryHamyBBH2D_10x10_intra2", "BoundaryHamxBBH2D_10x5_intra0.5","BoundaryHamxBBH2D_10x1_intra0.5","BoundaryHamxBBH2D_10x3_intra0.5", "BoundaryHamxBBH2D_10x5_intra2","BoundaryHamxBBH2D_10x1_intra2","BoundaryHamxBBH2D_10x3_intra2"]
 
 for name in names:
-    matrixHist(name + ".dat", False, 512, 8)
+    break
+    matrixHist(name + ".dat", False, 512, 1)
 
 for name in names2:
-    matrixHist(name + ".dat", True, 64, 8)
+    matrixHist(name + ".dat", True, 100, 1)
 
 '''
 for name in names1:

@@ -13,9 +13,6 @@ class TBDisorderedH2D : public TBCleanH{
 
     void setSize(int * l);
 
-    void setDisHop(int nDisHop, int * hop);
-    void setDisOnSite(int nDisOnSite, int * onSite);
-
     //Fill disHop and disOnSite
     virtual void generateDisorder() = 0;
 
@@ -33,6 +30,10 @@ class TBDisorderedH2D : public TBCleanH{
     bool * isDisOnSite;
     int * indexDisOnSite;
     complex<double> *** disOnSite = NULL;
+
+    //To be called by generateDisorder of derived class
+    void setDisHop(int nDisHop, int * hop);
+    void setDisOnSite(int nDisOnSite, int * onSite);
 
     void createDisArrays();
     void deleteDisArrays();

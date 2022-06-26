@@ -87,8 +87,8 @@ void bbh2x1(vector<double> & res, vector<double> params){
 
 int main (int arc, char ** argv) {
   cout << "\n2D BBH" << endl;
-  int l[2] = {50,100};
   /*
+  int l[2] = {50,100};
   BBH2D bbh2D(0.5,1);
   auto t1 = chrono::high_resolution_clock::now();
   cout << bbh2D.getBoundPolarization(l,0) << endl;

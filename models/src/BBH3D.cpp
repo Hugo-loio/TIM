@@ -244,10 +244,12 @@ void BBH3D::test(char * argv0){
   OData o(argv0, "testH.dat");
   o.matrixWeights(h);
 
-  ham->setBlockDim(2);
+  ham->setBlockDim(1);
   //ham->blockH(0,7);
 
-  cx_mat h2 = ham->blockH(5,4);
+  cx_mat h2 = ham->blockH(3,4);
+  h2 = ham->blockH(1,2);
+  h2 = ham->blockH(0,0);
   //cout << h2 << endl;
   OData o2(argv0, "testH2.dat");
   o2.matrixWeights(h2);

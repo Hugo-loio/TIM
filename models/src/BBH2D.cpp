@@ -143,10 +143,10 @@ void BBH2D::getSupercellWannierBands(char * argv0, string fileName, int nx, int 
 }
 
 void BBH2D::test(char * argv0){
-  int bC[2] = {0,0};
+  int bC[2] = {2,0};
   double k[2] = {M_PI/2,-M_PI/2};
-  int l[2] = {2,2};
-  int order[2] = {1,0};
+  int l[2] = {5,5};
+  int order[2] = {0,1};
 
   bool layerDir[2] = {true, true};
   setLayers(layerDir);
@@ -155,16 +155,23 @@ void BBH2D::test(char * argv0){
   ham->setSparse(false);
   ham->setOrder(order);
 
-  cx_mat h = ham->H(k);
-  cout << h << endl;
+  for(int i = 0; i < 10; i++){
+    cx_mat h = ham->H(k);
+  }
+
+  for(int i = 0; i < 100; i++){
+    cx_mat h = ham->blockH(1,2);
+  }
 
   OData o(argv0, "testH.dat");
-  o.matrixWeights(h);
+  //o.matrixWeights(h);
 
-  cx_mat h2 = ham->blockH(3,1);
-  cout << h2 << endl;
+  cx_mat h2 = ham->blockH(0,1);
+  h2 = ham->blockH(1,2);
+  h2 = ham->blockH(2,3);
+  h2 = ham->blockH(3,4);
   OData o2(argv0, "testH2.dat");
-  o2.matrixWeights(h2);
+  //o2.matrixWeights(h2);
 }
 
 double BBH2D::getQuadrupoleManyBody(int * l){

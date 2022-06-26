@@ -95,8 +95,15 @@ class TBCleanH : public Hamiltonian{
     // for already sorted n
     int flatten2(int alpha, int * n);
 
-    template <class mat> void fillH(mat & res, double * k);
-    template <class mat> void fill(mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI = 0, int addJ = 0);
+    template <class mat> void fill(mat & res, complex<double> w, int n, int * incN, int * start, int * end, int dim, int addI = 0, int addJ = 0, int * startI = NULL);
+    template <class mat> void fillHop(mat & res, int hopIndex, double * k, int dim, int addI = 0, int addJ = 0, int addN = 0, int * startI = NULL);
+    template <class mat> void fillOnSite(mat & res, int onSiteIndex, double *k, int dim, int addN = 0, int * startI = NULL);
+
+    //Wrappers to override in derived class
+    virtual void fillHopWrapper(cx_mat & res, int hopIndex, double *k, int dim, int addI = 0, int addJ = 0, int addN = 0, int * startI = NULL);
+    virtual void fillHopWrapper(sp_cx_mat & res, int hopIndex, double *k, int dim, int addI = 0, int addJ = 0, int addN = 0, int * startI = NULL);
+    virtual void fillOnSiteWrapper(cx_mat & res, int onSiteIndex, double *k, int dim, int addN = 0, int * startI = NULL);
+    virtual void fillOnSiteWrapper(sp_cx_mat & res, int onSiteIndex, double *k, int dim, int addN = 0, int * startI = NULL);
 };
 
 #endif

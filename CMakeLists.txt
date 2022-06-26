@@ -8,7 +8,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 # Compiler options
-add_compile_options(-std=c++11 -pthread)
+add_compile_options(-std=c++11 -pthread -g)
 
 # Armadillo
 find_package (Armadillo REQUIRED)

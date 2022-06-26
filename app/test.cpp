@@ -18,7 +18,7 @@ class A{
       overfunc();
     };
   protected:
-    void overfunc(){
+    void virtual overfunc(){
       cout << "class A" << endl;
     }
 };
@@ -65,12 +65,16 @@ int main (int arc, char ** argv) {
   //cout << n << " concurrent threads are supported.\n";
 
   /*
-  BBH3D bbh3(0.5,1);
+  BBH3D bbh3(0.5,1,0.5);
   bbh3.test(argv[0]);
-
-  BBH2D bbh2(0.7,1);
-  int l[2] = {100,100};
   */
+  BBH2D bbh2(0.5,1,0.5);
+  bbh2.test(argv[0]);
+  /*
+
+     BBH2D bbh2(0.7,1);
+     int l[2] = {100,100};
+     */
   //cout << bbh2.getBoundPolarization(l,0) << endl;
   //cout << bbh2.getBoundPolarization(l,1) << endl;
 
@@ -81,14 +85,14 @@ int main (int arc, char ** argv) {
      */
 
   /*
-  vector<thread> t;
-  t.push_back(thread(dummy_func));
-  while(1){
-    if(t[0].joinable()){
-      t[0].join();
-      t[0] = thread(dummy_func);
-    }
-  }
-  */
+     vector<thread> t;
+     t.push_back(thread(dummy_func));
+     while(1){
+     if(t[0].joinable()){
+     t[0].join();
+     t[0] = thread(dummy_func);
+     }
+     }
+     */
   return 0;
 }
