@@ -1,4 +1,5 @@
 #include "MultipoleOp.h"
+#include <chrono>
 
 using namespace std;
 using namespace arma;
@@ -81,6 +82,13 @@ double MultipoleOp::polarization(int a, double * k){
   double p0 = ((double)1/2)*(nOcc/l[a])*(1+l[a]);
   if(!ham->getIsSparse()){
     vec eigVal;
+    /*
+    auto t1 = chrono::high_resolution_clock::now();
+    cx_mat h = ham->H(k);
+    auto t2 = chrono::high_resolution_clock::now();
+    eig_sym(eigVal, psi, h);
+    auto t3 = chrono::high_resolution_clock::now();
+    */
     eig_sym(eigVal, psi, ham->H(k));
     psi = psi.cols(0,nOcc-1);
     psi_tilde = psi;
@@ -93,6 +101,12 @@ double MultipoleOp::polarization(int a, double * k){
       psi_tilde.rows(m, m + nOrb -1) *= u;
       nextPoint(0, point, false);
     }
+    /*
+    auto d1 = chrono::duration_cast<chrono::microseconds>(t2 - t1);
+    auto d2 = chrono::duration_cast<chrono::microseconds>(t3 - t2);
+    cout << "Effective ham: " << d1.count() << endl; 
+    cout << "Diagonalization: " << d2.count() << endl; 
+    */
   }
   return chop((l[a]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
 }

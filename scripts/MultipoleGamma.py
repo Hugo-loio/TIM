@@ -49,4 +49,4 @@ for name in boundaryQxz:
     MultipoleGamma(name + ".dat", False, r'$q_{xz}$')
 
 for name in boundaryQyz:
-    MultipoleGamma(name + ".dat", True, r'$q_{yz}$')
+    MultipoleGamma(name + ".dat", False, r'$q_{yz}$')

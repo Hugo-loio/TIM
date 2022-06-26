@@ -13,6 +13,7 @@ class OData{
     ~OData();
 
     void line(string line);
+    void line(vector<double> line);
     void data(double ** data, int dim, int nPoints);
     void data(vector< vector<double> > data);
 

@@ -20,6 +20,15 @@ void OData::line(string line){
   f << line << endl;
 }
 
+void OData::line(vector<double> line){
+  for(int i = 0; i < line.size(); i++){
+    f << line[i] << " ";
+  }
+  if(line.size() != 0){
+    f << endl;
+  }
+}
+
 void OData::data(double ** data, int dim, int nPoints){
   for(int i = 0; i < nPoints; i++){
     for(int e = 0; e < dim; e++){
