@@ -25,9 +25,6 @@ class A{
 
 class B: public A{
   public:
-    void func(){
-      A::func();
-    };
   protected:
     void overfunc(){
       cout << "class B" << endl;
@@ -65,11 +62,13 @@ int main (int arc, char ** argv) {
   //cout << n << " concurrent threads are supported.\n";
 
   /*
-  BBH3D bbh3(0.5,1,0.5);
-  bbh3.test(argv[0]);
-  */
+     BBH3D bbh3(0.5,1,0.5);
+     bbh3.test(argv[0]);
+     */
+  /*
   BBH2D bbh2(0.5,1,0.5);
   bbh2.test(argv[0]);
+  */
   /*
 
      BBH2D bbh2(0.7,1);
@@ -78,11 +77,9 @@ int main (int arc, char ** argv) {
   //cout << bbh2.getBoundPolarization(l,0) << endl;
   //cout << bbh2.getBoundPolarization(l,1) << endl;
 
-  /*
-     A a;
-     B b;
-     b.func();
-     */
+  A a;
+  B b;
+  b.func();
 
   /*
      vector<thread> t;

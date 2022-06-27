@@ -1,9 +1,12 @@
 #include "DisorderedSOTAI.h"
 #include "MultipoleOp.h"
 #include "BoundaryGreenH.h"
+#include "Wilson.h"
 #include "OData.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
+  this->m = m;
+  this->delta = delta;
   model = new TBModel(2,4);
   int n1[2] = {0,0};
   int n2[2] = {1,0}; 
@@ -26,11 +29,7 @@ DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
     model->setOnSite(2,delta);
     model->setOnSite(3,-delta);
   }
-  ham = new TBDisorderedH(*model);
-  ham->setHopDisorderFunction(&sotaiDisorder);
-  ham->setHopDisorderWeight(w);
-  //ham->setMatchingHopDisorder(1,2,-1);
-  //ham->setMatchingHopDisorder(0,3);
+  ham = new DisorderedHopH2D(*model);
 }
 
 DisorderedSOTAI::~DisorderedSOTAI(){
@@ -39,44 +38,20 @@ DisorderedSOTAI::~DisorderedSOTAI(){
 }
 
 void DisorderedSOTAI::setM(double m){
-  complex<double> ii(0,1);
-  model->getHop(0).setHop(-ii*m);
-  model->getHop(1).setHop(-ii*m);
-  model->getHop(2).setHop(ii*m);
-  model->getHop(3).setHop(-ii*m);
-  delete ham;
-  ham = new TBDisorderedH(*model);
-  ham->setHopDisorderFunction(&sotaiDisorder);
-  ham->setHopDisorderWeight(w);
-  //ham->setMatchingHopDisorder(1,2,-1);
-  //ham->setMatchingHopDisorder(0,3);
+  this->m = m;
+  this->~DisorderedSOTAI();
+  DisorderedSOTAI(m,delta);
 }
 
 void DisorderedSOTAI::setOnSite(double delta){
-  if(model->getNOnSite() == 0){
-    model->setOnSite(0,-delta);
-    model->setOnSite(1,delta);
-    model->setOnSite(2,delta);
-    model->setOnSite(3,-delta);
-  }
-  else{
-    model->getOnSite(0).setEn(-delta);
-    model->getOnSite(1).setEn(delta);
-    model->getOnSite(2).setEn(delta);
-    model->getOnSite(3).setEn(-delta);
-  }
-  delete ham;
-  ham = new TBDisorderedH(*model);
-  ham->setHopDisorderFunction(&sotaiDisorder);
-  ham->setHopDisorderWeight(w);
-  //ham->setMatchingHopDisorder(1,2,-1);
-  //ham->setMatchingHopDisorder(0,3);
+  this->delta = delta;
+  this->~DisorderedSOTAI();
+  DisorderedSOTAI(m,delta);
 }
 
 
 void DisorderedSOTAI::setW(double w){
-  this->w = w;
-  ham->setHopDisorderWeight(w);
+  ham->setWeight(w);
 }
 
 void DisorderedSOTAI::generateDisorder(){

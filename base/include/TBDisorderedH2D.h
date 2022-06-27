@@ -1,5 +1,5 @@
-#ifndef TBDISORDEREDH2D
-#define TBDISORDEREDH2D
+#ifndef TBDISORDEREDH2D_H
+#define TBDISORDEREDH2D_H
 
 #include "TBCleanH.h"
 
@@ -37,6 +37,15 @@ class TBDisorderedH2D : public TBCleanH{
 
     void createDisArrays();
     void deleteDisArrays();
+
+    template <class mat> void fillDis(mat & res, complex<double> ** w, int n, int * incN, int * start, int * end, int dim, int addI = 0, int addJ = 0, int * startI = NULL);
+    template <class mat> void fillHop(mat & res, int hopIndex, double * k, int dim, int addI = 0, int addJ = 0, int addN = 0, int * startI = NULL);
+    template <class mat> void fillOnSite(mat & res, int onSiteIndex, double *k, int dim, int addN = 0, int * startI = NULL);
+
+    void fillHopWrapper(cx_mat & res, int hopIndex, double *k, int dim, int addI = 0, int addJ = 0, int addN = 0, int * startI = NULL);
+    void fillHopWrapper(sp_cx_mat & res, int hopIndex, double *k, int dim, int addI = 0, int addJ = 0, int addN = 0, int * startI = NULL);
+    void fillOnSiteWrapper(cx_mat & res, int onSiteIndex, double *k, int dim, int addN = 0, int * startI = NULL);
+    void fillOnSiteWrapper(sp_cx_mat & res, int onSiteIndex, double *k, int dim, int addN = 0, int * startI = NULL);
 };
 
 #endif

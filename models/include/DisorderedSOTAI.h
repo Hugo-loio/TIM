@@ -1,9 +1,7 @@
 #ifndef DISORDEREDSOTAI_H
 #define DISORDEREDSOTAI_H
 
-#include "TBDisorderedH.h"
-#include "DisorderFunctions.h"
-#include "Wilson.h"
+#include "DisorderedHopH2D.h"
 
 using namespace std;
 
@@ -28,10 +26,10 @@ class DisorderedSOTAI{
     cx_mat getHam(int * l);
 
   private:
+    double m;
+    double delta;
     TBModel * model;
-    TBDisorderedH * ham;
-    double w = 0;
-    //BoundaryWilsonH * boundH = NULL;
+    DisorderedHopH2D * ham;
 };
 
 #endif
