@@ -835,10 +835,10 @@ cx_mat TBCleanH::blockH(int line, int col, double * k){
   vector<int> os;
   bool isOS;
   if(sub1 == 0){
-    for(int e = 0; e < nOrb; e++){
+    for(int e = 0; e < nOnSite; e++){
       isOS = true;
       for(int i = 0; i < nRDim - bDim; i++){
-	if(lOrb[e][rIndex[i + bDim]] != startL[i]){
+	if(lOrb[model.getOnSite(e).getNOrb()][rIndex[i + bDim]] != startL[i]){
 	  isOS = false;
 	}
       }

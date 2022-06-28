@@ -17,6 +17,7 @@ class TBCleanH : public Hamiltonian{
     void setBC(int * bC);
     //nDim array that specifies the number of unit cells in each direction (l[i] > 0)    
     void setSize(int * l);
+    const int * getSize(){return l;}
 
     //Get Hamiltonian in reciprocal space in the directions where PCBs are applied and in real space in the remaining directions
     cx_mat H(double * k = NULL);

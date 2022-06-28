@@ -3,38 +3,7 @@
 #include <thread>
 #include "DisorderedSOTAI.h"
 #include "OData.h"
-
-void scanQuadrupole(int * l, char * argv0, string name){
-  int nPoints = 20;
-  int nAvg = 10;
-  double m = 1.1;
-
-  OData out(argv0, name);
-  double delta = 9/(double)nPoints;
-  vector<vector<double>> data;
-  vector<double> w;
-  vector<vector<double>> quad;
-  DisorderedSOTAI sotai(m);
-
-  for(int e = 0; e < nAvg; e++){
-    quad.push_back(w);
-  }
-
-  for(int i = 0; i <= nPoints; i++){
-    w.push_back(i*delta);
-    sotai.setW(i*delta);
-    cout << i << endl;
-    for(int e = 0; e < nAvg; e++){
-      sotai.generateDisorder();
-      quad[e].push_back(sotai.getQuadrupoleManyBody(l));
-    }
-  }
-  data.push_back(w);
-  for(int e = 0; e < nAvg; e++){
-    data.push_back(quad[e]);
-  }
-  out.data(data);
-}
+#include "MultiThread.h"
 
 //Multithreading solution
 void threadCalcQuad(int nAvg, int nThreads, int threadIndex, int * l, OData & out){
@@ -56,6 +25,7 @@ void threadCalcQuad(int nAvg, int nThreads, int threadIndex, int * l, OData & ou
   vector<double> w;
   vector<vector<double>> quad;
   DisorderedSOTAI sotai(m);
+  sotai.setSize(l);
 
   for(int e = 0; e < nAvg; e++){
     quad.push_back(w);
@@ -67,7 +37,7 @@ void threadCalcQuad(int nAvg, int nThreads, int threadIndex, int * l, OData & ou
     cout << i << " " << threadIndex << endl;
     for(int e = 0; e < nAvg; e++){
       sotai.generateDisorder();
-      quad[e].push_back(sotai.getQuadrupoleManyBody(l));
+      quad[e].push_back(sotai.getQuadrupoleManyBody());
     }
   }
 
@@ -95,6 +65,55 @@ void scanQuadrupoleMulti(int nAvg, int * l, char * argv0, string name){
 
 }
 
+void threadQuad(int * l, int m, int nSamples, vector<double> & res, vector <double> params){
+  DisorderedSOTAI sotai(m);
+  sotai.setSize(l);
+  sotai.setW(params[0]);
+  res.push_back(params[0]);
+
+  for(int i = 0; i < nSamples; i++){
+    sotai.generateDisorder();
+    res.push_back(sotai.getQuadrupoleManyBody());
+  }
+}
+
+void threadPol(int * l, int m, int nSamples, vector<double> & res, vector <double> params){
+  DisorderedSOTAI sotai(m);
+  sotai.setSize(l);
+  sotai.setW(params[0]);
+  res.push_back(params[0]);
+
+  double polx;
+  double poly;
+  for(int i = 0; i < nSamples; i++){
+    try{
+      sotai.generateDisorder();
+      polx = sotai.getBoundPolarization(0);
+      poly = sotai.getBoundPolarization(1);
+      res.push_back(polx);
+      res.push_back(poly);
+    }
+    catch(const runtime_error & error){
+      cout << "Singular matrix found at intracell hop = "  << params[i] << endl;
+    }
+  }
+}
+
+void quad1(vector<double> & res, vector<double> params){
+  int l[2] = {10,10};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
+void quad2(vector<double> & res, vector<double> params){
+  int l[2] = {20,20};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
+void pol1(vector<double> & res, vector<double> params){
+  int l[2] = {10,10};
+  threadPol(l, 1.1, 40, res, params);
+}
+
 
 int main (int arc, char ** argv) {
   //SOTAI
@@ -102,7 +121,27 @@ int main (int arc, char ** argv) {
   int l2D2[2] = {20,20};
   int l2D3[2] = {30,30};
   cout << "Disordered SOTAI" << endl;
-  scanQuadrupoleMulti(40, l2D1, argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
+  //scanQuadrupoleMulti(40, l2D1, argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
   //scanQuadrupoleMulti(40, l2D2, argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
   //scanQuadrupoleMulti(1, l2D3, argv[0], "phaseDiagramSOTAI_30x30_m1.1.dat");
+
+  vector<vector<double>> paramList;
+  int nPoints = 20;
+  for(int i = 0; i <= nPoints; i++){
+    vector<double> param; 
+    param.push_back(9*(double)i/(double)nPoints);
+    paramList.push_back(param);
+  }
+
+  MultiThread r1(quad1, paramList, 8);
+  r1.setFile(argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
+  r1.run();
+
+  //MultiThread r2(quad2, paramList, 8);
+  //r2.setFile(argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
+  //r2.run();
+
+  MultiThread r3(pol1, paramList, 8);
+  r3.setFile(argv[0], "phaseDiagramSOTAIpol_10x10_m1.1.dat");
+  r3.run();
 }

@@ -37,8 +37,6 @@ void MultiThread::run(){
     resIndex[i] = i;
   }
 
-  cout<< nThreads << " " << nJobs << endl;
-
   cout << "0 %\r";
   cout.flush();
   int count = 0;

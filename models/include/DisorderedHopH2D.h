@@ -12,9 +12,11 @@ class DisorderedHopH2D : public TBDisorderedH2D{
 
     void generateDisorder();
     void setWeight(double w){this->w = w;}
+    void setDisType(int type);
 
   private:
 
+    int disType;
     void setIntraDisHop();
     double w;
 };

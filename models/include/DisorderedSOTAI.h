@@ -12,18 +12,22 @@ class DisorderedSOTAI{
 
     void setOnSite(double);
     void setM(double);
-
+    void setSize(int * l){ham->setSize(l);}
     void setW(double);
+    void setLayers(bool *);
+
     void generateDisorder();
 
     void getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled);
     double getQuadrupoleNestedSupercell(int * l, int * n);
-    double getQuadrupoleManyBody(int * l);
-    double getTopInv(int * l);
+    double getQuadrupoleManyBody();
+    double getBoundPolarization(int dir);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
     cx_mat getHam(int * l);
+
+    void test(char * argv0);
 
   private:
     double m;

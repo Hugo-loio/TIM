@@ -92,10 +92,10 @@ void DisorderedSOTAI::getSupercellWannierBands(char * argv0, string fileName, in
   o.supercellWannierBands(*ham, nPoints, 10, dirWilson, nx*ny*2);
 }
 
-double DisorderedSOTAI::getQuadrupoleManyBody(int * l){
+double DisorderedSOTAI::getQuadrupoleManyBody(){
   int bC[2] = {2,2};
+  int l[2] = {ham->getSize()[0], ham->getSize()[1]};
   ham->setBC(bC);
-  ham->setSize(l);
   ham->setSparse(false);
   MultipoleOp q(ham, l, 2, 4);
   q.setOcc(2*l[0]*l[1]);
@@ -110,15 +110,78 @@ cx_mat DisorderedSOTAI::getHam(int * l){
   return ham->H(NULL);
 }
 
-double DisorderedSOTAI::getTopInv(int * l){
-  int bC[2] = {0,0};
+double DisorderedSOTAI::getBoundPolarization(int dir){
+  int order[2] = {0,1};
+  int bC[2] = {2,0};
+  if(dir == 1){
+    bC[0] = 0;
+    bC[1] = 2;
+    order[0] = 1;
+    order[1] = 0;
+  }
+  bool layerDir[2] = {true, true};
+  setLayers(layerDir);
+  ham->setOrder(order);
   ham->setBC(bC);
+  ham->setSparse(false);
+  int l[2] = {ham->getSize()[0], ham->getSize()[1]};
+  BoundaryGreenH green(ham, l[order[0]]*2, l[order[1]]*2);
+
+  int lBound[1] = {l[order[0]]};
+  MultipoleOp o(&green, lBound, 1, 2);
+
+  return o.polarization(0);
+}
+
+
+void DisorderedSOTAI::test(char * argv0){
+  int bC[2] = {2,2};
+  int l[2] = {20,20};
+  int order[2] = {0,1};
+
+  bool layerDir[2] = {true, true};
+  setLayers(layerDir);
   ham->setSize(l);
-  /*j
-  ham->setSparse(true);
-  BoundaryGreenH green(ham, 4, l);
-  int lGreen[1] = {2*l[0]};
-  MultipoleOp p(&green, lGreen, 1, 2); 
-  return p.polarization(0);
-  */
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setOrder(order);
+
+  cx_mat h = ham->H();
+
+  cx_mat h2 = ham->blockH(0,1);
+  OData o2(argv0, "testH2.dat");
+  o2.matrixWeights(h2);
+
+  setW(8);
+  generateDisorder();
+
+  h = ham->H();
+
+  OData o(argv0, "testH.dat");
+  o.matrixWeights(h);
+}
+
+void DisorderedSOTAI::setLayers(bool * layerDir){
+  int ** layers = new int * [4];
+  for(int i = 0; i < 4; i++){
+    layers[i] = new int[2];
+    for(int e = 0; e < 2; e++){
+      layers[i][e] = 0;
+    }
+  }
+  if(layerDir[0]){
+    layers[2][0] = 1;
+    layers[3][0] = 1;
+  }
+  if(layerDir[1]){
+    layers[1][1] = 1;
+    layers[3][1] = 1;
+  }
+
+  ham->setOrbLayer(layers);
+
+  for(int i = 0; i < 4; i++){
+    delete[] layers[i];
+  }
+  delete[] layers;
 }

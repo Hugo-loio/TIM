@@ -2,9 +2,15 @@
 
 DisorderedHopH2D::DisorderedHopH2D(TBModel model) : TBDisorderedH2D(model){
   w = 0;
+  disType = 0;
 }
 
 DisorderedHopH2D::~DisorderedHopH2D(){
+}
+
+void DisorderedHopH2D::setDisType(int type){
+  this->disType = type;
+  deleteDisArrays();
 }
 
 void DisorderedHopH2D::generateDisorder(){
@@ -12,20 +18,47 @@ void DisorderedHopH2D::generateDisorder(){
   mt19937 generator(dev());
   uniform_real_distribution<double> uni(-0.5, 0.5);
 
-  setIntraDisHop();
-  createDisArrays();
+  switch(disType){
+    case 0:
+      {
+	//imaginary intracell hop disorder
+	setIntraDisHop();
+	if(disHop == NULL){
+	  createDisArrays();
+	}
+	complex<double> ii(0,1);
 
-  complex<double> ii(0,1);
-
-  int e,j;
-  complex<double> hop;
-  for(int i = 0; i < nDisHop; i++){
-    for(e = 0; e < l[0]; e++){
-      for(j = 0; j < l[0]; j++){
-	hop = model.getHop(indexDisHop[i]).getHop();
-	disHop[i][e][j] = hop + (hop/abs(hop))*w*uni(generator); 
+	int e,j;
+	complex<double> hop;
+	for(int i = 0; i < nDisHop; i++){
+	  hop = model.getHop(indexDisHop[i]).getHop();
+	  for(e = 0; e < l[0]; e++){
+	    for(j = 0; j < l[1]; j++){
+	      disHop[i][e][j] = hop + ii*w*uni(generator); 
+	    }
+	  }
+	}
+	break;
       }
-    }
+    case 1:
+      {
+	//real intracell hop disorder
+	setIntraDisHop();
+	if(disHop == NULL){
+	  createDisArrays();
+	}
+	int e,j;
+	complex<double> hop;
+	for(int i = 0; i < nDisHop; i++){
+	  hop = model.getHop(indexDisHop[i]).getHop();
+	  for(e = 0; e < l[0]; e++){
+	    for(j = 0; j < l[1]; j++){
+	      disHop[i][e][j] = hop + w*uni(generator); 
+	    }
+	  }
+	}
+	break;
+      }
   }
 }
 

@@ -154,7 +154,7 @@ template <class mat> void TBDisorderedH2D::fillOnSite(mat & res, int onSiteIndex
 
   n = flatten2(model.getOnSite(e).getNOrb(), start) + addN;
   if(isDisOnSite[e]){
-    fillDis<mat>(res, disOnSite[indexDisOnSite[e]], n, incNOnSite[e], start, end, dim, 0, 0, startI);
+    fillDis<mat>(res, disOnSite[indexDisOnSite[e]], 1, n, incNOnSite[e], start, end, dim, 0, 0, startI);
   }
   else{
     fill<mat>(res, model.getOnSite(e).getEn(), n, incNOnSite[e], start, end, dim, 0, 0, startI);
@@ -195,7 +195,7 @@ template <class mat> void TBDisorderedH2D::fillHop(mat & res, int hopIndex, doub
     n = flatten2(model.getHop(e).getNOrb1(), startHopUCBulk[e]) + addN;
 
     if(isDisHop[e]){
-      fillDis<mat>(res, disHop[indexDisHop[e]], n, incNHopBulk[e], startHopUCBulk[e], end, dim, addI, nHopBulk[e] + addJ, startI);
+      fillDis<mat>(res, disHop[indexDisHop[e]], 1, n, incNHopBulk[e], startHopUCBulk[e], end, dim, addI, nHopBulk[e] + addJ, startI);
     }
     else{
       fill<mat>(res, t, n, incNHopBulk[e], startHopUCBulk[e], end, dim, addI, nHopBulk[e] + addJ, startI);
@@ -241,7 +241,7 @@ template <class mat> void TBDisorderedH2D::fillHop(mat & res, int hopIndex, doub
     n = flatten2(model.getHop(e).getNOrb1(), start) + addN;
 
     if(isDisHop[e]){
-      fillDis<mat>(res, disHop[indexDisHop[e]], n, incNHopBound[e][q], start, end, dim, addI, nHopBound[e][q] + addJ, startI);
+      fillDis<mat>(res, disHop[indexDisHop[e]], phase, n, incNHopBound[e][q], start, end, dim, addI, nHopBound[e][q] + addJ, startI);
     }
     else{
       fill<mat>(res, t, n, incNHopBound[e][q], start, end, dim, addI, nHopBound[e][q] + addJ, startI);
@@ -263,7 +263,7 @@ template <class mat> void TBDisorderedH2D::fillHop(mat & res, int hopIndex, doub
   delete[] end;
 } 
 
-template <class mat> void TBDisorderedH2D::fillDis(mat & res, complex<double> ** w, int n, int * incN, int * start, int * end, int dim, int addI, int addJ, int * startI){
+template <class mat> void TBDisorderedH2D::fillDis(mat & res, complex<double> ** w, complex<double> phase, int n, int * incN, int * start, int * end, int dim, int addI, int addJ, int * startI){
   int * i = new int[nRDim + 1];
   for(int j = 0; j < nRDim + 1; j++){
     i[j] = start[j];
@@ -277,7 +277,7 @@ template <class mat> void TBDisorderedH2D::fillDis(mat & res, complex<double> **
   int p;
   while(i[dim] == val){
     //cout << n << " " << addI << " " << addJ << " " << end[0] << " " << end[1] << " " << end[2] << " " << dim << " " << i[dim] << " " << start[dim] << endl;
-    res(n + addI, n + addJ) += w[i[rOrder[0]]][i[rOrder[1]]];
+    res(n + addI, n + addJ) += w[i[rOrder[0]]][i[rOrder[1]]]*phase;
 
     i[0] += 1;
     n += incN[0];
