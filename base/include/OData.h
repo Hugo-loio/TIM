@@ -33,6 +33,8 @@ class OData{
     void supercellNestedWannierBands(Hamiltonian & ham, int nPoints, int xDir, int * nWilson, int * dirWilson, int * nOrbFilled);
 
     void matrixWeights(cx_mat & mat);
+    void matrixWeightsReal(cx_mat & mat);
+    void matrixWeightsImag(cx_mat & mat);
 
   private:
     ofstream f;

@@ -16,7 +16,7 @@ class BoundaryGreenH : public Hamiltonian{
     //Dummy sparse option
     sp_cx_mat spH(double * k = NULL){return sp_cx_mat(H(k));};
     cx_mat blockH(int line, int col, double * k = NULL){return cx_mat();};
-    void setLowerBound(bool lowerBound, int blockSize);
+    void setLowerBound(bool lowerBound, int blockSize = 0);
 
   private:
     bool lowerBound = false;

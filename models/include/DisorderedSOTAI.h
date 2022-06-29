@@ -25,13 +25,12 @@ class DisorderedSOTAI{
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
-    cx_mat getHam(int * l);
+    cx_mat getHam();
+    void printHam(char * argv0, string fileName);
 
     void test(char * argv0);
 
   private:
-    double m;
-    double delta;
     TBModel * model;
     DisorderedHopH2D * ham;
 };

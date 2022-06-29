@@ -370,7 +370,31 @@ void OData::matrixWeights(cx_mat & mat){
     for(int e = 0; e < size(mat)[1]; e++){
       w = abs(mat(i,e));
       if(w != 0){
-	f << e << " " << i << " " << abs(mat(i,e)) << endl;
+	f << e << " " << i << " " << w << endl;
+      }
+    }
+  }
+}
+
+void OData::matrixWeightsReal(cx_mat & mat){
+  double w;
+  for(int i = 0; i < size(mat)[0]; i++){
+    for(int e = 0; e < size(mat)[1]; e++){
+      w = mat(i,e).real();
+      if(w != 0){
+	f << e << " " << i << " " << w << endl;
+      }
+    }
+  }
+}
+
+void OData::matrixWeightsImag(cx_mat & mat){
+  double w;
+  for(int i = 0; i < size(mat)[0]; i++){
+    for(int e = 0; e < size(mat)[1]; e++){
+      w = mat(i,e).imag();
+      if(w != 0){
+	f << e << " " << i << " " << w << endl;
       }
     }
   }

@@ -10,7 +10,7 @@ using namespace std;
 class TBCleanH : public Hamiltonian{
   public:
     TBCleanH(TBModel model);
-    //TBCleanH(const TBCleanH &);
+    TBCleanH(const TBCleanH &);
     ~TBCleanH();
 
     //Set boundary conditions for each direction: 0 for open, 1 for periodic (goes to reciprocal space), 2 for twisted

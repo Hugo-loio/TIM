@@ -21,6 +21,7 @@ void MultiThread::setFile(char * argv0, string fileName){
 
 void MultiThread::run(){
   int nJobs = paramList.size();
+  cout << "Running " << nJobs << " jobs in " << nThreads << "threads." << endl;
 
   res.clear();
   for(int i = 0; i < nJobs; i++){

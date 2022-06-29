@@ -8,6 +8,7 @@ using namespace arma;
 class Hamiltonian{
   public:
     Hamiltonian(int nDim);
+    Hamiltonian(const Hamiltonian &);
     ~Hamiltonian();
     virtual cx_mat H(double * k = NULL) = 0;
     virtual sp_cx_mat spH(double * k = NULL) = 0;

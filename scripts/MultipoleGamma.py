@@ -20,9 +20,9 @@ quadrupole = ["QuadrupoleManyBodyBBH2D_10x10", "QuadrupoleManyBodyBBH2D_5x5", "Q
 
 octupole = ["OctupoleManyBodyBBH3D_4x4x4", "OctupoleManyBodyBBH3D_5x5x5", "OctupoleManyBodyBBH3D_6x6x6"]
 
-boundaryPolx = ["BoundaryPxBBH2D_50x100"]
+boundaryPolx = ["BoundaryPxBBH2D_50x100", "BoundaryPxBBH2D_50x50"]
 
-boundaryPoly = ["BoundaryPyBBH2D_50x100"]
+boundaryPoly = ["BoundaryPyBBH2D_50x100", "BoundaryPyBBH2D_50x50"]
 
 boundaryQxy = ["BoundaryQxyBBH3D_10x10x10", "BoundaryQxyBBH3D_15x15x15"]
 

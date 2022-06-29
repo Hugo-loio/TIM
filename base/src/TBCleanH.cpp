@@ -130,6 +130,10 @@ TBCleanH::~TBCleanH(){
   delete[] endOnSite;
 }
 
+TBCleanH::TBCleanH(const TBCleanH & copy) : model(copy.model), Hamiltonian(copy){
+  cout << __PRETTY_FUNCTION__ << endl;
+}
+
 void TBCleanH::setSparse(bool val){
   isSparse = val;
 }

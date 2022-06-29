@@ -29,12 +29,13 @@ names1 = ["hamBBH3D_4x4x4_noPBC", "hamBBH3D_4x4x4_PBCxy", "hamBBH3D_4x4x4_PBCx",
 
 boundaryHamBBH2D = ["BoundaryHamxBBH2D_10x10_intra0.5", "BoundaryHamyBBH2D_10x10_intra0.5","BoundaryHamxBBH2D_10x10_intra2", "BoundaryHamyBBH2D_10x10_intra2", "BoundaryHamxBBH2D_10x5_intra0.5","BoundaryHamxBBH2D_10x1_intra0.5","BoundaryHamxBBH2D_10x3_intra0.5", "BoundaryHamxBBH2D_10x5_intra2","BoundaryHamxBBH2D_10x1_intra2","BoundaryHamxBBH2D_10x3_intra2"]
 
+hamSotai = ["hamSotai_10x10_w0"]
+
 for name in names:
-    matrixHist(name + ".dat", False, 1600, 80)
+    matrixHist(name + ".dat", False, 1600, 40)
 
 for name in names2:
-    break
-    matrixHist(name + ".dat", True, 10, 1)
+    matrixHist(name + ".dat", True, 40, 1)
 
 '''
 for name in names1:
@@ -42,4 +43,10 @@ for name in names1:
 
 for name in boundaryHamBBH2D:
     matrixHist(name + ".dat", False, 20, 1)
+
+for baseName in hamSotai:
+    name = baseName + "_real"
+    matrixHist(name + ".dat", False, 64, 1)
+    name = baseName + "_imag"
+    matrixHist(name + ".dat", False, 64, 1)
 '''

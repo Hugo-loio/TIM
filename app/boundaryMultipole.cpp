@@ -10,67 +10,45 @@
 using namespace std;
 using namespace arma;
 
-void scanPolBBH2D(int nPoints, int dir, int * l, char* argv0, string name){
-  OData out(argv0, name);
-  double delta = 2/(double)nPoints;
-  vector<vector<double>> data;
-  vector<double> t1;
-  vector<double> pol;
-  BBH2D bbh2D(0,1);
-  for(int i = 0; i <= nPoints; i++){
-    if(i % (nPoints/10) == 0){
-      cout << i << " %\r";
-      cout.flush();
-    }
-    try{
-      bbh2D.setIntraHop(i*delta);
-      pol.push_back(bbh2D.getBoundPolarization(l,dir));
-      t1.push_back(i*delta);
-    }
-    catch(const runtime_error & error){
-      cout << "Singular matrix found at intracell hop = "  << i*delta << endl;
-    }
-  }
-  cout << "100 %" << endl;
-  data.push_back(t1);
-  data.push_back(pol);
-  out.data(data);
-}
-
-void scanQuadBBH3D(int nPoints, int dir, int * l, char* argv0, string name){
-  OData out(argv0, name);
-  double delta = 2/(double)nPoints;
-  vector<vector<double>> data;
-  vector<double> t1;
-  vector<double> quad;
-  BBH3D bbh3D(0,1);
-  for(int i = 0; i <= nPoints; i++){
-    if(i % (nPoints/10) == 0){
-      cout << i << " %\r";
-      cout.flush();
-    }
-    try{
-      bbh3D.setIntraHop(i*delta);
-      quad.push_back(bbh3D.getBoundQuadrupole(l,dir));
-      t1.push_back(i*delta);
-    }
-    catch(const runtime_error & error){
-      cout << "Singular matrix found at intracell hop = "  << i*delta << endl;
-    }
-  }
-  cout << "100 %" << endl;
-  data.push_back(t1);
-  data.push_back(quad);
-  out.data(data);
-}
-
 void threadPolBBH2D(int dir, int * l, vector<double> & res, vector<double> params){
-  BBH2D bbh2D(0,1);
+  BBH2D mod(0,1);
   double pol;
   for(int i = 0; i < params.size(); i++){
     try{
-      bbh2D.setIntraHop(params[i]);
-      pol = bbh2D.getBoundPolarization(l,dir);
+      mod.setIntraHop(params[i]);
+      pol = mod.getBoundPolarization(l,dir);
+      res.push_back(params[i]);
+      res.push_back(pol);
+    }
+    catch(const runtime_error & error){
+      cout << "Singular matrix found at intracell hop = "  << params[i] << endl;
+    }
+  }
+}
+
+void threadPolBBH3D(int dir, int * l, vector<double> & res, vector<double> params){
+  BBH3D mod(0,1);
+  double pol;
+  for(int i = 0; i < params.size(); i++){
+    try{
+      mod.setIntraHop(params[i]);
+      pol = mod.getBoundPolarization(l,dir);
+      res.push_back(params[i]);
+      res.push_back(pol);
+    }
+    catch(const runtime_error & error){
+      cout << "Singular matrix found at intracell hop = "  << params[i] << endl;
+    }
+  }
+}
+
+void threadQuadBBH3D(int dir, int * l, vector<double> & res, vector<double> params){
+  BBH3D mod(0,1);
+  double pol;
+  for(int i = 0; i < params.size(); i++){
+    try{
+      mod.setIntraHop(params[i]);
+      pol = mod.getBoundQuadrupole(l,dir);
       res.push_back(params[i]);
       res.push_back(pol);
     }
@@ -81,8 +59,43 @@ void threadPolBBH2D(int dir, int * l, vector<double> & res, vector<double> param
 }
 
 void bbh2x1(vector<double> & res, vector<double> params){
-  int l[2] = {50,100};
+  int l[2] = {50,50};
   threadPolBBH2D(0, l, res, params);
+}
+
+void bbh2y1(vector<double> & res, vector<double> params){
+  int l[2] = {50,50};
+  threadPolBBH2D(1, l, res, params);
+}
+
+void bbh3polx1(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadPolBBH3D(0, l, res, params);
+}
+
+void bbh3poly1(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadPolBBH3D(1, l, res, params);
+}
+
+void bbh3polz1(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadPolBBH3D(2, l, res, params);
+}
+
+void bbh3quadx1(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadQuadBBH3D(0, l, res, params);
+}
+
+void bbh3quady1(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadQuadBBH3D(1, l, res, params);
+}
+
+void bbh3quadz1(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadQuadBBH3D(2, l, res, params);
 }
 
 int main (int arc, char ** argv) {
@@ -106,21 +119,43 @@ int main (int arc, char ** argv) {
     param.push_back((double)i*2/(double)nPoints);
     paramList.push_back(param);
   }
-  MultiThread r1(bbh2x1, paramList, 8);
-  r1.setFile(argv[0], "BoundaryPxBBH2D_50x100.dat");
-  r1.run();
+  /*
+  MultiThread r2pol1(bbh2x1, paramList, 8);
+  r2pol1.setFile(argv[0], "BoundaryPxBBH2D_50x50.dat");
+  r2pol1.run();
+
+  MultiThread r2pol2(bbh2y1, paramList, 8);
+  r2pol2.setFile(argv[0], "BoundaryPyBBH2D_50x50.dat");
+  r2pol2.run();
+  */
 
   cout << "\n3D BBH" << endl;
-  int l2[3] = {10,10,10};
-  BBH3D bbh(0.7,1);
-  //cout << bbh.getBoundQuadrupole(l2, 0) << endl;
-  //scanQuadBBH3D(100, 2, l2, argv[0], "BoundaryQxyBBH3D_10x10x10.dat");
-  //scanQuadBBH3D(100, 1, l2, argv[0], "BoundaryQxzBBH3D_10x10x10.dat");
-  //scanQuadBBH3D(100, 0, l2, argv[0], "BoundaryQyzBBH3D_10x10x10.dat");
-  int l3[3] = {10,10,10};
-  //scanQuadBBH3D(100, 2, l3, argv[0], "BoundaryQxyBBH3D_15x15x15.dat");
-  //scanQuadBBH3D(100, 1, l3, argv[0], "BoundaryQxzBBH3D_15x15x15.dat");
-  //scanQuadBBH3D(100, 0, l3, argv[0], "BoundaryQyzBBH3D_15x15x15.dat");
+
+  MultiThread r3pol1(bbh3polx1, paramList, 8);
+  r3pol1.setFile(argv[0], "BoundaryPxBBH3D_10x10x10.dat");
+  r3pol1.run();
+
+  /*
+  MultiThread r3pol2(bbh3poly1, paramList, 8);
+  r3pol2.setFile(argv[0], "BoundaryPyBBH3D_10x10x10.dat");
+  r3pol2.run();
+
+  MultiThread r3pol3(bbh3polz1, paramList, 8);
+  r3pol3.setFile(argv[0], "BoundaryPzBBH3D_10x10x10.dat");
+  r3pol3.run();
+
+  MultiThread r3quad1(bbh3quadx1, paramList, 8);
+  r3quad1.setFile(argv[0], "BoundaryQyzBBH3D_10x10x10.dat");
+  r3quad1.run();
+
+  MultiThread r3quad2(bbh3quady1, paramList, 8);
+  r3quad2.setFile(argv[0], "BoundaryQxzBBH3D_10x10x10.dat");
+  r3quad2.run();
+
+  MultiThread r3quad3(bbh3quadz1, paramList, 8);
+  r3quad3.setFile(argv[0], "BoundaryQxyBBH3D_10x10x10.dat");
+  r3quad3.run();
+  */
 
   return 0;
 }

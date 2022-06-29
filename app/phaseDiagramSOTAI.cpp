@@ -65,7 +65,7 @@ void scanQuadrupoleMulti(int nAvg, int * l, char * argv0, string name){
 
 }
 
-void threadQuad(int * l, int m, int nSamples, vector<double> & res, vector <double> params){
+void threadQuad(int * l, double m, int nSamples, vector<double> & res, vector <double> params){
   DisorderedSOTAI sotai(m);
   sotai.setSize(l);
   sotai.setW(params[0]);
@@ -77,7 +77,7 @@ void threadQuad(int * l, int m, int nSamples, vector<double> & res, vector <doub
   }
 }
 
-void threadPol(int * l, int m, int nSamples, vector<double> & res, vector <double> params){
+void threadPol(int * l, double m, int nSamples, vector<double> & res, vector <double> params){
   DisorderedSOTAI sotai(m);
   sotai.setSize(l);
   sotai.setW(params[0]);
@@ -94,7 +94,7 @@ void threadPol(int * l, int m, int nSamples, vector<double> & res, vector <doubl
       res.push_back(poly);
     }
     catch(const runtime_error & error){
-      cout << "Singular matrix found at intracell hop = "  << params[i] << endl;
+      cout << "Singular matrix found at disorder weight = "  << params[0] << endl;
     }
   }
 }
@@ -111,6 +111,16 @@ void quad2(vector<double> & res, vector<double> params){
 
 void pol1(vector<double> & res, vector<double> params){
   int l[2] = {10,10};
+  threadPol(l, 1.1, 40, res, params);
+}
+
+void pol2(vector<double> & res, vector<double> params){
+  int l[2] = {50,50};
+  threadPol(l, 1.1, 40, res, params);
+}
+
+void pol3(vector<double> & res, vector<double> params){
+  int l[2] = {100,100};
   threadPol(l, 1.1, 40, res, params);
 }
 
@@ -133,15 +143,28 @@ int main (int arc, char ** argv) {
     paramList.push_back(param);
   }
 
-  MultiThread r1(quad1, paramList, 8);
-  r1.setFile(argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
-  r1.run();
+  /*
+     MultiThread r1(quad1, paramList, 8);
+     r1.setFile(argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
+     r1.run();
 
-  //MultiThread r2(quad2, paramList, 8);
-  //r2.setFile(argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
-  //r2.run();
+*/
+  MultiThread r2(quad2, paramList, 8);
+  r2.setFile(argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
+  r2.run();
+  /*
 
-  MultiThread r3(pol1, paramList, 8);
-  r3.setFile(argv[0], "phaseDiagramSOTAIpol_10x10_m1.1.dat");
-  r3.run();
+     MultiThread r3(pol1, paramList, 8);
+     r3.setFile(argv[0], "phaseDiagramSOTAIpol_10x10_m1.1.dat");
+     r3.run();
+
+     MultiThread r4(pol2, paramList, 8);
+     r4.setFile(argv[0], "phaseDiagramSOTAIpol_50x50_m1.1.dat");
+     r4.run();
+     */
+
+  MultiThread r5(pol3, paramList, 8);
+  r5.setFile(argv[0], "phaseDiagramSOTAIpol_100x100_m1.1.dat");
+  r5.run();
+
 }
