@@ -368,3 +368,42 @@ double BBH3D::getBoundPolarization(int * l, int dir){
 
   return o.polarization(0);
 }
+
+void BBH3D::getBoundaryHam(int * l, int dir, char * argv0, string fileName){
+  int bC[3] = {0,0,0};
+
+  int order[3] = {0,1,2};
+  bool layerDir[3] = {true,true,true};
+  int a,b;
+  if(dir == 0){
+    order[0] = 2;
+    order[1] = 0;
+    order[2] = 1;
+    bC[1] = 2;
+    bC[2] = 2;
+  }
+  else if(dir == 1){
+    order[0] = 0;
+    order[1] = 2;
+    order[2] = 1;
+    bC[0] = 2;
+    bC[2] = 2;
+  }
+  else{
+    bC[0] = 2;
+    bC[1] = 2;
+  }
+
+  ham->setSize(l);
+  ham->setBC(bC);
+  ham->setSparse(false);
+  setLayers(layerDir);
+  ham->setOrder(order);
+
+  BoundaryGreenH green(ham, l[order[0]]*l[order[1]]*4, l[order[2]]*2);
+
+  cx_mat h = green.H();
+
+  OData o(argv0, fileName);
+  o.matrixWeightsReal(h);
+}
