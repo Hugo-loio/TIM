@@ -104,10 +104,6 @@ int main (int argc, char ** argv) {
      r2.setFile(argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
      r2.run();
 
-     MultiThread r4(pol2, paramList, threadNumber);
-     r4.setFile(argv[0], "phaseDiagramSOTAIpol_50x50_m1.1.dat");
-     r4.run();
-
      MultiThread r5(pol3, paramList, threadNumber);
      r5.setFile(argv[0], "phaseDiagramSOTAIpol_100x100_m1.1.dat");
      r5.run();
@@ -116,10 +112,13 @@ int main (int argc, char ** argv) {
      r7.setFile(argv[0], "phaseDiagramSOTAI_40x40_m1.1.dat");
      r7.run();
 
-*/
+     MultiThread r6(pol4, paramList, threadNumber);
+     r6.setFile(argv[0], "phaseDiagramSOTAIpol_200x200_m1.1.dat");
+     r6.run();
+     */
 
-  MultiThread r6(pol4, paramList, threadNumber);
-  r6.setFile(argv[0], "phaseDiagramSOTAIpol_200x200_m1.1.dat");
-  r6.run();
+     MultiThread r4(pol2, paramList, threadNumber);
+     r4.setFile(argv[0], "phaseDiagramSOTAIpol_50x50_m1.1.dat");
+     r4.run();
 
 }

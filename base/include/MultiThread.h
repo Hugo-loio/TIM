@@ -22,7 +22,9 @@ class MultiThread{
     void (*job) (vector<double> &, vector<double>);
     OData * out;
     vector<vector<double>> res;
-    
+    chrono::high_resolution_clock::time_point tStart;
+
+    void printTime();
 };
 
 #endif

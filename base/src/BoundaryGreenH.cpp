@@ -39,7 +39,6 @@ cx_mat BoundaryGreenH::boundaryGreenFunc(double * k){
   if(lowerBound){
     int begin = blockSize - lowerBlockSize -1;
     int end = blockSize -1;
-    cout << "aqui " << begin << " " << end << endl;
     return res.submat(begin, begin, end, end);
   }
   else{

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <thread>
+#include <chrono>
 
 MultiThread::MultiThread(void (*job) (vector<double> &, vector<double>), vector<vector<double>> paramList, int nThreads){
   printToFile = false;
@@ -38,8 +39,9 @@ void MultiThread::run(){
     resIndex[i] = i;
   }
 
-  cout << "0 %\r";
-  cout.flush();
+  tStart = chrono::high_resolution_clock::now();
+  cout << "0 \% at ";
+  printTime();
   int count = 0;
   while(count < nJobs){
     for(int i = 0; i < nThreads; i++){
@@ -53,10 +55,22 @@ void MultiThread::run(){
 	  resIndex[i] = count + nThreads;
 	}
 	count++;
-	cout << setprecision(4) << 100*(double)count/(double)nJobs << " %\r";
-	cout.flush();
+	cout << setprecision(4) << 100*(double)count/(double)nJobs << " \% at thread " << i << " at ";
+	printTime();
       }
     }
   }
   cout << "100 %" << endl;
 }
+
+void MultiThread::printTime(){
+  auto tNow = chrono::high_resolution_clock::now();
+  auto dH = chrono::duration_cast<chrono::hours>(tNow-tStart);
+  auto dM = chrono::duration_cast<chrono::minutes>(tNow-tStart);
+  auto dS = chrono::duration_cast<chrono::seconds>(tNow-tStart);
+  int h = dH.count();
+  int m = dM.count() % 60;
+  int s = dS.count() % 60;
+  cout << h << ":" << m << ":" << s << endl;
+}
+
