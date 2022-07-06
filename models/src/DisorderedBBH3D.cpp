@@ -1,5 +1,7 @@
 #include "DisorderedBBH3D.h"
 #include "OData.h"
+#include "MultipoleOp.h"
+#include "BoundaryGreenH.h"
 
 DisorderedBBH3D::DisorderedBBH3D(double t1, double t2, double delta){
   model = new TBModel(3, 8);
@@ -34,15 +36,18 @@ DisorderedBBH3D::DisorderedBBH3D(double t1, double t2, double delta){
   model->setHop(2,6, nZ, t2);
   model->setHop(3,7, nZ, t2);
   //OnSite
-  model->setOnSite(0,delta);
-  model->setOnSite(1,delta);
-  model->setOnSite(2,-delta);
-  model->setOnSite(3,-delta);
-  model->setOnSite(4,-delta);
-  model->setOnSite(5,-delta);
-  model->setOnSite(6,delta);
-  model->setOnSite(7,delta);
-  ham = new TBDisorderedH(*model);
+  if(delta != 0){
+    model->setOnSite(0,delta);
+    model->setOnSite(1,delta);
+    model->setOnSite(2,-delta);
+    model->setOnSite(3,-delta);
+    model->setOnSite(4,-delta);
+    model->setOnSite(5,-delta);
+    model->setOnSite(6,delta);
+    model->setOnSite(7,delta);
+  }
+  ham = new DisorderedHopH3D(*model);
+  ham->setDisType(1);
 };
 
 DisorderedBBH3D::~DisorderedBBH3D(){
@@ -60,7 +65,8 @@ void DisorderedBBH3D::setIntraHop(double t1){
     }
   }
   delete ham;
-  ham = new TBDisorderedH(*model);
+  ham = new DisorderedHopH3D(*model);
+  ham->setDisType(1);
 }
 
 void DisorderedBBH3D::setInterHop(double t2){
@@ -73,58 +79,136 @@ void DisorderedBBH3D::setInterHop(double t2){
     }
   }
   delete ham;
-  ham = new TBDisorderedH(*model);
+  ham = new DisorderedHopH3D(*model);
+  ham->setDisType(1);
 }
 
 void DisorderedBBH3D::setOnSite(double delta){
-  model->getOnSite(0).setEn(delta);
-  model->getOnSite(1).setEn(delta);
-  model->getOnSite(2).setEn(-delta);
-  model->getOnSite(3).setEn(-delta);
-  model->getOnSite(4).setEn(-delta);
-  model->getOnSite(5).setEn(-delta);
-  model->getOnSite(6).setEn(delta);
-  model->getOnSite(7).setEn(delta);
+  if(model->getNOnSite() == 0){
+    model->setOnSite(0,delta);
+    model->setOnSite(1,delta);
+    model->setOnSite(2,-delta);
+    model->setOnSite(3,-delta);
+    model->setOnSite(4,-delta);
+    model->setOnSite(5,-delta);
+    model->setOnSite(6,delta);
+    model->setOnSite(7,delta);
+  }
+  else{
+    model->getOnSite(0).setEn(delta);
+    model->getOnSite(1).setEn(delta);
+    model->getOnSite(2).setEn(-delta);
+    model->getOnSite(3).setEn(-delta);
+    model->getOnSite(4).setEn(-delta);
+    model->getOnSite(5).setEn(-delta);
+    model->getOnSite(6).setEn(delta);
+    model->getOnSite(7).setEn(delta);
+  }
+  delete ham;
+  ham = new DisorderedHopH3D(*model);
+  ham->setDisType(1);
 }
 
 
-void DisorderedBBH3D::setProbDisorder(double p){
-  ham->setHopDisorderFunction(&probDisorder3D);
-  ham->setHopDisorderWeight(p);
+void DisorderedBBH3D::setW(double w){
+  ham->setWeight(w);
 }
 
 void DisorderedBBH3D::generateDisorder(){
   ham->generateDisorder();
 }
 
-void DisorderedBBH3D::getChargeDensity(char * argv0, string fileName, int * l, int nOrbFilled){
+void DisorderedBBH3D::setLayers(bool * layerDir){
+  int ** layers = new int * [8];
+  for(int i = 0; i < 8; i++){
+    layers[i] = new int[3];
+    for(int e = 0; e < 3; e++){
+      layers[i][e] = 0;
+    }
+  }
+
+  if(layerDir[0]){
+    layers[0][0] = 1;
+    layers[3][0] = 1;
+    layers[4][0] = 1;
+    layers[7][0] = 1;
+  }
+  if(layerDir[1]){
+    layers[0][1] = 1;
+    layers[2][1] = 1;
+    layers[4][1] = 1;
+    layers[6][1] = 1;
+  }
+  if(layerDir[2]){
+    layers[0][2] = 1;
+    layers[1][2] = 1;
+    layers[2][2] = 1;
+    layers[3][2] = 1;
+  }
+
+  ham->setOrbLayer(layers);
+
+  for(int i = 0; i < 4; i++){
+    delete[] layers[i];
+  }
+  delete[] layers;
+}
+
+void DisorderedBBH3D::getChargeDensity(char * argv0, string fileName, int nOrbFilled){
   int bC[3] = {0,0,0};
+  int l[3] = {ham->getSize()[0], ham->getSize()[1], ham->getSize()[2]};
   ham->setBC(bC);
   ham->setSparse(false);
-  ham->setSize(l);
   OData o(argv0, fileName);
   o.chargeDensity(*ham, 8, nOrbFilled, l);
 }
 
-void DisorderedBBH3D::getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n){
-  int bC[3] = {2,2,2};
+double DisorderedBBH3D::getBoundQuadrupole(int dir){
+  int bC[3] = {0,0,0};
+  int l[3] = {ham->getSize()[0], ham->getSize()[1], ham->getSize()[2]};
+
+  int order[3] = {0,1,2};
+  bool layerDir[3] = {false,false,false};
+  layerDir[dir] = true;
+  int a,b;
+  if(dir == 0){
+    order[0] = 2;
+    order[1] = 0;
+    order[2] = 1;
+    bC[1] = 2;
+    bC[2] = 2;
+  }
+  else if(dir == 1){
+    order[0] = 0;
+    order[1] = 2;
+    order[2] = 1;
+    bC[0] = 2;
+    bC[2] = 2;
+  }
+  else{
+    bC[0] = 2;
+    bC[1] = 2;
+  }
+
   ham->setBC(bC);
   ham->setSparse(false);
-  ham->setSize(l);
-  OData o(argv0, fileName);
-  int m[2] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2};
-  int dir[2] = {0,1};
-  o.supercellNestedWannierBands(*ham, 100, 2, n, dir, m);
+  setLayers(layerDir);
+  ham->setOrder(order);
+
+  BoundaryGreenH green(ham, l[order[0]]*l[order[1]]*4, l[order[2]]*2);
+  int lBound[2] = {l[order[0]], l[order[1]]};
+  MultipoleOp o(&green, lBound, 2, 4);
+
+  return o.quadrupole(0,1);
 }
 
-double DisorderedBBH3D::getOctupoleNestedSupercell(int * l, int * n){
-  int bc[3] = {2,2,2};
-  ham->setBC(bc);
-  ham->setSize(l);
+double DisorderedBBH3D::getOctupoleManyBody(){
+  int bC[3] = {2,2,2};
+  int l[3] = {ham->getSize()[0], ham->getSize()[1], ham->getSize()[2]};
+  ham->setBC(bC);
   ham->setSparse(false);
-  Wilson wilson(ham);
-  int dir[3] = {0,1,2};
-  int m[3] = {l[0]*l[1]*l[2]*4, l[1]*l[2]*2, l[2]};
-
-  return fmod(abs(log_det(wilson.nestedNestedWilsonLoopSupercell(n, dir, m)).imag())/(2*M_PI), 1);
+  MultipoleOp o(ham, l, 3, 8);
+  o.setOcc(4*l[0]*l[1]*l[2]);
+  return o.octupole(0,1,2);
 }
+

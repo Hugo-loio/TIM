@@ -2,7 +2,6 @@
 #include <time.h>
 #include <armadillo>
 #include "OData.h"
-#include "DisorderFunctions.h"
 #include "DisorderedSOTAI.h"
 #include "BBH2D.h"
 #include "BBH3D.h"

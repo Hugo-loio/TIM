@@ -1,9 +1,7 @@
 #ifndef DISORDEREDBBH3D_H
 #define DISORDEREDBBH3D_H
 
-#include "TBDisorderedH.h"
-#include "DisorderFunctions.h"
-#include "Wilson.h"
+#include "DisorderedHopH3D.h"
 
 using namespace std;
 
@@ -16,20 +14,19 @@ class DisorderedBBH3D{
     void setOnSite(double);
     void setIntraHop(double);
     void setInterHop(double);
-    //void setSparse(bool);
+    void setSize(int * l){ham->setSize(l);}
+    void setLayers(bool *);
+    void setW(double);
 
-    void setProbDisorder(double);
     void generateDisorder();
 
-    void getChargeDensity(char * argv0, string fileName, int * l, int nOrbFilled);
-
-    double getOctupoleNestedSupercell(int * l, int * n);
-    void getSupercellNestedWannierBands(char * argv0, string fileName, int * l, int * n);
+    void getChargeDensity(char * argv0, string fileName, int nOrbFilled);
+    double getBoundQuadrupole(int dir);
+    double getOctupoleManyBody();
 
   private:
     TBModel * model;
-    TBDisorderedH * ham;
-    //BoundaryWilsonH * boundH = NULL;
+    DisorderedHopH3D * ham;
 };
 
 #endif
