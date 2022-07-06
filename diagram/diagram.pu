@@ -43,6 +43,7 @@ package "<color:ccc>base</color>" {
   abstract class Hamiltonian{
   +virtual cx_mat H(double * k = NULL) = 0
   +virtual sp_cx_mat spH(double * k = NULL) = 0
+  +virtual cx_mat blockH(int, int, double * k = NULL) = 0
   - bool isSparse
 }
 
@@ -74,13 +75,18 @@ class TBCleanH{
   + void setSparse()
 }
 
-class TBDisorderedH{
+class TBDisorderedH2D{
   + TBDisorderedH(TBModel)
   + void setSparse()
 }
 
-class BoundaryGreenH #yellow{
-  + BoundaryGreenH(Hamiltonian *, int dir)
+class TBDisorderedH3D{
+  + TBDisorderedH(TBModel)
+  + void setSparse()
+}
+
+class BoundaryGreenH{
+  + BoundaryGreenH(Hamiltonian *, ...)
 }
 
 Wilson o-- Hamiltonian
@@ -90,11 +96,13 @@ LocalizationStats o--Hamiltonian
 OData o..Hamiltonian
 
 Hamiltonian <|-- TBCleanH
-TBCleanH <|-- TBDisorderedH
+TBCleanH <|-- TBDisorderedH2D
+TBCleanH <|-- TBDisorderedH3D
 Hamiltonian <|-- BoundaryGreenH
 
 TBCleanH o-- TBModel
-TBDisorderedH o-- TBModel
+TBDisorderedH2D o-- TBModel
+TBDisorderedH3D o-- TBModel
 
 TBModel o-- OnSite
 TBModel o-- Hop
