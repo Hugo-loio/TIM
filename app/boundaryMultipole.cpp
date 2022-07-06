@@ -4,6 +4,7 @@
 #include "OData.h"
 #include "BBH2D.h"
 #include "BBH3D.h"
+#include "DisorderedBBH3D.h"
 #include "MultiThread.h"
 #include <chrono>
 
@@ -98,6 +99,29 @@ void bbh3quadz1(vector<double> & res, vector<double> params){
   threadQuadBBH3D(2, l, res, params);
 }
 
+void threadQuadDisBBH3D(int dir, int * l, vector<double> & res, vector<double> params){
+  DisorderedBBH3D bbh3d;
+  for(int i = 0; i < params.size(); i++){
+    bbh3d.setIntraHop(params[i]);
+    bbh3d.setSize(l);
+    bbh3d.setW(0);
+    bbh3d.generateDisorder();
+    res.push_back(params[i]);
+    res.push_back(bbh3d.getBoundQuadrupole(dir));
+  }
+}
+
+void quadDisBBH3D1(vector<double> & res, vector<double> params){
+  int l[3] = {7,7,7};
+  threadQuadDisBBH3D(0, l, res, params);
+}
+
+void quadDisBBH3D2(vector<double> & res, vector<double> params){
+  int l[3] = {10,10,10};
+  threadQuadDisBBH3D(0, l, res, params);
+}
+
+
 int main (int arc, char ** argv) {
   cout << "\n2D BBH" << endl;
   /*
@@ -131,11 +155,11 @@ int main (int arc, char ** argv) {
 
   cout << "\n3D BBH" << endl;
 
+  /*
   MultiThread r3pol1(bbh3polx1, paramList, 8);
   r3pol1.setFile(argv[0], "BoundaryPxBBH3D_10x10x10.dat");
   r3pol1.run();
 
-  /*
   MultiThread r3pol2(bbh3poly1, paramList, 8);
   r3pol2.setFile(argv[0], "BoundaryPyBBH3D_10x10x10.dat");
   r3pol2.run();
@@ -156,6 +180,17 @@ int main (int arc, char ** argv) {
   r3quad3.setFile(argv[0], "BoundaryQxyBBH3D_10x10x10.dat");
   r3quad3.run();
   */
+
+  //Disordered BBH3D
+  cout << "\nDisorederedBBH3D" << endl;
+
+  MultiThread rDB3D1(quadDisBBH3D1, paramList, 8);
+  rDB3D1.setFile(argv[0], "BoundaryQyzNoDisBBH3D_L7.dat");
+  rDB3D1.run();
+
+  MultiThread rDB3D2(quadDisBBH3D2, paramList, 8);
+  rDB3D2.setFile(argv[0], "BoundaryQyzNoDisBBH3D_L10.dat");
+  rDB3D2.run();
 
   return 0;
 }

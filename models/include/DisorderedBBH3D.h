@@ -8,7 +8,7 @@ using namespace std;
 class DisorderedBBH3D{
   public:
     //Intracell hopping t1, intercell hopping t2
-    DisorderedBBH3D(double t1 = 1, double t2 = 2, double delta = 0);
+    DisorderedBBH3D(double t1 = 0.5, double t2 = 1, double delta = 0);
     ~DisorderedBBH3D();
 
     void setOnSite(double);

@@ -110,21 +110,21 @@ void TBDisorderedH3D::createDisArrays(){
 }
 
 cx_mat TBDisorderedH3D::H(double* k){
-  if(nRDim != 2 || nDim != 2){
+  if(nRDim != 3 || nDim != 3){
     cout << "3D disordered class doesn't have a 3D TB model in real space. Expect things to go wrong, not my problem." << endl;
   }
   return TBCleanH::H(k);
 }
 
 sp_cx_mat TBDisorderedH3D::spH(double* k){
-  if(nRDim != 2 || nDim != 2){
+  if(nRDim != 3 || nDim != 3){
     cout << "3D disordered class doesn't have a 3D TB model in real space. Expect things to go wrong, not my problem." << endl;
   }
   return TBCleanH::spH(k);
 }
 
 cx_mat TBDisorderedH3D::blockH(int line, int col, double* k){
-  if(nRDim != 2 || nDim != 2){
+  if(nRDim != 3 || nDim != 3){
     cout << "3D disordered class doesn't have a 3D TB model in real space. Expect things to go wrong, not my problem." << endl;
   }
   return TBCleanH::blockH(line, col, k);

@@ -9,6 +9,7 @@ endif()
 
 # Compiler options
 add_compile_options(-std=c++11 -pthread -g)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 # Armadillo
 find_package (Armadillo REQUIRED)

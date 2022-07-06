@@ -101,8 +101,6 @@ void quadDisSotai2(vector<double> & res, vector<double> params){
   threadQuadDisSotai(0, l, res, params);
 }
 
-
-
 int main (int arc, char ** argv) {
   //SSH
   SSH ssh(2,1);
