@@ -39,6 +39,15 @@ void threadPol(int * l, double m, int nSamples, vector<double> & res, vector <do
   }
 }
 
+void run(void (*job) (vector<double> &, vector<double>), vector<vector<double>> & paramList, int threadNumber, char * argv0, string fileName, int version = 0){
+  if(version != 0){
+    fileName +=  "(" + to_string(version) + ").dat";
+  }
+  MultiThread r(job, paramList, threadNumber);
+  r.setFile(argv0, fileName);
+  r.run();
+}
+
 void quad1(vector<double> & res, vector<double> params){
   int l[2] = {10,10};
   threadQuad(l, 1.1, 40, res, params);
@@ -74,13 +83,16 @@ void pol4(vector<double> & res, vector<double> params){
   threadPol(l, 1.1, 40, res, params);
 }
 
-
 int main (int argc, char ** argv) {
   //SOTAI
 
   int threadNumber = 8;
-  if(argc == 2){
+  int version = 0;
+  if(argc > 1){
     threadNumber = stoi(argv[1]);
+  }
+  if(argc > 2){
+    version = stoi(argv[2]);
   }
 
   vector<vector<double>> paramList;
@@ -91,34 +103,12 @@ int main (int argc, char ** argv) {
     paramList.push_back(param);
   }
 
-  /*
-     MultiThread r1(quad1, paramList, threadNumber);
-     r1.setFile(argv[0], "phaseDiagramSOTAI_10x10_m1.1.dat");
-     r1.run();
+  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_10x10_m1.1",version);
+  //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_20x20_m1.1",version);
+  //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_40x40_m1.1",version);
 
-     MultiThread r3(pol1, paramList, threadNumber);
-     r3.setFile(argv[0], "phaseDiagramSOTAIpol_10x10_m1.1.dat");
-     r3.run();
-
-     MultiThread r2(quad2, paramList, threadNumber);
-     r2.setFile(argv[0], "phaseDiagramSOTAI_20x20_m1.1.dat");
-     r2.run();
-
-     MultiThread r5(pol3, paramList, threadNumber);
-     r5.setFile(argv[0], "phaseDiagramSOTAIpol_100x100_m1.1.dat");
-     r5.run();
-
-     MultiThread r7(quad3, paramList, threadNumber);
-     r7.setFile(argv[0], "phaseDiagramSOTAI_40x40_m1.1.dat");
-     r7.run();
-
-     MultiThread r6(pol4, paramList, threadNumber);
-     r6.setFile(argv[0], "phaseDiagramSOTAIpol_200x200_m1.1.dat");
-     r6.run();
-     */
-
-     MultiThread r4(pol2, paramList, threadNumber);
-     r4.setFile(argv[0], "phaseDiagramSOTAIpol_50x50_m1.1.dat");
-     r4.run();
-
+  run(pol1, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_10x10_m1.1",version);
+  //run(pol2, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_50x50_m1.1",version);
+  //run(pol3, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_100x100_m1.1",version);
+  //run(pol4, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_200x200_m1.1",version);
 }

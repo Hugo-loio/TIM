@@ -25,5 +25,22 @@ def readfile(fname):
 
     return data
 
+def writeToFile(fname, data):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    repo_dir = script_dir[:script_dir.rfind("/")]
+    fpath = repo_dir + "/build/data/" + fname
+
+    if os.path.isfile(fpath):
+        check = input("Overwrite contents of " + fpath + " ? [y/n] ")
+        if check.lower() != "y":
+            return
+
+    f = open(fpath, "w")
+    for line in data.T:
+        for val in line:
+            f.write(str(val) + " ")
+        f.write("\n")
+
+
 def plot_dir():
     return os.path.dirname(os.path.realpath(__file__)) + "/plots/"

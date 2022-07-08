@@ -16,12 +16,16 @@ MultiThread::~MultiThread(){
 }
 
 void MultiThread::setFile(char * argv0, string fileName){
+  this->fileName = fileName;
   out = new OData(argv0, fileName);
   printToFile = true;
 }
 
 void MultiThread::run(){
   int nJobs = paramList.size();
+  if(printToFile){
+    cout << "Printing to file: " << fileName << endl;
+  }
   cout << "Running " << nJobs << " jobs in " << nThreads << "threads." << endl;
 
   res.clear();

@@ -17,6 +17,7 @@ class MultiThread{
 
   private:
     bool printToFile;
+    string fileName;
     int nThreads;
     vector<vector<double>> paramList;
     void (*job) (vector<double> &, vector<double>);
