@@ -32,7 +32,7 @@ def plot(name, fileNames, labels, detail = True):
     plt.close()
 
 
-namesQuad = ["phaseDiagramBBH3Dquad_L5_intra1.1","phaseDiagramBBH3Dquad_L7_intra1.1","phaseDiagramBBH3Dquad_L10_intra0.5"]
+namesQuad = ["phaseDiagramBBH3Dquad_L5_intra1.1","phaseDiagramBBH3Dquad_L7_intra1.1","phaseDiagramBBH3Dquad_L10_intra1.1"]
 labelsQuad = ["L = 5","L=7","L=10"]
 
 plot("phaseDiagramBBH3D_intra1.1", namesQuad, labelsQuad)

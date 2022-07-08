@@ -76,7 +76,7 @@ int main (int argc, char ** argv) {
 
   vector<vector<double>> paramList;
   int nPoints = 100;
-  for(int i = 0; i <= nPoints; i++){
+  for(int i = 79; i <= nPoints; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)nPoints);
     paramList.push_back(param);
@@ -94,11 +94,11 @@ int main (int argc, char ** argv) {
   MultiThread r3(quad3, paramList, threadNumber);
   r3.setFile(argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9.dat");
   r3.run();
-  */
 
   MultiThread r4(quad4, paramList, threadNumber);
   r4.setFile(argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5.dat");
   r4.run();
+  */
   
   MultiThread r5(quad5, paramList, threadNumber);
   r5.setFile(argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1.dat");

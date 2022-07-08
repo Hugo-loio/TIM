@@ -28,7 +28,8 @@ boundaryQxy = ["BoundaryQxyBBH3D_10x10x10", "BoundaryQxyBBH3D_15x15x15"]
 
 boundaryQxz = ["BoundaryQxzBBH3D_10x10x10", "BoundaryQxzBBH3D_15x15x15"]
 
-boundaryQyz = ["BoundaryQyzBBH3D_10x10x10", "BoundaryQyzBBH3D_15x15x15"]
+boundaryQyz = ["BoundaryQyzBBH3D_10x10x10", "BoundaryQyzBBH3D_15x15x15", "BoundaryQyzNoDisBBH3D_L7", "BoundaryQyzNoDisBBH3D_L10"]
+
 
 for name in quadrupole:
     MultipoleGamma(name + ".dat", False, r'$q_{xy}$')

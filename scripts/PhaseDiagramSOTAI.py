@@ -24,8 +24,8 @@ def plotQuad():
 
 plot_name = "phaseDiagramSOTAI"
 #namesQuad = ["phaseDiagramSOTAI_10x10_m1.1", "phaseDiagramSOTAI_20x20_m1.1"]
-namesQuad = ["phaseDiagramSOTAI_20x20_m1.1"]
-labelsQuad = ["L = 20"]
+namesQuad = ["phaseDiagramSOTAI_20x20_m1.1","phaseDiagramSOTAI_40x40_m1.1"]
+labelsQuad = ["L = 20", "L = 40"]
 #namesPol = ["phaseDiagramSOTAIpol_10x10_m1.1", "phaseDiagramSOTAIpol_50x50_m1.1"]
 #labelsPol = ["L = 10", "L = 50"]
 namesPol = ["phaseDiagramSOTAIpol_100x100_m1.1","phaseDiagramSOTAIpol_200x200_m1.1"]
