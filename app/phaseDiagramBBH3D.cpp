@@ -41,6 +41,15 @@ void threadQuad(int * l, double gamma, int nSamples, vector<double> & res, vecto
   }
 }
 
+void run(void (*job) (vector<double> &, vector<double>), vector<vector<double>> & paramList, int threadNumber, char * argv0, string fileName, int version = 0){
+  if(version != 0){
+    fileName +=  "(" + to_string(version) + ").dat";
+  }
+  MultiThread r(job, paramList, threadNumber);
+  r.setFile(argv0, fileName);
+  r.run();
+}
+
 void quad1(vector<double> & res, vector<double> params){
   int l[3] = {5,5,5};
   threadQuad(l, 1.1, 40, res, params);
@@ -66,42 +75,39 @@ void quad5(vector<double> & res, vector<double> params){
   threadQuad(l, 1.1, 40, res, params);
 }
 
-int main (int argc, char ** argv) {
-  //SOTAI
+void quad6(vector<double> & res, vector<double> params){
+  int l[3] = {12,12,12};
+  threadQuad(l, 1.1, 40, res, params);
+}
 
+void quad7(vector<double> & res, vector<double> params){
+  int l[3] = {15,15,15};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
+int main (int argc, char ** argv) {
   int threadNumber = 8;
-  if(argc == 2){
+  int version = 0;
+  if(argc > 1){
     threadNumber = stoi(argv[1]);
+  }
+  if(argc > 2){
+    version = stoi(argv[2]);
   }
 
   vector<vector<double>> paramList;
   int nPoints = 100;
-  for(int i = 79; i <= nPoints; i++){
+  for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)nPoints);
     paramList.push_back(param);
   }
 
-  /*
-  MultiThread r1(quad1, paramList, threadNumber);
-  r1.setFile(argv[0], "phaseDiagramBBH3Dquad_L5_intra1.1.dat");
-  r1.run();
-
-  MultiThread r2(quad2, paramList, threadNumber);
-  r2.setFile(argv[0], "phaseDiagramBBH3Dquad_L7_intra1.1.dat");
-  r2.run();
-
-  MultiThread r3(quad3, paramList, threadNumber);
-  r3.setFile(argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9.dat");
-  r3.run();
-
-  MultiThread r4(quad4, paramList, threadNumber);
-  r4.setFile(argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5.dat");
-  r4.run();
-  */
-  
-  MultiThread r5(quad5, paramList, threadNumber);
-  r5.setFile(argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1.dat");
-  r5.run();
-
+  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L5_intra1.1.dat", version);
+  //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra1.1.dat", version);
+  //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9.dat", version);
+  //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5.dat", version);
+  //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1.dat", version);
+  //run(quad6, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L12_intra1.1.dat", version);
+  //run(quad7, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L15_intra1.1.dat", version);
 }

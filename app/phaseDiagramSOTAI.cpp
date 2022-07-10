@@ -63,6 +63,16 @@ void quad3(vector<double> & res, vector<double> params){
   threadQuad(l, 1.1, 40, res, params);
 }
 
+void quad4(vector<double> & res, vector<double> params){
+  int l[2] = {60,60};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
+void quad5(vector<double> & res, vector<double> params){
+  int l[2] = {80,80};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
 void pol1(vector<double> & res, vector<double> params){
   int l[2] = {10,10};
   threadPol(l, 1.1, 40, res, params);
@@ -83,9 +93,22 @@ void pol4(vector<double> & res, vector<double> params){
   threadPol(l, 1.1, 40, res, params);
 }
 
-int main (int argc, char ** argv) {
-  //SOTAI
+void pol5(vector<double> & res, vector<double> params){
+  int l[2] = {300,300};
+  threadPol(l, 1.1, 40, res, params);
+}
 
+void pol6(vector<double> & res, vector<double> params){
+  int l[2] = {400,400};
+  threadPol(l, 1.1, 40, res, params);
+}
+
+void pol7(vector<double> & res, vector<double> params){
+  int l[2] = {500,500};
+  threadPol(l, 1.1, 40, res, params);
+}
+
+int main (int argc, char ** argv) {
   int threadNumber = 8;
   int version = 0;
   if(argc > 1){
@@ -106,9 +129,14 @@ int main (int argc, char ** argv) {
   //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_10x10_m1.1",version);
   //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_20x20_m1.1",version);
   //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_40x40_m1.1",version);
+  //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_60x60_m1.1",version);
+  //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_80x80_m1.1",version);
 
   run(pol1, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_10x10_m1.1",version);
   //run(pol2, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_50x50_m1.1",version);
   //run(pol3, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_100x100_m1.1",version);
   //run(pol4, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_200x200_m1.1",version);
+  //run(pol5, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_300x300_m1.1",version);
+  //run(pol6, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_400x400_m1.1",version);
+  //run(pol7, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_500x500_m1.1",version);
 }
