@@ -103,11 +103,11 @@ int main (int argc, char ** argv) {
     paramList.push_back(param);
   }
 
-  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L5_intra1.1.dat", version);
-  //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra1.1.dat", version);
-  //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9.dat", version);
-  //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5.dat", version);
-  //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1.dat", version);
-  //run(quad6, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L12_intra1.1.dat", version);
-  //run(quad7, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L15_intra1.1.dat", version);
+  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L5_intra1.1", version);
+  //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra1.1", version);
+  //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9", version);
+  //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5", version);
+  //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1", version);
+  //run(quad6, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L12_intra1.1", version);
+  //run(quad7, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L15_intra1.1", version);
 }
