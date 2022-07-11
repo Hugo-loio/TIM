@@ -6,9 +6,9 @@ def plotQuad(name, label, ax, detail):
     data = hp.readfile(name + ".dat")
 
     data = data[:, data[0,:].argsort()]
-    qyz = data[1:-3:3]
-    qxz = data[2:-2:3]
-    qxy = data[3:-1:3]
+    qyz = data[1::3]
+    qxz = data[2::3]
+    qxy = data[3::3]
     q = 8*np.absolute(np.multiply(np.multiply(qyz,qxz),qxy))
 
     if(detail):

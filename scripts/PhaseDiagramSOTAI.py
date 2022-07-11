@@ -6,8 +6,8 @@ def plotPol():
     data = hp.readfile(namesPol[i] + ".dat")
 
     data = data[:, data[0,:].argsort()]
-    px = data[1:-2:2]
-    py = data[2:-1:2]
+    px = data[1::2]
+    py = data[2::2]
     p = 4*np.absolute(np.multiply(px,py))
 
     #ax.errorbar(data[0], np.average(px,axis=0), yerr = np.std(px,axis=0)/np.sqrt(np.size(data)), label = r'$p_x$, ' + labelsPol[i], capsize = 5, linestyle='-')
