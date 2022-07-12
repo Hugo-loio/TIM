@@ -85,6 +85,16 @@ void quad7(vector<double> & res, vector<double> params){
   threadQuad(l, 1.1, 40, res, params);
 }
 
+void quad8(vector<double> & res, vector<double> params){
+  int l[3] = {18,18,18};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
+void quad9(vector<double> & res, vector<double> params){
+  int l[3] = {20,20,20};
+  threadQuad(l, 1.1, 40, res, params);
+}
+
 int main (int argc, char ** argv) {
   int threadNumber = 8;
   int version = 0;
@@ -110,4 +120,6 @@ int main (int argc, char ** argv) {
   //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1", version);
   //run(quad6, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L12_intra1.1", version);
   //run(quad7, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L15_intra1.1", version);
+  //run(quad8, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L18_intra1.1", version);
+  //run(quad9, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L20_intra1.1", version);
 }
