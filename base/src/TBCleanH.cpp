@@ -92,7 +92,9 @@ TBCleanH::~TBCleanH(){
   delete[] mOrb;
   delete[] rIndex;
   delete[] rOrder;
+  delete[] nu;
   delete[] nuAccum;
+  delete[] lAccum;
   delete[] nHopBulk;
   for(int i = 0; i < nHop; i++){
     for(int e = 0; e < pow(2,nDim); e++){
@@ -107,6 +109,8 @@ TBCleanH::~TBCleanH(){
     delete[] endHopBound[i];
     delete[] startHopUCBulk[i];
     delete[] startHopUCBound[i];
+    delete[] endHopUCBulk[i];
+    delete[] endHopUCBound[i];
   }
   delete[] nHopBound;
   delete[] inc;

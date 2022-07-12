@@ -65,6 +65,7 @@ void MultiThread::run(){
     }
   }
   cout << "100 %" << endl;
+  delete[] resIndex;
 }
 
 void MultiThread::printTime(){

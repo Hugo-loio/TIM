@@ -19,6 +19,7 @@ MultipoleOp::MultipoleOp(Hamiltonian * ham, int * l,int dim, int nOrb) : ham(ham
 
 MultipoleOp::~MultipoleOp(){
   delete[] lAccum;
+  delete[] l;
 }
 
 int MultipoleOp::getN(int * n){
@@ -108,6 +109,7 @@ double MultipoleOp::polarization(int a, double * k){
     cout << "Diagonalization: " << d2.count() << endl; 
     */
   }
+  delete[] point;
   return chop((l[a]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
 }
 
@@ -137,6 +139,7 @@ double MultipoleOp::quadrupole(int a, int b, double * k){
       nextPoint(0, point, false);
     }
   }
+  delete[] point;
   return chop((l[a]*l[b]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
 }
 
@@ -166,5 +169,6 @@ double MultipoleOp::octupole(int a, int b, int c, double * k){
     }
   }
   //cout << "p0 : " << p0 << endl;
+  delete[] point;
   return chop((l[a]*l[b]*l[c]/(2*M_PI*lAccum[dim-1]))*log_det(psi.t()*psi_tilde).imag() - p0);
 }
