@@ -126,13 +126,13 @@ int main (int argc, char ** argv) {
     paramList.push_back(param);
   }
 
-  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_10x10_m1.1",version);
+  run(quad1, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_10x10_m1.1",version);
   //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_20x20_m1.1",version);
   //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_40x40_m1.1",version);
   //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_60x60_m1.1",version);
   //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramSOTAI_80x80_m1.1",version);
 
-  run(pol1, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_10x10_m1.1",version);
+  //run(pol1, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_10x10_m1.1",version);
   //run(pol2, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_50x50_m1.1",version);
   //run(pol3, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_100x100_m1.1",version);
   //run(pol4, paramList, threadNumber, argv[0], "phaseDiagramSOTAIpol_200x200_m1.1",version);
