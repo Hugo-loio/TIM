@@ -13,6 +13,10 @@ if(len(rawData) == 0):
 
 mergedData = rawData[0]
 for data in rawData[1:]:
+    if(len(data[0]) < len(mergedData[0])):
+        mergedData = mergedData[:,0:len(data[0])]
+    elif(len(data[0]) > len(mergedData[0])):
+        data = data[:,0:len(mergedData[0])]
     mergedData = np.concatenate((mergedData, data[1:]), axis = 0)
 
 hp.writeToFile(sys.argv[-1], mergedData)

@@ -12,6 +12,6 @@ class DOS{
 
   private:
     Hamiltonian * ham;
-}
+};
 
 #endif
