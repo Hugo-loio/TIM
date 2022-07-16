@@ -4,6 +4,7 @@
 #include "DisorderedBBH3D.h"
 #include "OData.h"
 #include "MultiThread.h"
+#include "AuxFunctions.h"
 
 void threadOctu(int * l, double gamma, int nSamples, vector<double> & res, vector <double> params){
   DisorderedBBH3D bbh3d(gamma, 1);
@@ -39,15 +40,6 @@ void threadQuad(int * l, double gamma, int nSamples, vector<double> & res, vecto
       cout << "Singular matrix found at disorder weight = "  << params[0] << endl;
     }
   }
-}
-
-void run(void (*job) (vector<double> &, vector<double>), vector<vector<double>> & paramList, int threadNumber, char * argv0, string fileName, int version = 0){
-  if(version != 0){
-    fileName +=  "(" + to_string(version) + ").dat";
-  }
-  MultiThread r(job, paramList, threadNumber);
-  r.setFile(argv0, fileName);
-  r.run();
 }
 
 void quad1(vector<double> & res, vector<double> params){
@@ -108,11 +100,15 @@ void quad11(vector<double> & res, vector<double> params){
 int main (int argc, char ** argv) {
   int threadNumber = 8;
   int version = 0;
+  int part = 0;
   if(argc > 1){
     threadNumber = stoi(argv[1]);
   }
   if(argc > 2){
     version = stoi(argv[2]);
+  }
+  if(argc > 3){
+    part = stoi(argv[3]);
   }
 
   vector<vector<double>> paramList;
@@ -123,15 +119,25 @@ int main (int argc, char ** argv) {
     paramList.push_back(param);
   }
 
-  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L5_intra1.1", version);
-  //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra1.1", version);
-  //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9", version);
-  //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5", version);
-  //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1", version);
-  //run(quad6, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L12_intra1.1", version);
-  //run(quad7, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L15_intra1.1", version);
-  //run(quad8, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L18_intra1.1", version);
-  //run(quad9, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L20_intra1.1", version);
-  //run(quad10, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L22_intra1.1", version);
-  //run(quad11, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L24_intra1.1", version);
+  int nParts = 4;
+  if(part != 0){
+    if(part != 1){
+      paramList.erase(paramList.begin(), paramList.begin() + (nPoints/nParts)*(part -1));
+    }
+    if(part != nParts){
+      paramList.erase(paramList.begin() + nPoints/nParts, paramList.end());
+    }
+  }
+
+  //run(quad1, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L5_intra1.1", version, part);
+  //run(quad2, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra1.1", version, part);
+  //run(quad3, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.9", version, part);
+  //run(quad4, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L7_intra0.5", version, part);
+  //run(quad5, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L10_intra1.1", version, part);
+  //run(quad6, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L12_intra1.1", version, part);
+  //run(quad7, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L15_intra1.1", version, part);
+  //run(quad8, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L18_intra1.1", version, part);
+  //run(quad9, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L20_intra1.1", version, part);
+  //run(quad10, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L22_intra1.1", version, part);
+  //run(quad11, paramList, threadNumber, argv[0], "phaseDiagramBBH3Dquad_L24_intra1.1", version, part);
 }

@@ -31,8 +31,9 @@ def writeToFile(fname, data):
     fpath = repo_dir + "/build/data/" + fname
 
     if os.path.isfile(fpath):
-        check = input("Overwrite contents of " + fpath + " ? [y/n] ")
+        check = input("Overwrite contents of " + fname + " ? [y/n] ")
         if check.lower() != "y":
+            print(fname + " not overwritten")
             return
 
     f = open(fpath, "w")
