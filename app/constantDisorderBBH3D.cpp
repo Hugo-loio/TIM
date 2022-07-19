@@ -33,7 +33,7 @@ void threadQuad(double weight, double gamma, int nSamples, vector<double> & res,
 }
 
 void quad1(vector<double> & res, vector<double> params){
-  threadQuad(3, 1.1, 40, res, params);
+  threadQuad(3, 1.1, 4, res, params);
 }
 
 int main (int argc, char ** argv) {
@@ -81,5 +81,5 @@ int main (int argc, char ** argv) {
     cout << paramList[i][0] << endl;
   }
 
-  //run(quad1, paramList, threadNumber, argv[0], "constantDisorderBBH3Dquad_intra1.1_w3", version, part);
+  run(quad1, paramList, threadNumber, argv[0], "constantDisorderBBH3Dquad_intra1.1_w3", version, part);
 }

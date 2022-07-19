@@ -18,7 +18,11 @@ else
     rawData=$(ls $dataDir | grep $part'(')
     (set -x ; python $scriptDir/mergeData.py $rawData $part'.dat')
   done
+fi
 
+parts=$(ls $dataDir | grep -e "$1_p.\.dat")
+
+if [ ! -z "$parts" ]; then
   file="$1.dat"
   if [ ! -z "$(ls $dataDir | grep $file)" ]; then
     printf "Overwrite contents of $file ? [y/n]"
@@ -32,6 +36,6 @@ else
   > $dataDir$file
   for part in $parts
   do
-    cat $dataDir$part'.dat' >> $dataDir$file
+    cat $dataDir$part >> $dataDir$file
   done
 fi
