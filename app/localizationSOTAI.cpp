@@ -29,6 +29,11 @@ void ipr2(vector<double> & res, vector<double> params){
 }
 
 void ipr3(vector<double> & res, vector<double> params){
+  int l[2] = {100,100};
+  ipr(l, 1.1, 5, 10, res, params);
+}
+
+void ipr4(vector<double> & res, vector<double> params){
   int l[2] = {200,200};
   ipr(l, 1.1, 5, 10, res, params);
 }
@@ -67,5 +72,6 @@ int main (int argc, char ** argv) {
 
   //runSingleThread(ipr1, paramList, argv[0], "iprSOTAI_L20_n10_m1.1", version, part);
   //runSingleThread(ipr2, paramList, argv[0], "iprSOTAI_L50_n10_m1.1", version, part);
-  runSingleThread(ipr3, paramList, argv[0], "iprSOTAI_L200_n10_m1.1", version, part);
+  runSingleThread(ipr3, paramList, argv[0], "iprSOTAI_L100_n10_m1.1", version, part);
+  //runSingleThread(ipr4, paramList, argv[0], "iprSOTAI_L200_n10_m1.1", version, part);
 }
