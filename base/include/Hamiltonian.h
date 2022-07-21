@@ -13,6 +13,8 @@ class Hamiltonian{
     virtual cx_mat H(double * k = NULL) = 0;
     virtual sp_cx_mat spH(double * k = NULL) = 0;
     virtual cx_mat blockH(int, int, double * k = NULL) = 0;
+    //Does nothing for clean Hamiltonians
+    virtual void generateDisorder(){};
     bool getIsSparse(){return isSparse;};
     //nDim twist angle array
     void setTwists(double * theta);

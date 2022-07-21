@@ -12,6 +12,7 @@ class MultiThread{
     MultiThread(void (*job) (vector<double> & res, vector<double> params), vector<vector<double>> paramList, int nThreads);
     ~MultiThread();
     void run();
+    void runSingleThread();
     void setFile(char * argv0, string fileName); 
     vector<vector<double>> getResult(){return res;}
 

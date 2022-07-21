@@ -89,7 +89,7 @@ void TBDisorderedH3D::createDisArrays(){
   int e,j;
   for(int i = 0; i < nDisHop; i++){
     disHop[i] = new complex<double> ** [l[0]];
-    for(e = 0; e < l[1]; e++){
+    for(e = 0; e < l[0]; e++){
       disHop[i][e] = new complex<double> * [l[1]];
       for(j = 0; j < l[1]; j++){
 	disHop[i][e][j] = new complex<double> [l[2]];
@@ -100,7 +100,7 @@ void TBDisorderedH3D::createDisArrays(){
   disOnSite = new complex<double> *** [nDisOnSite];
   for(int i = 0; i < nDisOnSite; i++){
     disOnSite[i] = new complex<double> ** [l[0]];
-    for(e = 0; e < l[1]; e++){
+    for(e = 0; e < l[0]; e++){
       disOnSite[i][e] = new complex<double> * [l[1]];
       for(j = 0; j < l[1]; j++){
 	disOnSite[i][e][j] = new complex<double> [l[2]];

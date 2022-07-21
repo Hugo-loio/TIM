@@ -68,6 +68,32 @@ void MultiThread::run(){
   delete[] resIndex;
 }
 
+void MultiThread::runSingleThread(){
+  int nJobs = paramList.size();
+  if(printToFile){
+    cout << "Printing to file: " << fileName << endl;
+  }
+  cout << "Running " << nJobs << " jobs in " << nThreads << "threads." << endl;
+
+  res.clear();
+  for(int i = 0; i < nJobs; i++){
+    res.push_back(vector<double>());
+  }
+
+  tStart = chrono::high_resolution_clock::now();
+
+  cout << "0 \% at ";
+  printTime();
+  for(int i = 0; i < nJobs; i++){
+    job(res[i], paramList[i]);
+    cout << setprecision(4) << 100*(double)(i+1)/(double)nJobs << " \% at ";
+    printTime();
+    if(printToFile){
+      out->line(res[i]);
+    }
+  }
+}
+
 void MultiThread::printTime(){
   auto tNow = chrono::high_resolution_clock::now();
   auto dH = chrono::duration_cast<chrono::hours>(tNow-tStart);

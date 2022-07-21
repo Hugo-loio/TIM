@@ -83,7 +83,7 @@ void TBDisorderedH2D::createDisArrays(){
   int e;
   for(int i = 0; i < nDisHop; i++){
     disHop[i] = new complex<double> * [l[0]];
-    for(e = 0; e < l[1]; e++){
+    for(e = 0; e < l[0]; e++){
       disHop[i][e] = new complex<double> [l[1]];
     }
   }
@@ -91,7 +91,7 @@ void TBDisorderedH2D::createDisArrays(){
   disOnSite = new complex<double> ** [nDisOnSite];
   for(int i = 0; i < nDisOnSite; i++){
     disOnSite[i] = new complex<double> * [l[0]];
-    for(e = 0; e < l[1]; e++){
+    for(e = 0; e < l[0]; e++){
       disOnSite[i][e] = new complex<double> [l[1]];
     }
   }

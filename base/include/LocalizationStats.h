@@ -10,8 +10,10 @@ class LocalizationStats{
     LocalizationStats(Hamiltonian * ham);
     ~LocalizationStats();
 
-    //double ipr();
-
+    //Inverse Participation Ratio
+    double ipr(int vol, int nOrb, int nStates, double * k = NULL);
+    //Transfer Matrix Method, localization length
+    double tmm(int nLayers, int nIt, double en, double * k = NULL);
   private:
     Hamiltonian * ham;
 };

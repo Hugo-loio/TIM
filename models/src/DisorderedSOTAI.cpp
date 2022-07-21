@@ -3,6 +3,7 @@
 #include "BoundaryGreenH.h"
 #include "Wilson.h"
 #include "OData.h"
+#include "LocalizationStats.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   model = new TBModel(2,4);
@@ -165,7 +166,7 @@ double DisorderedSOTAI::getBoundPolarization(int dir){
 
 void DisorderedSOTAI::test(char * argv0){
   int bC[2] = {2,2};
-  int l[2] = {20,20};
+  int l[2] = {5,2};
   int order[2] = {0,1};
 
   bool layerDir[2] = {true, true};
@@ -176,20 +177,9 @@ void DisorderedSOTAI::test(char * argv0){
   ham->setOrder(order);
 
   setW(1);
-  generateDisorder();
-  generateDisorder();
-  generateDisorder();
-  generateDisorder();
 
-  cx_mat h = ham->H();
-
-  OData o(argv0, "testH.dat");
-  o.matrixWeightsReal(h);
-
-  cx_mat h2 = ham->blockH(3,4);
-  OData o2(argv0, "testH2.dat");
-  o2.matrixWeightsReal(h2);
-
+  LocalizationStats loc(ham);
+  //loc.tmm(1,1);
 }
 
 void DisorderedSOTAI::setLayers(bool * layerDir){
@@ -215,4 +205,32 @@ void DisorderedSOTAI::setLayers(bool * layerDir){
     delete[] layers[i];
   }
   delete[] layers;
+}
+
+double DisorderedSOTAI::getIPR(int nStates){
+  int order[2] = {0,1};
+  int bC[2] = {0,0};
+  bool layerDir[2] = {false,false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+  int vol = ham->getSize()[0]*ham->getSize()[1];
+
+  LocalizationStats loc(ham);
+  return loc.ipr(vol, 4, nStates);
+}
+
+double DisorderedSOTAI::getTMM(int nIt, double en, int l){
+  int order[2] = {0,1};
+  int bC[2] = {0,0};
+  int lvec[2] = {l, 2};
+  setSize(lvec);
+  bool layerDir[2] = {true,true};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+
+  LocalizationStats loc(ham);
+  return loc.tmm(2, nIt, en);
 }
