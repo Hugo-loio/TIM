@@ -84,21 +84,21 @@ void TBDisorderedH1D::createDisArrays(){
 }
 
 cx_mat TBDisorderedH1D::H(double* k){
-  if(nRDim != 2 || nDim != 2){
+  if(nRDim != 1 || nDim != 1){
     cout << "1D disordered class doesn't have a 1D TB model in real space. Expect things to go wrong, not my problem." << endl;
   }
   return TBCleanH::H(k);
 }
 
 sp_cx_mat TBDisorderedH1D::spH(double* k){
-  if(nRDim != 2 || nDim != 2){
+  if(nRDim != 1 || nDim != 1){
     cout << "1D disordered class doesn't have a 1D TB model in real space. Expect things to go wrong, not my problem." << endl;
   }
   return TBCleanH::spH(k);
 }
 
 cx_mat TBDisorderedH1D::blockH(int line, int col, double* k){
-  if(nRDim != 2 || nDim != 2){
+  if(nRDim != 1 || nDim != 1){
     cout << "1D disordered class doesn't have a 1D TB model in real space. Expect things to go wrong, not my problem." << endl;
   }
   return TBCleanH::blockH(line, col, k);
@@ -262,7 +262,6 @@ template <class mat> void TBDisorderedH1D::fillDis(mat & res, complex<double> * 
   int val = i[dim];
   int p;
   while(i[dim] == val){
-    //cout << n << " " << addI << " " << addJ << " " << end[0] << " " << end[1] << " " << end[2] << " " << dim << " " << i[dim] << " " << start[dim] << endl;
     res(n + addI, n + addJ) += w[i[0]]*phase;
 
     i[0] += 1;

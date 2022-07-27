@@ -7,8 +7,9 @@ void run(void (*job) (vector<double> &, vector<double>), vector<vector<double>> 
     fileName += "_p" + to_string(part);
   }
   if(version != 0){
-    fileName +=  "(" + to_string(version) + ").dat";
+    fileName +=  "(" + to_string(version) + ")";
   }
+  fileName += ".dat";
   MultiThread r(job, paramList, threadNumber);
   r.setFile(argv0, fileName);
   r.run();
@@ -19,8 +20,9 @@ void runSingleThread(void (*job) (vector<double> &, vector<double>), vector<vect
     fileName += "_p" + to_string(part);
   }
   if(version != 0){
-    fileName +=  "(" + to_string(version) + ").dat";
+    fileName +=  "(" + to_string(version) + ")";
   }
+  fileName += ".dat";
 
   MultiThread r(job, paramList, 1);
   r.setFile(argv0, fileName);

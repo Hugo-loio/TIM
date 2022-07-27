@@ -11,13 +11,12 @@ double LocalizationStats::ipr(int vol, int nOrb, int nStates, double * k){
   if(ham->getIsSparse()){
     cx_vec eigVal;
     cx_mat eigVec;
-    eigs_opts opts;
-    opts.subdim = 4*nStates;
-    opts.maxiter = 10000;
-    //eigs_gen(eigVal, eigVec, ham->spH(k), nStates, "sm", opts);
     eigs_gen(eigVal, eigVec, ham->spH(k), nStates, 0.0);
     double res = 0;
     double amp = 0;
+    if(size(eigVal)[0] != nStates){
+      throw runtime_error("Diagonalization failed.");
+    }
     for(int i = 0; i < nStates; i++){
       //cout << eigVal[i] << endl;
       eigVec.col(i) = normalise(eigVec.col(i));

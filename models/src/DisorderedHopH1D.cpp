@@ -55,6 +55,36 @@ void DisorderedHopH1D::generateDisorder(){
 	}
 	break;
       }
+    case 2:
+      {
+	//real hop disorder
+	int * hopVec = new int[nHop];
+	for(int i = 0; i < nHop; i++){
+	  hopVec[i] = i;
+	}
+	setDisHop(nHop, hopVec);
+	delete[] hopVec;
+
+	if(disHop == NULL){
+	  createDisArrays();
+	}
+	int e;
+	complex<double> hop;
+	for(int i = 0; i < nDisHop; i++){
+	  hop = model.getHop(indexDisHop[i]).getHop();
+	  if(model.getHop(indexDisHop[i]).getN()[0] != 0){
+	    for(e = 0; e < l[0]; e++){
+	      disHop[i][e] = hop + (w/2)*uni(generator); 
+	    }
+	  }
+	  else{
+	    for(e = 0; e < l[0]; e++){
+	      disHop[i][e] = hop + w*uni(generator); 
+	    }
+	  }
+	}
+	break;
+      }
   }
 }
 
