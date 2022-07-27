@@ -32,7 +32,7 @@ int main (int arc, char ** argv) {
   ssh.generateDisorder();
   vec eigval;
   eig_sym(eigval, ssh.getHam());
-  cout << eigval << endl;
+  //cout << eigval << endl;
   cout << ssh.getHam() << endl;
 
   return 0;

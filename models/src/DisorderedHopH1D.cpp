@@ -76,11 +76,13 @@ void DisorderedHopH1D::generateDisorder(){
 	    for(e = 0; e < l[0]; e++){
 	      disHop[i][e] = hop + (w/2)*uni(generator); 
 	    }
+	    //disHop[i][l[0] -2] = disHop[i][0];
 	  }
 	  else{
 	    for(e = 0; e < l[0]; e++){
 	      disHop[i][e] = hop + w*uni(generator); 
 	    }
+	    //disHop[i][l[0] -1] = disHop[i][0];
 	  }
 	}
 	break;
