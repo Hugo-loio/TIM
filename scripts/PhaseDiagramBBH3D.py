@@ -33,9 +33,9 @@ def plot(name, fileNames, labels, detail = True, show = True):
     plt.close()
 
 
-namesQuad = ["L5", "L7", "L10", "L12", "L13", "L15", "L17", "L18", "L20", "L22"]
+namesQuad = ["L5", "L7", "L10", "L12", "L13", "L15", "L17", "L18", "L20", "L22", "L24"]
 namesQuad = ["phaseDiagramBBH3Dquad_" + name + "_intra1.1" for name in namesQuad]
-labelsQuad = ["L = 5", "L = 7", "L = 10", "L = 12", "L = 13", "L = 15", "L = 17", "L = 18", "L = 20", "L = 22"]
+labelsQuad = ["L = 5", "L = 7", "L = 10", "L = 12", "L = 13", "L = 15", "L = 17", "L = 18", "L = 20", "L = 22", "L = 24"]
 
 plot("phaseDiagramBBH3D_intra1.1", namesQuad[2:], labelsQuad[2:], True, False)
 plot("phaseDiagramBBH3D_intra1.1_Q", namesQuad[2:], labelsQuad[2:], False)

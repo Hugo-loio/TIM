@@ -19,7 +19,7 @@ def phasePlot(fname, show: bool, label, part :int = -1):
     im = ax.pcolormesh(x, y, z, vmin = np.min(z), vmax = np.max(z), cmap=plt.colormaps['cividis'], shading = 'auto')
 
     ax.set_xlabel(r'W', fontsize = 20)
-    ax.set_ylabel(r'$\frac{v}{w}$', fontsize = 20)
+    ax.set_ylabel(r'$v/w$', fontsize = 20)
     cb = fig.colorbar(im)
     cb.set_label(label, size = 20)
 
@@ -53,5 +53,5 @@ for name in ipr:
 
 for name in ent:
     phasePlot(name + ".dat", False, r'$S_A/\log2$', 0)
-    phasePlot(name + ".dat", False, r'$S_{Orb}$', 1)
+    phasePlot(name + ".dat", False, r'$S_{Orb}/\log2$', 1)
     phasePlot(name + ".dat", False, r'$S^D/\log2$', 2)

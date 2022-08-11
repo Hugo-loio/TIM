@@ -105,6 +105,7 @@ double DisorderedSSH::entanglement(int type){
 	  cut[i] = 2*i;
 	}
 	s = ent->bipEntropy(cut);
+	s /= log(2);
 	break;
       }
     case 2: //disconnected
