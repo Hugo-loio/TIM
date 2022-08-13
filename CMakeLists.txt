@@ -33,6 +33,7 @@ target_link_libraries(models PRIVATE base)
 
 # create special needed directories
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/data)
+#file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/aux)
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/scripts/plots)
 
 # compile main functions
