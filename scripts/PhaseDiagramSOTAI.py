@@ -22,7 +22,7 @@ def plotQuad():
     ax.errorbar(data[0], np.average(data[1:],axis=0), label = r'$q_{xy}$, ' + labelsQuad[i], capsize = 5, linestyle='-')
 
 
-plot_name = "phaseDiagramSOTAI"
+plot_name = "PhaseDiagramSOTAI"
 #namesQuad = ["phaseDiagramSOTAI_10x10_m1.1", "phaseDiagramSOTAI_20x20_m1.1"]
 namesQuad = ["phaseDiagramSOTAI_20x20_m1.1","phaseDiagramSOTAI_40x40_m1.1","phaseDiagramSOTAI_60x60_m1.1"]
 labelsQuad = ["L = 20", "L = 40", "L = 60"]

@@ -1,12 +1,9 @@
 #include <iostream>
-#include <iomanip>
-#include <thread>
 #include "DisorderedSOTAI.h"
-#include "OData.h"
 #include "ParallelMPI.h"
 
 int sampPerJob = 10;
-int l[2] = {10,10};
+int l[2] = {50,50};
 double m = 1.1;
 
 void quad(double * res, double * params){
@@ -53,9 +50,9 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   p.setSamples(sampMult);
   p.setParamList(paramList);
-  //p.setFile(argv[0], "phaseDiagramSOTAI_l" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1.dat");
+  //p.setFile(argv[0], "phaseDiagramSOTAI_" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1.dat");
   //p.setJob(quad, sampPerJob);
-  p.setFile(argv[0], "phaseDiagramSOTAIpol_l" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1.dat");
+  p.setFile(argv[0], "phaseDiagramSOTAIpol_" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1.dat");
   p.setJob(pol, 2*sampPerJob);
   p.run();
 }

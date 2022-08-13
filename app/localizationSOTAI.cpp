@@ -1,56 +1,25 @@
 #include <iostream>
-#include <iomanip>
-#include <thread>
 #include "DisorderedSOTAI.h"
-#include "OData.h"
-#include "MultiThread.h"
-#include "AuxFunctions.h"
+#include "ParallelMPI.h"
 
-void ipr(int * l, double m, int nSamples, int nStates, vector<double> & res, vector <double> params){
+int sampPerJob = 10;
+double m = 1.1;
+int l[2] = {20, 20};
+int nStates = 10;
+
+void ipr(double * res, double * params){
   DisorderedSOTAI sotai(m);
   sotai.setSize(l);
   sotai.setW(params[0]);
-  res.push_back(params[0]);
 
-  for(int i = 0; i < nSamples; i++){
+  for(int i = 0; i < sampPerJob; i++){
     sotai.generateDisorder();
-    res.push_back(sotai.getIPR(nStates));
+    res[i] = sotai.getIPR(nStates);
   }
-}
-
-void ipr1(vector<double> & res, vector<double> params){
-  int l[2] = {20,20};
-  ipr(l, 1.1, 5, 10, res, params);
-}
-
-void ipr2(vector<double> & res, vector<double> params){
-  int l[2] = {50,50};
-  ipr(l, 1.1, 5, 10, res, params);
-}
-
-void ipr3(vector<double> & res, vector<double> params){
-  int l[2] = {100,100};
-  ipr(l, 1.1, 5, 10, res, params);
-}
-
-void ipr4(vector<double> & res, vector<double> params){
-  int l[2] = {200,200};
-  ipr(l, 1.1, 5, 10, res, params);
 }
 
 int main (int argc, char ** argv) {
-  int threadNumber = 8;
-  int version = 0;
-  int part = 0;
-  if(argc > 1){
-    threadNumber = stoi(argv[1]);
-  }
-  if(argc > 2){
-    version = stoi(argv[2]);
-  }
-  if(argc > 3){
-    part = stoi(argv[3]);
-  }
+  int sampMult = 4;
 
   vector<vector<double>> paramList;
   int nPoints = 100;
@@ -60,18 +29,11 @@ int main (int argc, char ** argv) {
     paramList.push_back(param);
   }
 
-  int nParts = 4;
-  if(part != 0){
-    if(part != 1){
-      paramList.erase(paramList.begin(), paramList.begin() + (nPoints/nParts)*(part -1));
-    }
-    if(part != nParts){
-      paramList.erase(paramList.begin() + nPoints/nParts, paramList.end());
-    }
-  }
+  ParallelMPI p(&argc, &argv);
+  p.setSamples(sampMult);
+  p.setParamList(paramList);
+  p.setFile(argv[0], "iprSOTAI_L" + to_string(l[0]) + "_n" + to_string(nStates) + "_m1.1.dat");
+  p.setJob(ipr, sampPerJob);
+  p.run();
 
-  //runSingleThread(ipr1, paramList, argv[0], "iprSOTAI_L20_n10_m1.1", version, part);
-  //runSingleThread(ipr2, paramList, argv[0], "iprSOTAI_L50_n10_m1.1", version, part);
-  runSingleThread(ipr3, paramList, argv[0], "iprSOTAI_L100_n10_m1.1", version, part);
-  //runSingleThread(ipr4, paramList, argv[0], "iprSOTAI_L200_n10_m1.1", version, part);
 }
