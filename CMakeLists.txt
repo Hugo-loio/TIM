@@ -15,10 +15,15 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 find_package (Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
+# MPI
+find_package (MPI REQUIRED)
+include_directories(SYSTEM ${MPI_INCLUDE_PATH})
+
 # base library
 file(GLOB base_sources ${PROJECT_SOURCE_DIR}/base/src/*.cpp)
 add_library(base STATIC ${base_sources})
 target_include_directories(base PUBLIC ${PROJECT_SOURCE_DIR}/base/include)
+# target_link_libraries(base PRIVATE ${MPI_CXX_LIBRARIES})
 
 # models library
 file(GLOB models_sources ${PROJECT_SOURCE_DIR}/models/src/*.cpp)
@@ -35,5 +40,5 @@ file(GLOB app_sources ${PROJECT_SOURCE_DIR}/app/*.cpp)
 foreach(app ${app_sources})
   get_filename_component(exe ${app} NAME_WE)
   add_executable(${exe} ${app})
-  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES} PRIVATE base PRIVATE models)
+  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES} PRIVATE base PRIVATE models PRIVATE ${MPI_CXX_LIBRARIES})
 endforeach(app ${app_sources})
