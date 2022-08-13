@@ -15,9 +15,5 @@ using namespace arma;
 
 int main (int argc, char ** argv) {
 
-  ParallelMPI p(&argc, & argv);
-  
-  p.test();
-
   return 0;
 }

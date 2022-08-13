@@ -81,6 +81,10 @@ void ParallelMPI::run(){
   tStart = chrono::high_resolution_clock::now();
 
   if(rank == 0){
+    int nJobs = nParams*nSamples;
+    cout << "Printing to file: " << fileName << endl;
+    cout << "Running " << nJobs << " jobs in " << nProcs - 1 << " processes" << endl;
+
     int * done = new int[nParams];
     int * sent = new int[nParams];
     int e;
@@ -97,7 +101,6 @@ void ParallelMPI::run(){
     int countSent = 0;
     int countDone = 0;
 
-    int nJobs = nParams*nSamples;
     if(nJobs < nProcs){
       nProcs = nJobs;
     }
@@ -113,13 +116,13 @@ void ParallelMPI::run(){
       }
     }
 
-    int flag, pIndex, proc;
+    int pIndex, proc;
     double * res = new double[resSize];
     MPI_Status status;
     while(countDone < nParams){
       MPI_Recv(&pIndex, 1, MPI_INT, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
       proc = status.MPI_SOURCE;
-      MPI_Recv(&res, resSize, MPI_DOUBLE, proc, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      MPI_Recv(res, resSize, MPI_DOUBLE, proc, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
       for(int i = 0; i < resSize; i++){
 	fullRes[pIndex].push_back(res[i]);
       }
@@ -143,7 +146,6 @@ void ParallelMPI::run(){
 	MPI_Request_free(&req);
       }
     }
-    cout << "done: " << countDone << " sent " << countSent << " nParams " << nParams << endl;
     delete[] sent;
     delete[] done;
     delete[] res;
@@ -171,65 +173,6 @@ void ParallelMPI::run(){
 
       MPI_Send(&pIndex, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
       MPI_Send(res, resSize, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
-    }
-  }
-
-}
-
-void ParallelMPI::test(){
-  if(rank == 0){
-    int size = 4*nProcs;
-    int sent = 0;
-    int done = 0; 
-    MPI_Request req;
-    int * array = new int[size];
-    for(int i = 0; i < size; i++){
-      array[i] = i;
-    }
-
-    for(int i = 0; i < nProcs - 1; i++){
-      MPI_Isend(&array[i], 1, MPI_INT, i + 1, 0, MPI_COMM_WORLD, &req);
-      MPI_Request_free(&req);
-      sent++;
-    }
-
-    int flag, num, proc;
-    MPI_Status status;
-    while(done < size){
-      MPI_Recv(&num, 1, MPI_INT, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
-      proc = status.MPI_SOURCE;
-      cout << "From process: " << proc << " got num " << num << endl;
-      done++;
-      if(sent < size){
-	MPI_Isend(&array[sent], 1, MPI_INT, proc, 0, MPI_COMM_WORLD, &req);
-	MPI_Request_free(&req);
-	sent++;
-      }
-      else{
-	MPI_Isend(&sent, 1, MPI_INT, proc, 2, MPI_COMM_WORLD, &req);
-	MPI_Request_free(&req);
-      }
-    }
-    cout << "done: " << done << " sent " << sent << " size " << size << endl;
-  }
-  else{
-    int num; 
-    int flag;
-    int end = 0;
-    while(1){
-      flag = 0;
-      while(!flag){
-	MPI_Iprobe(0, 0, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
-	MPI_Iprobe(0, 2, MPI_COMM_WORLD, &end, MPI_STATUS_IGNORE);
-	if(end){
-	  cout << "Process " << rank << " did " << jobCount << " calculations" << endl;
-	  return;
-	}
-      }
-      MPI_Recv(&num, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      num*=2;
-      jobCount++;
-      MPI_Send(&num, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
     }
   }
 }

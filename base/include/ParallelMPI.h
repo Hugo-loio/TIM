@@ -18,7 +18,6 @@ class ParallelMPI{
     void setJob(void (*job) (double * res, double * params), int resSize);
 
     void run();
-    void test();
 
     vector<vector<double>> getResult(){return fullRes;}
 
