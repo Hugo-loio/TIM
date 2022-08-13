@@ -8,32 +8,16 @@
 #include "BBH3D.h"
 #include <thread>
 #include <cstdlib>
+#include "ParallelMPI.h"
 
 using namespace std;
 using namespace arma;
 
-int main (int arc, char ** argv) {
-  /*
-     DisorderedSOTAI sotai(1.1);
-     int l[2] = {20,20};
-     sotai.setSize(l);
-     sotai.setW(0);
-     for(int i = 0; i < 10; i++){
-     sotai.generateDisorder();
-     sotai.getIPR(10);
-     }
-  //sotai.getTMM(100, 0, 10);
-  */
+int main (int argc, char ** argv) {
 
-  DisorderedSSH ssh(0.5);
-  int l[1] = {10};
-  ssh.setSize(l);
-  ssh.setW(0.5);
-  ssh.generateDisorder();
-  vec eigval;
-  eig_sym(eigval, ssh.getHam());
-  //cout << eigval << endl;
-  cout << ssh.getHam() << endl;
+  ParallelMPI p(&argc, & argv);
+  
+  p.test();
 
   return 0;
 }

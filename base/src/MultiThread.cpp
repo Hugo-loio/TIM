@@ -32,9 +32,6 @@ void MultiThread::run(){
   if(printToFile){
     cout << "Printing to file: " << fileName << endl;
   }
-  if(existsAuxFile){
-    cout << "Auxiliary file: " << auxFileName << endl;
-  }
   cout << "Running " << nJobs << " jobs in " << nThreads << "threads." << endl;
 
   res.clear();
@@ -145,11 +142,4 @@ void MultiThread::printTime(){
   int m = dM.count() % 60;
   int s = dS.count() % 60;
   cout << h << ":" << m << ":" << s << endl;
-}
-
-void MultiThread::setAuxFile(char * argv0, string fileName){
-  existsAuxFile = true;
-  auxFileName = fileName;
-  string path(argv0);
-  string dir = path.substr(0, path.find_last_of('/') + 1);
 }

@@ -24,8 +24,6 @@ class MultiThread{
     bool printToFile;
     bool existsAuxFile;
     string fileName;
-    string auxFileName;
-    fstream auxFile;
     int nThreads;
     vector<vector<double>> paramList;
     void (*job) (vector<double> &, vector<double>);
