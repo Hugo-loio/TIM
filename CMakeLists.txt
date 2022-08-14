@@ -12,7 +12,7 @@ add_compile_options(-std=c++11 -pthread -g)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 # Armadillo
-find_package (Armadillo REQUIRED)
+find_package (Armadillo 11 REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
 # MPI
