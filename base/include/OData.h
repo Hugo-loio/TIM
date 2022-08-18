@@ -12,10 +12,11 @@ class OData{
     OData(char * argv0, string fName); //Output argv[0] to argv0
     ~OData();
 
+    void clear();
     void line(string line);
     void line(vector<double> line);
-    void data(double ** data, int dim, int nPoints);
-    void data(vector< vector<double> > data);
+    void data(double ** data, int dim, int nPoints, int order = 1);
+    void data(vector< vector<double> > data, int order = 1);
 
     //x axis is kx, n number of points
     void eBands2D(Hamiltonian & ham, int n, int dir, double * k);
@@ -38,6 +39,7 @@ class OData{
 
   private:
     ofstream f;
+    string filePath;
 };
 
 #endif

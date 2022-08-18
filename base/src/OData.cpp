@@ -9,11 +9,17 @@ using namespace arma;
 OData::OData(char * argv0, string fName){
   string path(argv0);
   string dir = path.substr(0,path.find_last_of('/') + 1);
-  f.open(dir + "data/" + fName);
+  filePath = dir + "data/" + fName;
+  f.open(filePath);
 }
 
 OData::~OData(){
   f.close();
+}
+
+void OData::clear(){
+  f.close();
+  f.open(filePath, std::ofstream::out | std::ofstream::trunc);
 }
 
 void OData::line(string line){
@@ -29,22 +35,42 @@ void OData::line(vector<double> line){
   }
 }
 
-void OData::data(double ** data, int dim, int nPoints){
-  for(int i = 0; i < nPoints; i++){
-    for(int e = 0; e < dim; e++){
-      f << data[e][i] << " " ; 
-    }
-    f << endl;
-  }
-}
-
-void OData::data(vector<vector<double>> data){
-  if(data.size() != 0){
-    for(int i = 0; i < data[0].size(); i++){
-      for(int e = 0; e < data.size(); e++){
+void OData::data(double ** data, int dim, int nPoints, int order){
+  if(order == 1){
+    for(int i = 0; i < nPoints; i++){
+      for(int e = 0; e < dim; e++){
 	f << data[e][i] << " " ; 
       }
       f << endl;
+    }
+  }
+  else if(order == 0){
+    for(int i = 0; i < dim; i++){
+      for(int e = 0; e < nPoints; e++){
+	f << data[i][e] << " " ; 
+      }
+      f << endl;
+    }
+  }
+}
+
+void OData::data(vector<vector<double>> data, int order){
+  if(data.size() != 0){
+    if(order == 1){
+      for(int i = 0; i < data[0].size(); i++){
+	for(int e = 0; e < data.size(); e++){
+	  f << data[e][i] << " " ; 
+	}
+	f << endl;
+      }
+    }
+    else if(order == 0){
+      for(int i = 0; i < data.size(); i++){
+	for(int e = 0; e < data[i].size(); e++){
+	  f << data[i][e] << " " ; 
+	}
+	f << endl;
+      }
     }
   }
 }

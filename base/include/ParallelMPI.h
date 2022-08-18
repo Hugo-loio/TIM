@@ -16,6 +16,7 @@ class ParallelMPI{
     void setParamList(double ** paramList, int paramSize, int nParams);
     void setParamList(vector<vector<double>> paramList);
     void setJob(void (*job) (double * res, double * params), int resSize);
+    void setPrintEachSamp(bool printEachSamp){this->printEachSamp = printEachSamp;};
 
     void run();
 
@@ -33,6 +34,7 @@ class ParallelMPI{
     void (*job) (double *, double *);
     chrono::high_resolution_clock::time_point tStart;
     vector<vector<double>> fullRes;
+    bool printEachSamp = false;
 
     //MPI related attributes
     int rank;

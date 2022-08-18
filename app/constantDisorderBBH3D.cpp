@@ -2,7 +2,7 @@
 #include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
 
-int sampPerJob = 10;
+int sampPerJob = 1;
 double intra = 1.1;
 double weight = 3;
 
@@ -38,13 +38,13 @@ int main (int argc, char ** argv) {
     part = stoi(argv[1]);
   }
 
-  int sampMult = 10;
+  int sampMult = 100;
 
-  int nPoints = 10;
+  int nPoints = 15;
   vector<vector<double>> paramList;
   for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
-    param.push_back(10 + i*2);
+    param.push_back(5 + i*2);
     paramList.push_back(param);
   }
 
@@ -81,5 +81,6 @@ int main (int argc, char ** argv) {
   }
   p.setFile(argv[0], fileName + ".dat");
   p.setJob(quad, 3*sampPerJob);
+  p.setPrintEachSamp(true);
   p.run();
 }

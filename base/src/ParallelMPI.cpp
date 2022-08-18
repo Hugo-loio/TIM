@@ -128,10 +128,15 @@ void ParallelMPI::run(){
       }
       done[pIndex]++;
       if(done[pIndex] == nSamples){
-	out->line(fullRes[pIndex]);
+	out->clear();
+	out->data(fullRes, 0);
 	countDone++;
 	cout << setprecision(4) << 100*(double)countDone/(double)nParams << " \% at ";
 	printTime();
+      }
+      else if(printEachSamp){
+	out->clear();
+	out->data(fullRes, 0);
       }
       if(countSent < nParams){
 	MPI_Isend(&countSent, 1, MPI_INT, proc, 0, MPI_COMM_WORLD, &req);
