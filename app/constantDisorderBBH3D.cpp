@@ -2,7 +2,7 @@
 #include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
 
-int sampPerJob = 4;
+int sampPerJob = 10;
 double intra = 1.1;
 double weight = 3;
 
@@ -26,7 +26,7 @@ void quad(double * res, double * params){
       res[3*i + 2] = quadxy;
     }
     catch(const runtime_error & error){
-      cout << "Singular matrix found at disorder weight = "  << params[0] << endl;
+      cout << "Singular matrix found" << endl;
       i--;
     }
   }
@@ -40,8 +40,9 @@ int main (int argc, char ** argv) {
 
   int sampMult = 10;
 
+  int nPoints = 10;
   vector<vector<double>> paramList;
-  for(int i = 0; i <= 10; i++){
+  for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
     param.push_back(10 + i*2);
     paramList.push_back(param);
@@ -68,7 +69,7 @@ int main (int argc, char ** argv) {
   }
 
   for(int i = 0; i < paramList.size(); i++){
-    cout << paramList[i][0] << endl;
+    //cout << paramList[i][0] << endl;
   }
 
   ParallelMPI p(&argc, &argv);

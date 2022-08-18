@@ -148,7 +148,7 @@ void DisorderedBBH3D::setLayers(bool * layerDir){
 
   ham->setOrbLayer(layers);
 
-  for(int i = 0; i < 4; i++){
+  for(int i = 0; i < 8; i++){
     delete[] layers[i];
   }
   delete[] layers;
