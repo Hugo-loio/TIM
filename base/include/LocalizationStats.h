@@ -13,9 +13,13 @@ class LocalizationStats{
     //Inverse Participation Ratio
     double ipr(int vol, int nOrb, int nStates, double * k = NULL);
     //Transfer Matrix Method, localization length
-    double tmm(int nLayers, int nIt, double en, double * k = NULL);
+    double tmm(int nLayers, int qrIt, double en, double * k = NULL);
   private:
     Hamiltonian * ham;
+    int maxItTMM = 1E6;
+    double tmmErr = 0.01;
+
+    bool testTmmConv(double * c, double * d, int size, int nQR, int & minIndex);
 };
 
 #endif

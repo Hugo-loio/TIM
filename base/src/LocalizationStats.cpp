@@ -36,42 +36,81 @@ double LocalizationStats::ipr(int vol, int nOrb, int nStates, double * k){
   }
 }
 
-double LocalizationStats::tmm(int nLayers, int nIt, double en, double * k){
+double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
   int size = ham->blockH(0,0,k).n_cols;
+  int tSize = 2*size;
+  double * c = new double[tSize];
+  double * d = new double[tSize];
+  for(int i = 0; i < tSize; i++){
+    c[i] = 0;
+    d[i] = 0;
+  }
   cout << size << endl;
-  cx_mat tN(2*size, 2*size, fill::zeros);
-  tN.submat(size, 0, 2*size -1, size -1) = eye<cx_mat>(size, size);
+  cx_mat tAux(tSize, tSize, fill::zeros);
+  tAux.submat(size, 0, tSize -1, size -1) = eye<cx_mat>(size, size);
   cx_mat enMat = en*eye<cx_mat>(size,size);
   cx_mat v = ham->blockH(0,1,k).i();
-  tN.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(0,0,k));
-  tN.submat(0, size, size -1, 2*size -1) = -v;
-  cx_mat t = tN;
+  tAux.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(0,0,k));
+  tAux.submat(0, size, size -1, tSize -1) = -v;
+  cx_mat t = tAux;
+  cx_mat q,r;
 
-  ham->generateDisorder();
-  for(int i = 0; i < nIt; i++){
-    for(int e = 1; e < nLayers; e++){
-      v = ham->blockH(e,e+1,k).i();
-      t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(e,e,k));
-      t.submat(0, size, size -1, 2*size -1) = -v*ham->blockH(e,e-1,k);
-      tN = t*tN;
+  int i,e,minIndex;
+  double rTemp;
+
+  for(i = 1; i < maxItTMM; i++){
+    if(i % qrIt){
+      qr(q, r, tAux);
+      tAux = q;
+      for(e = 0; e < tSize; e++){
+	//TODO: do this if r is complex?
+	rTemp = log(abs(r(e,e)));
+	c[e] += rTemp;
+	d[e] += rTemp*rTemp;
+      }
+      if(testTmmConv(c, d, tSize, i/qrIt, minIndex)){
+	break;
+      }
     }
-    t.submat(0, 0, size -1, size -1) = enMat - ham->blockH(nLayers-1,nLayers-1,k);
-    t.submat(0, size, size -1, 2*size -1) = -ham->blockH(nLayers-1,nLayers-2,k);
-    ham->generateDisorder();
-    v = ham->blockH(0,1,k).i();
-    t.submat(0, 0, size -1, size -1) = v*t.submat(0, 0, size -1, size -1);
-    t.submat(0, size, size -1, 2*size -1) = v*t.submat(0, size, size -1, 2*size -1);
-    tN = t*tN;
+    e = i % nLayers;
+    if(e != 0){
+      v = ham->blockH(i,i+1,k).i();
+      t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(i,i,k));
+      t.submat(0, size, size -1, tSize -1) = -v*ham->blockH(i,i-1,k);
+      tAux = t*tAux;
+    }
+    else{
+      t.submat(0, 0, size -1, size -1) = enMat - ham->blockH(nLayers-1,nLayers-1,k);
+      t.submat(0, size, size -1, tSize -1) = -ham->blockH(nLayers-1,nLayers-2,k);
+      ham->generateDisorder();
+      v = ham->blockH(0,1,k).i();
+      t.submat(0, 0, size -1, size -1) = v*t.submat(0, 0, size -1, size -1);
+      t.submat(0, size, size -1, tSize -1) = v*t.submat(0, size, size -1, tSize -1);
+      tAux = t*tAux;
+    }
   }
-  cout << tN << endl;
+  cout << tAux << endl;
 
-  cx_mat gamma = tN*tN.t();
-  gamma = powmat(gamma, 1);
-  cout << gamma << endl;
-  vec eigVal = eig_sym(gamma);
-  cout << nLayers*nIt << endl;
-  for(int i = 0; i < eigVal.size(); i++){
-    cout << pow(eigVal(i), 1/(double)(nLayers*nIt)) << endl;
+  if(i == maxItTMM){
+    cout << "Warning: transfer matrix method stopped at iteration limit" << endl;
   }
-  return 0;
+
+  return c[minIndex]/(double)i;
+}
+
+bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, int & minIndex){
+  minIndex = 0; 
+  double minAbs = abs(c[0]);
+  double thisAbs = 0;
+  for(int e = 1; e < size; e++){
+    thisAbs = abs(c[e]);
+    if(thisAbs < minAbs){
+      minIndex = e;
+      minAbs = thisAbs;
+    }
+  }
+  if(sqrt(d[minIndex]/(double)nQR - (d[minIndex]/(double)nQR)*(d[minIndex]/(double)nQR))*sqrt((double)nQR)/c[minIndex] < tmmErr){
+    return true;
+  }
+  return false;
 }
