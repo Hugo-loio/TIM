@@ -7,9 +7,9 @@ def plotIPR(name, label, ax, detail):
     data = data[:, data[0,:].argsort()]
 
     if(detail):
-        ax.errorbar(data[0], np.average(data,axis=0), label = label, yerr = np.std(data[1:], axis = 0)/np.sqrt(len(data[1:])) , capsize = 5, linestyle='-')
+        ax.errorbar(data[0], np.average(data[1:],axis=0), label = label, yerr = np.std(data[1:], axis = 0)/np.sqrt(len(data[1:])) , capsize = 5, linestyle='-')
     else:
-        ax.plot(data[0], np.average(data,axis=0), label = label, yerr = np.std(data[1:], axis = 0)/np.sqrt(len(data[1:])) , capsize = 5, linestyle='-')
+        ax.plot(data[0], np.average(data[1:],axis=0), label = label, linestyle='-')
 
 def plot(name, fileNames, labels, detail = True, show = True):
     fig, ax = plt.subplots()

@@ -31,3 +31,8 @@ void runSingleThread(void (*job) (vector<double> &, vector<double>), vector<vect
   r.run();
 }
 
+string rmTrailZeros(string str){
+  str.erase(str.find_last_not_of('0') + 1, string::npos);
+  str.erase(str.find_last_not_of('.') + 1, string::npos);
+  return str;
+}

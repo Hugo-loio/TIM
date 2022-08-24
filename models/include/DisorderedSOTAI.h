@@ -24,7 +24,7 @@ class DisorderedSOTAI{
     double getBoundPolarization(int dir);
 
     double getIPR(int nStates);
-    double getTMM(int nIt, double en, int l);
+    double getTMM(int qrIt, double en, int m);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 

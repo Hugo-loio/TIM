@@ -48,26 +48,6 @@ int main (int argc, char ** argv) {
     paramList.push_back(param);
   }
 
-  int nParts = 4;
-  if(part != 0){
-    switch(part){
-      case 1:
-	paramList.erase(paramList.begin() + 5, paramList.end());
-	break;
-      case 2:
-	paramList.erase(paramList.begin(), paramList.begin() + 5);
-	paramList.erase(paramList.begin() + 3, paramList.end());
-	break;
-      case 3:
-	paramList.erase(paramList.begin(), paramList.begin() + 8);
-	paramList.erase(paramList.begin() + 2, paramList.end());
-	break;
-      case 4:
-	paramList.erase(paramList.begin(), paramList.begin() + 10);
-	break;
-    }
-  }
-
   for(int i = 0; i < paramList.size(); i++){
     //cout << paramList[i][0] << endl;
   }
@@ -76,9 +56,6 @@ int main (int argc, char ** argv) {
   p.setSamples(sampMult);
   p.setParamList(paramList);
   string fileName = "constantDisorderBBH3Dquad_intra1.1_w3";
-  if(part != 0){
-    fileName += "p" + to_string(part);
-  }
   p.setFile(argv[0], fileName + ".dat");
   p.setJob(quad, 3*sampPerJob);
   p.setPrintEachSamp(true);

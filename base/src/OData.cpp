@@ -19,7 +19,8 @@ OData::~OData(){
 
 void OData::clear(){
   f.close();
-  f.open(filePath, std::ofstream::out | std::ofstream::trunc);
+  //f.open(filePath, std::ofstream::out | std::ofstream::trunc);
+  f.open(filePath);
 }
 
 void OData::line(string line){

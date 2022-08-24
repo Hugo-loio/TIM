@@ -221,16 +221,17 @@ double DisorderedSOTAI::getIPR(int nStates){
   return loc.ipr(vol, 4, nStates);
 }
 
-double DisorderedSOTAI::getTMM(int nIt, double en, int l){
+double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   int order[2] = {0,1};
   int bC[2] = {0,0};
-  int lvec[2] = {l, 2};
+  int lvec[2] = {m, 2};
   setSize(lvec);
   bool layerDir[2] = {true,true};
   setLayers(layerDir);
   ham->setOrder(order);
   ham->setBC(bC);
+  generateDisorder();
 
   LocalizationStats loc(ham);
-  return loc.tmm(2, nIt, en);
+  return loc.tmm(2, qrIt, en)/(double)m;
 }

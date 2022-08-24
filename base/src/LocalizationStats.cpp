@@ -45,7 +45,6 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
     c[i] = 0;
     d[i] = 0;
   }
-  cout << size << endl;
   cx_mat tAux(tSize, tSize, fill::zeros);
   tAux.submat(size, 0, tSize -1, size -1) = eye<cx_mat>(size, size);
   cx_mat enMat = en*eye<cx_mat>(size,size);
@@ -59,7 +58,7 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
   double rTemp;
 
   for(i = 1; i < maxItTMM; i++){
-    if(i % qrIt){
+    if(i % qrIt == 0 && i/qrIt > 1){
       qr(q, r, tAux);
       tAux = q;
       for(e = 0; e < tSize; e++){
@@ -74,9 +73,9 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
     }
     e = i % nLayers;
     if(e != 0){
-      v = ham->blockH(i,i+1,k).i();
-      t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(i,i,k));
-      t.submat(0, size, size -1, tSize -1) = -v*ham->blockH(i,i-1,k);
+      v = ham->blockH(e,e+1,k).i();
+      t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(e,e,k));
+      t.submat(0, size, size -1, tSize -1) = -v*ham->blockH(e,e-1,k);
       tAux = t*tAux;
     }
     else{
@@ -89,13 +88,16 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
       tAux = t*tAux;
     }
   }
-  cout << tAux << endl;
+  //cout << "Iterations: " << i << endl;
 
   if(i == maxItTMM){
     cout << "Warning: transfer matrix method stopped at iteration limit" << endl;
   }
 
-  return c[minIndex]/(double)i;
+  double res = abs((double)i/c[minIndex]);
+  delete[] c;
+  delete[] d;
+  return res;
 }
 
 bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, int & minIndex){
@@ -109,7 +111,14 @@ bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, i
       minAbs = thisAbs;
     }
   }
-  if(sqrt(d[minIndex]/(double)nQR - (d[minIndex]/(double)nQR)*(d[minIndex]/(double)nQR))*sqrt((double)nQR)/c[minIndex] < tmmErr){
+  double err = abs(sqrt(d[minIndex]/(double)nQR - (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR))*sqrt((double)nQR)/c[minIndex]);
+  /*
+  if(nQR % 1000 == 0){
+    cout << "nQR: " << nQR << " err " << err << " d " << d[minIndex] << " c " << c[minIndex] <<  endl;
+    cout << d[minIndex]/(double)nQR << " " << (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR) << endl;
+  }
+  */
+  if(err < tmmErr){
     return true;
   }
   return false;
