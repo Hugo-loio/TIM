@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import optimize
 
+plt.rcParams.update({'font.size': 14})
+plt.style.use('science')
+
 def fitFunc(x, a, b):
     return a*(1/x) + b
 
@@ -33,8 +36,8 @@ def plot(name):
     print(params)
 
     xdata = np.linspace(data[0][fitStart], data[0][-1], 100)
-    ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params)
-    plt.legend()
+    ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params, color = 'orange')
+    plt.legend(loc= 'lower right')
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
     plt.show()

@@ -73,7 +73,11 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
     }
     e = i % nLayers;
     if(e != 0){
+      ham->generateDisorder();
+      //cout << "aqui 3" << endl;
+      //cout << ham->blockH(e, e+1, k) << endl;
       v = ham->blockH(e,e+1,k).i();
+      //cout << "aqui 4" << endl;
       t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(e,e,k));
       t.submat(0, size, size -1, tSize -1) = -v*ham->blockH(e,e-1,k);
       tAux = t*tAux;
@@ -82,7 +86,9 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
       t.submat(0, 0, size -1, size -1) = enMat - ham->blockH(nLayers-1,nLayers-1,k);
       t.submat(0, size, size -1, tSize -1) = -ham->blockH(nLayers-1,nLayers-2,k);
       ham->generateDisorder();
+      //cout << "aqui 1" << endl;
       v = ham->blockH(0,1,k).i();
+      //cout << "aqui 2" << endl;
       t.submat(0, 0, size -1, size -1) = v*t.submat(0, 0, size -1, size -1);
       t.submat(0, size, size -1, tSize -1) = v*t.submat(0, size, size -1, tSize -1);
       tAux = t*tAux;
@@ -90,8 +96,13 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
   }
   //cout << "Iterations: " << i << endl;
 
+  cout << "iterations: " << i << endl;
   if(i == maxItTMM){
     cout << "Warning: transfer matrix method stopped at iteration limit" << endl;
+  }
+
+  for(e = 0; e < tSize; e++){
+    cout << abs((double)i/c[e]) << endl;
   }
 
   double res = abs((double)i/c[minIndex]);
@@ -113,13 +124,51 @@ bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, i
   }
   double err = abs(sqrt(d[minIndex]/(double)nQR - (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR))*sqrt((double)nQR)/c[minIndex]);
   /*
-  if(nQR % 1000 == 0){
-    cout << "nQR: " << nQR << " err " << err << " d " << d[minIndex] << " c " << c[minIndex] <<  endl;
-    cout << d[minIndex]/(double)nQR << " " << (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR) << endl;
-  }
-  */
+     if(nQR % 1000 == 0){
+     cout << "nQR: " << nQR << " err " << err << " d " << d[minIndex] << " c " << c[minIndex] <<  endl;
+     cout << d[minIndex]/(double)nQR << " " << (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR) << endl;
+     }
+     */
   if(err < tmmErr){
     return true;
   }
   return false;
+}
+
+double LocalizationStats::lsr(int nStates, double * k){
+  if(ham->getIsSparse()){
+    cx_vec eigVal;
+    eigs_gen(eigVal, ham->spH(k), nStates, 0.0);
+    vec realEig = vec(nStates, fill::zeros);
+    for(int i = 0; i < nStates; i++){
+      realEig[i] = eigVal[i].real();
+    }
+    realEig = sort(realEig);
+    double res = 0;
+    double max, min;
+    if(size(eigVal)[0] != nStates){
+      throw runtime_error("Diagonalization failed.");
+    }
+    double * s = new double[nStates-1];
+    for(int i = 0; i < nStates - 1; i++){
+      s[i] = realEig[i+1] - realEig[i];
+    }
+    for(int i = 0; i < nStates - 2; i++){
+      if(s[i] < s[i+1]){
+	min = s[i];
+	max = s[i+1];
+      }
+      else{
+	min = s[i+1];
+	max = s[i];
+      }
+      res += min/max;
+    }
+    delete s;
+    return res/((double)nStates-2);
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
+    return -1;
+  }
 }

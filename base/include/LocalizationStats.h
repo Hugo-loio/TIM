@@ -14,6 +14,8 @@ class LocalizationStats{
     double ipr(int vol, int nOrb, int nStates, double * k = NULL);
     //Transfer Matrix Method, localization length
     double tmm(int nLayers, int qrIt, double en, double * k = NULL);
+    //Level spacing statistics
+    double lsr(int nStates, double * k = NULL);
   private:
     Hamiltonian * ham;
     int maxItTMM = 1E6;

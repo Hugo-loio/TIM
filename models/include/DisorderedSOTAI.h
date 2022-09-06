@@ -25,6 +25,7 @@ class DisorderedSOTAI{
 
     double getIPR(int nStates);
     double getTMM(int qrIt, double en, int m);
+    double getLSR(int nStates);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 

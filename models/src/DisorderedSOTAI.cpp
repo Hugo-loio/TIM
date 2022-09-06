@@ -223,7 +223,7 @@ double DisorderedSOTAI::getIPR(int nStates){
 
 double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   int order[2] = {0,1};
-  int bC[2] = {0,0};
+  int bC[2] = {2,0};
   int lvec[2] = {m, 2};
   setSize(lvec);
   bool layerDir[2] = {true,true};
@@ -234,4 +234,17 @@ double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
 
   LocalizationStats loc(ham);
   return loc.tmm(2, qrIt, en)/(double)m;
+}
+
+double DisorderedSOTAI::getLSR(int nStates){
+  int order[2] = {0,1};
+  int bC[2] = {2,2};
+  bool layerDir[2] = {false,false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+
+  LocalizationStats loc(ham);
+  return loc.lsr(nStates);
 }
