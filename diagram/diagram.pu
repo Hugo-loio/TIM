@@ -68,6 +68,10 @@ class MultipoleOp{
 }
 
 class LocalizationStats #yellow{
+  + LocalizationStats(Hamiltonian *)
+  + double ipr()
+  + double tmm()
+  + double lsr()
 }
 
 class TBCleanH{
