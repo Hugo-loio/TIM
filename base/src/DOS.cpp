@@ -10,7 +10,7 @@ DOS::~DOS(){
   }
 }
 
-DOS::kpm(double en, int nMoments, int nRandVecs){
+double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
   if(ham->getIsSparse()){
     findRescaling(k);
     if(momentsFound){
@@ -28,8 +28,9 @@ DOS::kpm(double en, int nMoments, int nRandVecs){
       mu = new double[nMoments];
       this->nMoments = nMoments;
       this->nRandVecs = nRandVecs;
-      calculateMoments()
+      calculateMoments(k);
     }
+    return 0;
   } 
   else{
     cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
@@ -37,10 +38,11 @@ DOS::kpm(double en, int nMoments, int nRandVecs){
   }
 }
 
-DOS::jacksonKernel(int n){
+double DOS::jacksonKernel(int n){
+  return 0;
 }
 
-DOS::findRescaling(double * k){
+void DOS::findRescaling(double * k){
   cx_vec eigVal;
   eigs_gen(eigVal, ham->spH(k), 1, "lr");
   double eMax = eigVal[0].real();

@@ -33,18 +33,17 @@ void quad(double * res, double * params){
 }
 
 int main (int argc, char ** argv) {
-  int part = 0;
   if(argc > 1){
-    part = stoi(argv[1]);
+    weight = stod(argv[1]);
   }
 
   int sampMult = 100;
 
-  int nPoints = 15;
+  int nPoints = 10;
   vector<vector<double>> paramList;
   for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
-    param.push_back(5 + i*2);
+    param.push_back(20 + i*2);
     paramList.push_back(param);
   }
 

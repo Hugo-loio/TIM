@@ -10,7 +10,7 @@ class DOS{
     DOS(Hamiltonian * ham);
     ~DOS();
 
-    kpm(double en, int nMoments, int nRandVecs, double * k = NULL);
+    double kpm(double en, int nMoments, int nRandVecs, double * k = NULL);
 
   private:
     Hamiltonian * ham;
@@ -22,7 +22,7 @@ class DOS{
     bool momentsFound = false;
 
     void findRescaling(double * k = NULL);
-    void calculateMoments();
+    void calculateMoments(double * k = NULL);
     double jacksonKernel(int n);
 };
 
