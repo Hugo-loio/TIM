@@ -1,4 +1,5 @@
 #include "DOS.h"
+#include "AuxFunctions.h"
 
 DOS::DOS(Hamiltonian * ham){
   this->ham = ham;
@@ -12,12 +13,11 @@ DOS::~DOS(){
 
 double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
   if(ham->getIsSparse()){
-    findRescaling(k);
     if(momentsFound){
       if(this->nMoments != nMoments){
 	momentsFound = false;
       }
-      if(this->nRandVecs != nRandVecs){
+      else if(this->nRandVecs != nRandVecs){
 	momentsFound = false;
       }
       if(!momentsFound){
@@ -29,17 +29,23 @@ double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
       this->nMoments = nMoments;
       this->nRandVecs = nRandVecs;
       calculateMoments(k);
+      momentsFound = true;
     }
-    return 0;
+    if(k != NULL || !rescalingFound){
+      findRescaling(k);
+      rescalingFound = true;
+    }
+    double res = jacksonKernel(0)*mu[0];
+    en = (en - b)/a;
+    for(int i = 1; i < nMoments; i++){
+      res += 2*jacksonKernel(i)*mu[i]*chebyshev(i, en);
+    }
+    return (1/a)*res/(M_PI*sqrt(1 - en*en));
   } 
   else{
     cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
     return 0;
   }
-}
-
-double DOS::jacksonKernel(int n){
-  return 0;
 }
 
 void DOS::findRescaling(double * k){
@@ -53,3 +59,50 @@ void DOS::findRescaling(double * k){
   b = (eMax + eMin)/2;
 }
 
+double DOS::jacksonKernel(int n){
+  double aux = nMoments + 1;
+  return ((aux - n)*cos((M_PI*n)/aux) + sin((M_PI*n)/aux)*cot(M_PI/aux))/aux;
+}
+
+double DOS::chebyshev(int n, double x){
+  return cos(n * acos(x));
+}
+
+void DOS::calculateMoments(double * k){
+  sp_cx_mat h = ham->spH(k);
+  int d = size(h)[0];
+  h = (h - b*speye(size(h)))/a;
+  cx_vec rand(d);
+  cx_vec a1 = h*rand;
+  cx_vec a2 = rand;
+  int i,e;
+  int n = nMoments/2;
+  mu[0] = 1;
+  mu[1] = cdot(rand, a1).real();
+  for(i = 0; i < nRandVecs; i++){
+    randomize(rand, d);
+    for(e = 1; e < n; e++){
+      a2 = a1;
+      a1 = h*a1;
+      mu[2*e] = 2*cdot(a2,a2).real() - 1;
+      mu[2*e + 1] = 2*cdot(a1,a2).real() -mu[1];
+    }
+    if(nMoments % 2 == 1){
+      mu[nMoments - 1] = 2*cdot(a1,a1).real() - 1;
+    } 
+  }
+  for(i = 0; i < nMoments; i++){
+    mu[i] *= (1/(double)nRandVecs);
+  }
+}
+
+void DOS::randomize(cx_vec & rand, int d){
+  random_device dev;
+  mt19937 generator(dev());
+  uniform_real_distribution<double> uni(-M_PI, M_PI);
+  double norm = 1/sqrt((double)d);
+  complex<double> ii(0,1);
+  for(int i = 0; i < d; i++){
+    rand[i] = norm*exp(ii*uni(generator));
+  }
+}

@@ -27,6 +27,8 @@ class DisorderedSOTAI{
     double getTMM(int qrIt, double en, int m);
     double getLSR(int nStates);
 
+    double getDOS(double en, int nMoments, int nRandVecs);
+
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
     cx_mat getHam();

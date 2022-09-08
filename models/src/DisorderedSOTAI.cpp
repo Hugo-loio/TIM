@@ -4,6 +4,7 @@
 #include "Wilson.h"
 #include "OData.h"
 #include "LocalizationStats.h"
+#include "DOS.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   model = new TBModel(2,4);
@@ -209,7 +210,7 @@ void DisorderedSOTAI::setLayers(bool * layerDir){
 
 double DisorderedSOTAI::getIPR(int nStates){
   int order[2] = {0,1};
-  int bC[2] = {0,0};
+  int bC[2] = {2,2};
   bool layerDir[2] = {false,false};
   setLayers(layerDir);
   ham->setOrder(order);
@@ -247,4 +248,17 @@ double DisorderedSOTAI::getLSR(int nStates){
 
   LocalizationStats loc(ham);
   return loc.lsr(nStates);
+}
+
+double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs){
+  int order[2] = {0,1};
+  int bC[2] = {2,2};
+  bool layerDir[2] = {false,false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+
+  DOS dos(ham);
+  return dos.kpm(en, nMoments, nRandVecs);
 }

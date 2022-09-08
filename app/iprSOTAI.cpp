@@ -41,12 +41,12 @@ int main (int argc, char ** argv) {
     paramList1.push_back(param);
   }
 
-  int nPointsFit = 14;
+  int nPointsFit = 15;
   vector<vector<double>> paramList2;
   for(int i = 0; i <= nPointsFit; i++){
     for(int e = 0; e <= nPoints; e++){
       vector<double> param;
-      param.push_back(110 + 10*i);
+      param.push_back(90 + 10*i);
       param.push_back(9*(double)e/(double)nPoints);
       paramList2.push_back(param);
     }

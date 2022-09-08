@@ -26,8 +26,9 @@ def plot(name, fileNames, labels, detail = True, show = True):
     plt.close()
 
 
-names = ["L50_n10"]
+names = ["L50_n10", "L50_n10", "L100_n10"]
 names = ["lsrSOTAI_" + name + "_m1.1" for name in names]
-labels= ["L = 50, n = 10"]
+names[1] += "_open"
+labels= ["L = 50, n = 10", "L = 50, n = 10, OBC", "L = 100, n = 10"]
 
 plot("lsrSOTAI_intra1.1", names, labels, True, True)

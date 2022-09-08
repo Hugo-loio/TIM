@@ -20,10 +20,13 @@ class DOS{
     int nMoments;
     int nRandVecs;
     bool momentsFound = false;
+    bool rescalingFound = false;
 
     void findRescaling(double * k = NULL);
     void calculateMoments(double * k = NULL);
+    void randomize(cx_vec & rand, int d);
     double jacksonKernel(int n);
+    double chebyshev(int n, double x);
 };
 
 #endif

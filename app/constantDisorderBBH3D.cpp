@@ -2,7 +2,7 @@
 #include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
 
-int sampPerJob = 1;
+int sampPerJob = 4;
 double intra = 1.1;
 double weight = 3;
 

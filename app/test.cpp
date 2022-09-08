@@ -33,11 +33,11 @@ int main (int argc, char ** argv) {
   //
 
   DisorderedSOTAI sotai(1.1);
-  sotai.setW(5);
+  sotai.setW(3);
   int l2[2] = {100, 100};
   sotai.setSize(l);
   sotai.generateDisorder();
-  cout << sotai.getLSR(10) << endl;
+  cout << sotai.getDOS(0, 100, 5) << endl;
 
   return 0;
 }

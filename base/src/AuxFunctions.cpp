@@ -36,3 +36,7 @@ string rmTrailZeros(string str){
   str.erase(str.find_last_not_of('.') + 1, string::npos);
   return str;
 }
+
+double cot(double x){
+  return cos(x)/sin(x);
+}
