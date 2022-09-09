@@ -4,7 +4,6 @@
 #include "Wilson.h"
 #include "OData.h"
 #include "LocalizationStats.h"
-#include "DOS.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   model = new TBModel(2,4);
@@ -35,6 +34,9 @@ DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
 DisorderedSOTAI::~DisorderedSOTAI(){
   delete ham;
   delete model;
+  if(dos != NULL){
+    delete dos;
+  }
 }
 
 void DisorderedSOTAI::setM(double m){
@@ -45,6 +47,7 @@ void DisorderedSOTAI::setM(double m){
   model->getHop(3).setHop(-ii*m);
   delete ham;
   ham = new DisorderedHopH2D(*model);
+  updateDOS = true;
 }
 
 void DisorderedSOTAI::setOnSite(double delta){
@@ -62,6 +65,7 @@ void DisorderedSOTAI::setOnSite(double delta){
   }
   delete ham;
   ham = new DisorderedHopH2D(*model);
+  updateDOS = true;
 }
 
 
@@ -71,6 +75,12 @@ void DisorderedSOTAI::setW(double w){
 
 void DisorderedSOTAI::generateDisorder(){
   ham->generateDisorder();
+  updateDOS = true;
+}
+
+void DisorderedSOTAI::setSize(int * l){
+  ham->setSize(l);
+  updateDOS = true;
 }
 
 void DisorderedSOTAI::getChargeDensity(char * argv0, string fileName, int nx, int ny, int nOrbFilled){
@@ -250,15 +260,22 @@ double DisorderedSOTAI::getLSR(int nStates){
   return loc.lsr(nStates);
 }
 
-double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs){
-  int order[2] = {0,1};
-  int bC[2] = {2,2};
-  bool layerDir[2] = {false,false};
-  setLayers(layerDir);
-  ham->setOrder(order);
-  ham->setBC(bC);
-  ham->setSparse(true);
+double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs, double eMax){
+  if(updateDOS){
+    int order[2] = {0,1};
+    int bC[2] = {2,2};
+    bool layerDir[2] = {false,false};
+    setLayers(layerDir);
+    ham->setOrder(order);
+    ham->setBC(bC);
+    ham->setSparse(true);
 
-  DOS dos(ham);
-  return dos.kpm(en, nMoments, nRandVecs);
+    if(dos != NULL){
+      delete dos;
+    }
+    dos = new DOS(ham);
+    dos->setKpmERange(-eMax, eMax);
+    updateDOS = false;
+  }
+  return dos->kpm(en, nMoments, nRandVecs);
 }

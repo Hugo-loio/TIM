@@ -2,6 +2,7 @@
 #define DISORDEREDSOTAI_H
 
 #include "DisorderedHopH2D.h"
+#include "DOS.h"
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class DisorderedSOTAI{
 
     void setOnSite(double);
     void setM(double);
-    void setSize(int * l){ham->setSize(l);}
+    void setSize(int * l);
     void setW(double);
     void setLayers(bool *);
 
@@ -27,7 +28,7 @@ class DisorderedSOTAI{
     double getTMM(int qrIt, double en, int m);
     double getLSR(int nStates);
 
-    double getDOS(double en, int nMoments, int nRandVecs);
+    double getDOS(double en, int nMoments, int nRandVecs, double eMax = 0);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
@@ -39,6 +40,9 @@ class DisorderedSOTAI{
   private:
     TBModel * model;
     DisorderedHopH2D * ham;
+    DOS * dos = NULL;
+
+    bool updateDOS = true;
 };
 
 #endif

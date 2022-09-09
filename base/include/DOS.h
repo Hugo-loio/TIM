@@ -11,6 +11,7 @@ class DOS{
     ~DOS();
 
     double kpm(double en, int nMoments, int nRandVecs, double * k = NULL);
+    void setKpmERange(double eMin, double eMax);
 
   private:
     Hamiltonian * ham;
@@ -21,6 +22,7 @@ class DOS{
     int nRandVecs;
     bool momentsFound = false;
     bool rescalingFound = false;
+    bool customERange = false;
 
     void findRescaling(double * k = NULL);
     void calculateMoments(double * k = NULL);

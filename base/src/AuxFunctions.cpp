@@ -40,3 +40,16 @@ string rmTrailZeros(string str){
 double cot(double x){
   return cos(x)/sin(x);
 }
+
+void printElapsedTime(chrono::high_resolution_clock::time_point tStart){
+  auto tNow = chrono::high_resolution_clock::now();
+  auto dH = chrono::duration_cast<chrono::hours>(tNow-tStart);
+  auto dM = chrono::duration_cast<chrono::minutes>(tNow-tStart);
+  auto dS = chrono::duration_cast<chrono::seconds>(tNow-tStart);
+  auto dMS = chrono::duration_cast<chrono::milliseconds>(tNow-tStart);
+  int h = dH.count();
+  int m = dM.count() % 60;
+  int s = dS.count() % 60;
+  int ms = dMS.count() % 1000;
+  cout << h << ":" << m << ":" << s << ":" << ms << endl;
+}
