@@ -1,6 +1,7 @@
 #include <iostream>
 #include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
+#include "AuxFunctions.h"
 
 int sampPerJob = 4;
 double intra = 1.1;
@@ -36,6 +37,10 @@ int main (int argc, char ** argv) {
   if(argc > 1){
     weight = stod(argv[1]);
   }
+  int version = 0;
+  if(argc > 2){
+    version = stoi(argv[2]);
+  }
 
   int sampMult = 100;
 
@@ -54,7 +59,10 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   p.setSamples(sampMult);
   p.setParamList(paramList);
-  string fileName = "constantDisorderBBH3Dquad_intra1.1_w3";
+  string fileName = "constantDisorderBBH3Dquad_intra1.1_w" + rmTrailZeros(to_string(weight));
+  if(version != 0){
+    fileName += "(" + to_string(version) + ")";
+  }
   p.setFile(argv[0], fileName + ".dat");
   p.setJob(quad, 3*sampPerJob);
   p.setPrintEachSamp(true);

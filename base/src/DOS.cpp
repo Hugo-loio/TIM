@@ -66,7 +66,8 @@ void DOS::findRescaling(double * k){
 
 double DOS::jacksonKernel(int n){
   double aux = nMoments + 1;
-  return ((aux - n)*cos((M_PI*n)/aux) + sin((M_PI*n)/aux)*cot(M_PI/aux))/aux;
+  //return ((aux - n)*cos((M_PI*n)/aux) + sin((M_PI*n)/aux)*cot(M_PI/aux))/aux;
+  return 1;
 }
 
 double DOS::chebyshev(int n, double x){

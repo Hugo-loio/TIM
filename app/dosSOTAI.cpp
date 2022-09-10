@@ -8,7 +8,7 @@ double m = 1.1;
 int l[2] = {100,100};
 double w = 3.2;
 int nMoments = 100;
-int nRandVecs = 5;
+int nRandVecs = 1;
 double eMax = 10;
 int nPoints = 100;
 
