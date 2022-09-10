@@ -1,6 +1,7 @@
 #include <iostream>
 #include "DisorderedSOTAI.h"
 #include "ParallelMPI.h"
+#include "AuxFunctions.h"
 
 //int sampPerJob = 40;
 double m = 1.1;
@@ -9,6 +10,7 @@ double w = 3.2;
 int nMoments = 100;
 int nRandVecs = 5;
 double eMax = 10;
+int nPoints = 100;
 
 void dosConstW(double * res, double * params){
   DisorderedSOTAI sotai(m);
@@ -16,9 +18,8 @@ void dosConstW(double * res, double * params){
   sotai.setW(w);
   sotai.generateDisorder();
 
-  for(int i = 0; i <= (int)params[0]; i++){
-    res[2*i] = params[i+1];
-    res[2*i+1] = sotai.getDOS(params[i+1], nMoments, nRandVecs, eMax);
+  for(int i = 0; i <= nPoints; i++){
+    res[i] = sotai.getDOS(params[i], nMoments, nRandVecs, eMax);
   }
 }
 
@@ -26,20 +27,21 @@ int main (int argc, char ** argv) {
   int sampMult = 40;
 
   vector<vector<double>> paramList1;
-  int nPoints = 100;
   vector<double> param;
-  param.push_back(nPoints);
-  double deltaE = (2*eMax)/(double)nPoints;
-  for(int i = 1; i <= nPoints + 1; i++){
-    param.push_back(-eMax + deltaE*(i-1));
+  double deltaE = (18)/(double)nPoints;
+  for(int i = 0; i <= nPoints; i++){
+    param.push_back(-9 + deltaE*i);
   }
-  paramList1.push_back(param);
+  for(int i = 0; i < sampMult; i++){
+    paramList1.push_back(param);
+  }
 
   ParallelMPI p(&argc, &argv);
-  p.setSamples(sampMult);
+  p.setSamples(1);
   p.setParamList(paramList1);
-  p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
-  p.setJob(dosConstW, 2*(nPoints + 1));
+  p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
+  p.setJob(dosConstW, nPoints + 1);
+  p.setPrintEachSamp(true);
 
   p.run();
 }

@@ -274,7 +274,9 @@ double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs, double eM
       delete dos;
     }
     dos = new DOS(ham);
-    dos->setKpmERange(-eMax, eMax);
+    if(eMax != 0){
+      dos->setKpmERange(-eMax, eMax);
+    }
     updateDOS = false;
   }
   return dos->kpm(en, nMoments, nRandVecs);

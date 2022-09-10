@@ -42,10 +42,9 @@ double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
     //cout << res << endl;
     en = (en - b)/a;
     for(int i = 1; i < nMoments; i++){
-      //cout << i << " " << res << endl;
       res += 2*jacksonKernel(i)*mu[i]*chebyshev(i, en);
+      //cout << i << " " << res << " " << jacksonKernel(i) << " " << mu[i] << " " << chebyshev(i, en) << endl;
     }
-    printElapsedTime(tStart);
     return (1/a)*res/(M_PI*sqrt(1 - en*en));
   } 
   else{
@@ -85,17 +84,19 @@ void DOS::calculateMoments(double * k){
   for(i = 0; i < nRandVecs; i++){
     randomize(rand, d);
     cx_vec a1 = h*rand;
-    cx_vec a2 = rand;
+    cx_vec a2 = a1;
+    cx_vec a3 = rand;
     double mu1 = cdot(rand, a1).real();
     mu[1] += mu1;
     for(e = 1; e < n; e++){
+      a3 = 2*h*a1-a2;
       a2 = a1;
-      a1 = h*a1;
-      mu[2*e] = 2*cdot(a2,a2).real() - 1;
-      mu[2*e + 1] = 2*cdot(a1,a2).real() - mu1;
+      a1 = a3;
+      mu[2*e] += 2*cdot(a2,a2).real() - 1;
+      mu[2*e + 1] += 2*cdot(a1,a2).real() - mu1;
     }
     if(nMoments % 2 == 1){
-      mu[nMoments - 1] = 2*cdot(a1,a1).real() - 1;
+      mu[nMoments - 1] += 2*cdot(a1,a1).real() - 1;
     } 
   }
   for(i = 1; i < nMoments; i++){
@@ -107,15 +108,17 @@ void DOS::randomize(cx_vec & rand, int d){
   random_device dev;
   mt19937 generator(dev());
   uniform_real_distribution<double> uni(-M_PI, M_PI);
+  uniform_real_distribution<double> uni2(0,10);
   double norm = 1/sqrt((double)d);
   complex<double> ii(0,1);
   for(int i = 0; i < d; i++){
-    rand[i] = norm*exp(ii*uni(generator));
+    rand[i] = uni2(generator)*exp(ii*uni(generator));
   }
+  rand = normalise(rand);
 }
 
 void DOS::setKpmERange(double eMin, double eMax){
   customERange = true;
-  a = (eMax - eMin)/(2 - err);
+  a = (eMax - eMin)/2;
   b = (eMax + eMin)/2;
 }
