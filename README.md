@@ -6,6 +6,7 @@ This project was created to aid in my master's thesis.
 
 * [Armadillo](http://arma.sourceforge.net/)
 * [Matplotlib](https://matplotlib.org/) - *Optional* - only for running the python plotting scritps in the `scripts/` folder.
+* [Science Plots](https://github.com/garrettj403/SciencePlots) - *Optional* - only for running the python plotting scritps in the `scripts/` folder.
 
 ## Build
 

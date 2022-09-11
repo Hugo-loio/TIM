@@ -9,10 +9,7 @@ ParallelMPI::ParallelMPI(int * argc, char *** argv){
 
 ParallelMPI::~ParallelMPI(){
   if(areParamsSet){
-    for(int i = 0; i < nParams; i++){
-      delete[] paramList[i];
-    }
-    delete[] paramList;
+    deleteParamList();
   }
   if(isFileSet){
     delete out;
@@ -26,11 +23,17 @@ void ParallelMPI::setSamples(int nSamples){
 
 void ParallelMPI::setFile(char * argv0, string fileName){
   this->fileName = fileName;
+  if(isFileSet){
+    delete out;
+  }
   out = new OData(argv0, fileName);
   isFileSet = true;
 }
 
 void ParallelMPI::setParamList(double ** pList, int pSize, int nP){
+  if(areParamsSet){
+    deleteParamList();
+  }
   nParams = nP;
   paramSize = pSize;
   paramList = new double * [nParams];
@@ -45,6 +48,9 @@ void ParallelMPI::setParamList(double ** pList, int pSize, int nP){
 }
 
 void ParallelMPI::setParamList(vector<vector<double>> pList){
+  if(areParamsSet){
+    deleteParamList();
+  }
   nParams = pList.size();
   paramSize = pList[0].size();
   paramList = new double * [nParams];
@@ -56,6 +62,13 @@ void ParallelMPI::setParamList(vector<vector<double>> pList){
     }
   }
   areParamsSet = true;
+}
+
+void ParallelMPI::deleteParamList(){
+  for(int i = 0; i < nParams; i++){
+    delete[] paramList[i];
+  }
+  delete[] paramList;
 }
 
 void ParallelMPI::setJob(void (*job) (double * res, double * params), int resSize){
@@ -78,9 +91,12 @@ void ParallelMPI::run(){
     return;
   }
 
+  jobCount = 0;
+
   tStart = chrono::high_resolution_clock::now();
 
   if(rank == 0){
+    fullRes.clear();
     int nJobs = nParams*nSamples;
     cout << "Printing to file: " << fileName << endl;
     cout << "Running " << nJobs << " jobs in " << nProcs - 1 << " processes" << endl;
@@ -158,6 +174,7 @@ void ParallelMPI::run(){
   else{
     double * res = new double[resSize];
     int pIndex;
+    int countSent;
     int flag;
     int end = 0;
     while(1){
@@ -169,6 +186,7 @@ void ParallelMPI::run(){
 	  delete[] res;
 	  cout << "Process " << rank << " did " << jobCount << " jobs" << endl;
 	  printTimePerJob();
+	  MPI_Recv(&countSent, 1, MPI_INT, 0, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	  return;
 	}
       }

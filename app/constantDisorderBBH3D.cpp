@@ -3,7 +3,7 @@
 #include "ParallelMPI.h"
 #include "AuxFunctions.h"
 
-int sampPerJob = 4;
+int sampPerJob = 2;
 double intra = 1.1;
 double weight = 3;
 

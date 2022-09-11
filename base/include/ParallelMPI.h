@@ -49,5 +49,7 @@ class ParallelMPI{
     void createType();
     void printTime();
     void printTimePerJob();
+
+    void deleteParamList();
 };
 #endif

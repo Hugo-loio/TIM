@@ -18,10 +18,7 @@ double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
       rescalingFound = true;
     }
     if(momentsFound){
-      if(this->nMoments != nMoments){
-	momentsFound = false;
-      }
-      else if(this->nRandVecs != nRandVecs){
+      if(this->nMoments != nMoments || this->nRandVecs != nRandVecs || k != NULL){
 	momentsFound = false;
       }
       if(!momentsFound){
@@ -66,8 +63,7 @@ void DOS::findRescaling(double * k){
 
 double DOS::jacksonKernel(int n){
   double aux = nMoments + 1;
-  //return ((aux - n)*cos((M_PI*n)/aux) + sin((M_PI*n)/aux)*cot(M_PI/aux))/aux;
-  return 1;
+  return ((aux - n)*cos((M_PI*n)/aux) + sin((M_PI*n)/aux)*cot(M_PI/aux))/aux;
 }
 
 double DOS::chebyshev(int n, double x){
@@ -85,8 +81,8 @@ void DOS::calculateMoments(double * k){
   for(i = 0; i < nRandVecs; i++){
     randomize(rand, d);
     cx_vec a1 = h*rand;
-    cx_vec a2 = a1;
-    cx_vec a3 = rand;
+    cx_vec a2 = rand;
+    cx_vec a3;
     double mu1 = cdot(rand, a1).real();
     mu[1] += mu1;
     for(e = 1; e < n; e++){
@@ -108,14 +104,15 @@ void DOS::calculateMoments(double * k){
 void DOS::randomize(cx_vec & rand, int d){
   random_device dev;
   mt19937 generator(dev());
-  uniform_real_distribution<double> uni(-M_PI, M_PI);
-  uniform_real_distribution<double> uni2(0,10);
+  uniform_real_distribution<double> uni(0, 2*M_PI);
+  //uniform_real_distribution<double> uni2(0,10);
   double norm = 1/sqrt((double)d);
   complex<double> ii(0,1);
   for(int i = 0; i < d; i++){
-    rand[i] = uni2(generator)*exp(ii*uni(generator));
+    //rand[i] = uni2(generator)*exp(ii*uni(generator));
+    rand[i] = norm*exp(ii*uni(generator));
   }
-  rand = normalise(rand);
+  //rand = normalise(rand);
 }
 
 void DOS::setKpmERange(double eMin, double eMax){
