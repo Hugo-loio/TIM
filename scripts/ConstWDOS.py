@@ -62,10 +62,21 @@ labels = ["L = " + size[i] + ", W = " + weight[i] + ", N = " + mu[i] + ", R = " 
 weight = ["2.4", "2.8", "3.2", "3.6", "4", "9"]
 names = ["dosSOTAI_L200" + "_w" + weight[i] + "_nMu1000_nR1_m1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
-plot("ConstWDosSOTAI_intra1.1_v1", names, labels, False, False)
-
-plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
+#plot("ConstWDosSOTAI_intra1.1_v1", names, labels, False, False)
+#plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
 
 names = ["dosSOTAI_L200" + "_w" + weight[i] + "_nMu2000_nR1_m1.1" for i in range(len(weight))]
-plot("ConstWDosSOTAI_intra1.1_v2", names[0:1], labels[0:1], False, False)
-plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names[0:1], labels[0:1], False, False)
+#plot("ConstWDosSOTAI_intra1.1_v2", names[0:1], labels[0:1], False, False)
+#plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names[0:1], labels[0:1], False, False)
+
+size = ["50", "50"]
+weight = ["1", "2"]
+mu = ["100", "100"]
+rand = ["1", "1"]
+names = ["dosSOTAI_L" + size[i] + "_w" + weight[i] + "_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
+labels = ["L = " + size[i] + ", W = " + weight[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
+
+plot("ConstWDosSOTAI_intra1.1_test", names, labels, False, False)
+plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
+
+
