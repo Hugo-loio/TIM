@@ -2,8 +2,8 @@
 #include "DisorderedSOTAI.h"
 #include "ParallelMPI.h"
 
-int sampPerJob = 10;
-int l[2] = {50,50};
+int sampPerJob = 40;
+int l[2] = {20,20};
 double m = 1.1;
 
 void quad(double * res, double * params){
@@ -37,7 +37,7 @@ void pol(double * res, double * params){
 }
 
 int main (int argc, char ** argv) {
-  int sampMult = 4;
+  int sampMult = 1;
 
   vector<vector<double>> paramList;
   int nPoints = 100;

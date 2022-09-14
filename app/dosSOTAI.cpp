@@ -5,9 +5,9 @@
 
 //int sampPerJob = 40;
 double m = 1.1;
-int l[2] = {50,50};
+int l[2] = {100,100};
 double w = 2;
-int nMoments = 100;
+int nMoments = 8192;
 int nRandVecs = 1;
 double eMax = 12;
 int nPoints = 2000;
@@ -87,7 +87,7 @@ int main (int argc, char ** argv) {
   double wVec[6] = {2.4, 2.8, 3.2, 3.6, 4, 9};
 
   ParallelMPI p(&argc, &argv);
-  for(int i = 0; i < 0; i++){
+  for(int i = 0; i < 6; i++){
     w = wVec[i];
     p.setSamples(1);
     p.setParamList(paramList1);
@@ -96,13 +96,6 @@ int main (int argc, char ** argv) {
     //p.setPrintEachSamp(true);
     p.run();
   }
-
-  p.setSamples(1);
-  p.setParamList(paramList1);
-  p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
-  p.setJob(dosConstW, nPoints + 1);
-  //p.setPrintEachSamp(true);
-  p.run();
 
   /*
      p.setSamples(40);

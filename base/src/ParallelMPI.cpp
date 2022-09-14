@@ -96,6 +96,7 @@ void ParallelMPI::run(){
   tStart = chrono::high_resolution_clock::now();
 
   if(rank == 0){
+    //Master
     fullRes.clear();
     int nJobs = nParams*nSamples;
     cout << "Printing to file: " << fileName << endl;
@@ -135,7 +136,18 @@ void ParallelMPI::run(){
     int pIndex, proc;
     double * res = new double[resSize];
     MPI_Status status;
+    int flag;
     while(countDone < nParams){
+      flag = 0;
+      while(1){
+	MPI_Iprobe(MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &flag, MPI_STATUS_IGNORE);
+	if(flag){
+	  break;
+	}
+	else{
+	  sleep(0.3);
+	}
+      }
       MPI_Recv(&pIndex, 1, MPI_INT, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
       proc = status.MPI_SOURCE;
       MPI_Recv(res, resSize, MPI_DOUBLE, proc, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -172,11 +184,13 @@ void ParallelMPI::run(){
     delete[] res;
   }
   else{
+    //Slaves
     double * res = new double[resSize];
     int pIndex;
     int countSent;
     int flag;
     int end = 0;
+    MPI_Request req;
     while(1){
       flag = 0;
       while(!flag){
@@ -194,8 +208,10 @@ void ParallelMPI::run(){
       job(res, paramList[pIndex]);
       jobCount++;
 
-      MPI_Send(&pIndex, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
-      MPI_Send(res, resSize, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
+      MPI_Isend(&pIndex, 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &req);
+      MPI_Request_free(&req);
+      MPI_Isend(res, resSize, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, &req);
+      MPI_Request_free(&req);
     }
   }
 }
