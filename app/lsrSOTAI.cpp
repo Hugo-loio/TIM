@@ -5,7 +5,7 @@
 int sampPerJob = 40;
 double m = 1.1;
 int l[2] = {50,50};
-int nStates = 10;
+int nStates = 50;
 
 void lsrConstL(double * res, double * params){
   DisorderedSOTAI sotai(m);
@@ -14,7 +14,13 @@ void lsrConstL(double * res, double * params){
 
   for(int i = 0; i < sampPerJob; i++){
     sotai.generateDisorder();
-    res[i] = sotai.getLSR(nStates);
+    try{
+      res[i] = sotai.getLSR(nStates);
+    }
+    catch(const runtime_error & error){
+      cout << "Matrix diagonalization failed for w = " << params[0] << endl;
+      i--;
+    }
   }
 }
 

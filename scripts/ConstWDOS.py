@@ -41,7 +41,7 @@ def plotZoom(name, fileNames, labels, detail = True, show = True):
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
     ax.legend(loc = 'upper right', fontsize = 7)
-    plt.xlim([-1,1])
+    plt.xlim([-0.5,0.5])
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -66,8 +66,8 @@ labels = ["W = " + weight[i] for i in range(len(weight))]
 #plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
 
 names = ["dosSOTAI_L100" + "_w" + weight[i] + "_nMu8192_nR1_m1.1" for i in range(len(weight))]
-plot("ConstWDosSOTAI_intra1.1_v2", names[0:2], labels[0:2], False, False)
-plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names[0:2], labels[0:2], False, False)
+plot("ConstWDosSOTAI_intra1.1_v2", names, labels, False, False)
+plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names, labels, False, False)
 
 size = ["50", "50"]
 weight = ["1", "2"]

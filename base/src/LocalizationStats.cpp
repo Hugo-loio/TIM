@@ -149,11 +149,16 @@ double LocalizationStats::lsr(int nStates, double * k){
     if(size(eigVal)[0] != nStates){
       throw runtime_error("Diagonalization failed.");
     }
-    double * s = new double[nStates-1];
-    for(int i = 0; i < nStates - 1; i++){
-      s[i] = realEig[i+1] - realEig[i];
-    }
+    double * s = new double[nStates-2];
     for(int i = 0; i < nStates - 2; i++){
+      if(realEig[i+1] <= 0){
+	s[i] = realEig[i+1] - realEig[i];
+      }
+      else{
+	s[i] = realEig[i+2] - realEig[i+1];
+      }
+    }
+    for(int i = 0; i < nStates - 3; i++){
       if(s[i] < s[i+1]){
 	min = s[i];
 	max = s[i+1];
@@ -165,7 +170,7 @@ double LocalizationStats::lsr(int nStates, double * k){
       res += min/max;
     }
     delete s;
-    return res/((double)nStates-2);
+    return res/((double)nStates-3);
   }
   else{
     cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;

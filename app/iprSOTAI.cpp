@@ -14,7 +14,13 @@ void iprConstL(double * res, double * params){
 
   for(int i = 0; i < sampPerJob; i++){
     sotai.generateDisorder();
+    try{
     res[i] = sotai.getIPR(nStates);
+    }
+    catch(const runtime_error & error){
+      cout << "Matrix diagonalization failed for w = " << params[0] << endl;
+      i--;
+    }
   }
 }
 
@@ -26,7 +32,13 @@ void ipr(double * res, double * params){
 
   for(int i = 0; i < sampPerJob; i++){
     sotai.generateDisorder();
-    res[i] = sotai.getIPR(nStates);
+    try{
+      res[i] = sotai.getIPR(nStates);
+    }
+    catch(const runtime_error & error){
+      cout << "Matrix diagonalization failed for w = " << params[1] << " and L = " << params[0] << endl;
+      i--;
+    }
   }
 }
 
@@ -46,7 +58,7 @@ int main (int argc, char ** argv) {
   for(int i = 0; i <= nPointsFit; i++){
     for(int e = 0; e <= nPoints; e++){
       vector<double> param;
-      param.push_back(90 + 10*i);
+      param.push_back(50 + 10*i);
       param.push_back(9*(double)e/(double)nPoints);
       paramList2.push_back(param);
     }

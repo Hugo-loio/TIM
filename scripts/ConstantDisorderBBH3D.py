@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import optimize
 
-plt.rcParams.update({'font.size': 14})
+#plt.rcParams.update({'font.size': 14})
 plt.style.use('science')
 
 def fitFunc(x, a, b):
-    return a*(1/x) + b
+    return a*x + b
 
 def plot(name):
     fig, ax = plt.subplots()
@@ -18,29 +18,40 @@ def plot(name):
     qxz = data[2::3]
     qxy = data[3::3]
     q = 8*np.absolute(np.multiply(np.multiply(qyz,qxz),qxy))
-    #print(q[0:,-1])
-    print(np.sqrt(len(q)))
 
-    ax.errorbar(data[0], np.average(q,axis=0), yerr = np.std(q, axis = 0)/np.sqrt(len(q)), capsize = 5, linestyle='-')
+    x = 1/data[0]
+    sort = np.argsort(x)
+    x = x[sort]
+    qavg = np.average(q, axis = 0)
+    qavg = qavg[sort]
+    qerr = np.std(q, axis = 0)/np.sqrt(len(q))
+    qerr = qerr[sort]
 
-    ax.set(xlabel = r'$L$', ylabel = r'$Q$')
+    ax.errorbar(x, qavg, yerr = qerr, capsize = 5, linestyle='none', marker = '_')
 
-    fitStart = 5
-    xfit = data[0][fitStart:]
-    yfit = np.average(q, axis=0)[fitStart:]
-    yfiterr = np.std(q, axis = 0)[fitStart:]/np.sqrt(len(q) - fitStart)
+    ax.set(xlabel = r'$\frac{1}{L}$', ylabel = r'$Q$')
 
-    popt, pcov = optimize.curve_fit(fitFunc, xfit, yfit, sigma = yfiterr)
+    fitStart = 0
+    xfit = x[fitStart:]
+    yfit = qavg[fitStart:]
+    yfiterr = qerr[fitStart:] 
+
+    popt, pcov = optimize.curve_fit(fitFunc, xfit, yfit, sigma = yfiterr, absolute_sigma = True)
     perr = np.sqrt(np.diag(pcov))
-    params = r'$ f(x) = \frac{a}{x} + b \ , \  a = $' + str(round(popt[0], 2)) + r'$ \pm $' + str(round(perr[0],2)) +  r'$ \ , \ b = $' + str(round(popt[1], 2)) + r'$ \pm $' + str(round(perr[1],2))
-    print(params)
+    params = r'$ Q(L) = \frac{a}{L} + b$' '\n'  r'$a = $' + str(round(popt[0], 2)) + r'$ \pm $' + str(round(perr[0],2)) +  '\n' + r'$b = $' + str(round(popt[1], 2)) + r'$ \pm $' + str(round(perr[1],2))
+    #print(params)
 
-    xdata = np.linspace(data[0][fitStart], data[0][-1], 100)
+    xdata = np.linspace(x[-1], x[0], 100)
     ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params, color = 'orange')
-    plt.legend(loc= 'lower right')
+    plt.legend(loc= 'upper right')
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
-    plt.show()
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".eps")
+    #plt.show()
     plt.close()
 
+plot("constantDisorderBBH3Dquad_intra1.1_w2.8")
 plot("constantDisorderBBH3Dquad_intra1.1_w3")
+plot("constantDisorderBBH3Dquad_intra1.1_w3.2")
+plot("constantDisorderBBH3Dquad_intra1.1_w3.4")
+plot("constantDisorderBBH3Dquad_intra1.1_w3.6")
