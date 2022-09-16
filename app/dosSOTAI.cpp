@@ -51,7 +51,7 @@ void dosE0PlusGap(double * res, double * params){
   sotai.generateDisorder();
   res[0] = sotai.getDOS(0, nMoments, nRandVecs, eMax);
 
-  double tol = 0.05;
+  double tol = 0.001;
   if(res[0] > tol){
     res[1] = 0;
   }
@@ -78,7 +78,7 @@ int main (int argc, char ** argv) {
 
   vector<vector<double>> paramList2;
   int nPoints2 = 100;
-  for(int i = 0; i <= nPoints2; i++){
+  for(int i = 10; i <= nPoints2; i++){
     vector<double> param2;
     param2.push_back(9*(double)i/(double)nPoints2);
     paramList2.push_back(param2);
@@ -87,7 +87,7 @@ int main (int argc, char ** argv) {
   double wVec[6] = {2.4, 2.8, 3.2, 3.6, 4, 9};
 
   ParallelMPI p(&argc, &argv);
-  for(int i = 0; i < 6; i++){
+  for(int i = 0; i < 0; i++){
     w = wVec[i];
     p.setSamples(1);
     p.setParamList(paramList1);
@@ -97,11 +97,9 @@ int main (int argc, char ** argv) {
     p.run();
   }
 
-  /*
-     p.setSamples(40);
-     p.setParamList(paramList2);
-     p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_E0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
-     p.setJob(dosE0PlusGap, 2);
-     p.run();
-     */
+  p.setSamples(40);
+  p.setParamList(paramList2);
+  p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_E0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
+  p.setJob(dosE0PlusGap, 2);
+  p.run();
 }

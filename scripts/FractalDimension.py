@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import optimize
 
+plt.style.use('science')
+
 def fitFunc(x, a, b):
     return b*(1/x)**a
 
@@ -33,7 +35,7 @@ def plot(name, fileName, show = True):
     ax.set(xlabel = r'$W$', ylabel = r'$D_2$')
     #ax.legend()
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
 
     if(show):
         plt.show()
@@ -41,5 +43,7 @@ def plot(name, fileName, show = True):
 
 
 name = "iprSOTAI_n10_m1.1"
+plot("FractalDimensionSOTAI_n10", name, False)
 
-plot("FractalDimensionSOTAI", name, True)
+name = "iprSOTAI_n50_m1.1"
+plot("FractalDimensionSOTAI_n50", name, False)

@@ -24,8 +24,8 @@ def plot(name, fileNames, labels, detail = True, show = True):
     for i in range(0, len(fileNames)):
         plotEnGap(fileNames[i], labels[i], ax, detail)
 
-    ax.set(xlabel = r'$W$', ylabel = r'$\rho(0)$')
-    ax.legend(loc = 'lower right', fontsize = 7)
+    ax.set(xlabel = r'$W$', ylabel = r'Gap')
+    ax.legend(loc = 'upper right', fontsize = 7)
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -33,8 +33,8 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plt.show()
     plt.close()
 
-size = ["50"]
-mu = ["100"]
+size = ["100"]
+mu = ["8192"]
 rand = ["1"]
 names = ["dosSOTAI_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]

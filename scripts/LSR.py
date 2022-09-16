@@ -34,8 +34,8 @@ labels= ["L = 50, n = 10", "L = 50, n = 10, OBC", "L = 100, n = 10"]
 
 #plot("lsrSOTAI_intra1.1_test", names, labels, True, True)
 
-sizes = ["50"]
-nstates = ["50"]
+sizes = ["50", "100"]
+nstates = ["50", "50"]
 names = ["lsrSOTAI_L" + sizes[i] + "_n" + nstates[i] + "_m1.1" for i in range(len(sizes))]
 labels = ["L = " + sizes[i] + ", n = " + nstates[i] for i in range(len(sizes))]
 plot("LSR_SOTAI_intra1.1", names, labels, True, True)

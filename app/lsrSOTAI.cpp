@@ -4,7 +4,7 @@
 
 int sampPerJob = 40;
 double m = 1.1;
-int l[2] = {50,50};
+int l[2] = {100,100};
 int nStates = 50;
 
 void lsrConstL(double * res, double * params){
