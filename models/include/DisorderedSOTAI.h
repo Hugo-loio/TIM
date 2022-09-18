@@ -24,9 +24,9 @@ class DisorderedSOTAI{
     double getQuadrupoleManyBody();
     double getBoundPolarization(int dir);
 
-    double getIPR(int nStates);
+    double getIPR(int nStates, double en = 0);
     double getTMM(int qrIt, double en, int m);
-    double getLSR(int nStates);
+    double getLSR(int nStates, double en = 0);
 
     double getDOS(double en, int nMoments, int nRandVecs, double eMax = 0);
 

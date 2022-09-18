@@ -14,6 +14,8 @@ class DisorderedHopH2D : public TBDisorderedH2D{
     void setWeight(double w){this->w = w;}
     void setDisType(int type);
 
+    double getWeight(){return w;}
+
   private:
 
     int disType;

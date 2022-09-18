@@ -218,7 +218,7 @@ void DisorderedSOTAI::setLayers(bool * layerDir){
   delete[] layers;
 }
 
-double DisorderedSOTAI::getIPR(int nStates){
+double DisorderedSOTAI::getIPR(int nStates, double en){
   int order[2] = {0,1};
   int bC[2] = {2,2};
   bool layerDir[2] = {false,false};
@@ -229,7 +229,7 @@ double DisorderedSOTAI::getIPR(int nStates){
   int vol = ham->getSize()[0]*ham->getSize()[1];
 
   LocalizationStats loc(ham);
-  return loc.ipr(vol, 4, nStates);
+  return loc.ipr(vol, 4, nStates, en);
 }
 
 double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
@@ -247,7 +247,7 @@ double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   return loc.tmm(2, qrIt, en)/(double)m;
 }
 
-double DisorderedSOTAI::getLSR(int nStates){
+double DisorderedSOTAI::getLSR(int nStates, double en){
   int order[2] = {0,1};
   int bC[2] = {2,2};
   bool layerDir[2] = {false,false};
@@ -257,7 +257,7 @@ double DisorderedSOTAI::getLSR(int nStates){
   ham->setSparse(true);
 
   LocalizationStats loc(ham);
-  return loc.lsr(nStates);
+  return loc.lsr(nStates, en);
 }
 
 double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs, double eMax){

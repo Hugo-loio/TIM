@@ -19,7 +19,7 @@ class DisorderedSSH{
 
     void generateDisorder();
 
-    double ipr(int nStates);
+    double ipr(int nStates, double en = 0);
     double polarization();
     double entanglement(int type);
 

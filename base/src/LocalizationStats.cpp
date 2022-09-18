@@ -7,14 +7,15 @@ LocalizationStats::LocalizationStats(Hamiltonian * ham){
 LocalizationStats::~LocalizationStats(){
 }
 
-double LocalizationStats::ipr(int vol, int nOrb, int nStates, double * k){
+double LocalizationStats::ipr(int vol, int nOrb, int nStates, double en, double * k){
   if(ham->getIsSparse()){
     cx_vec eigVal;
     cx_mat eigVec;
-    eigs_gen(eigVal, eigVec, ham->spH(k), nStates, 0.0);
+    eigs_gen(eigVal, eigVec, ham->spH(k), nStates, en);
     double res = 0;
     double amp = 0;
     if(size(eigVal)[0] != nStates){
+      cout << "Found " << size(eigVal)[0] << " states" << endl;
       throw runtime_error("Diagonalization failed.");
     }
     for(int i = 0; i < nStates; i++){
@@ -135,10 +136,10 @@ bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, i
   return false;
 }
 
-double LocalizationStats::lsr(int nStates, double * k){
+double LocalizationStats::lsr(int nStates, double en, double * k){
   if(ham->getIsSparse()){
     cx_vec eigVal;
-    eigs_gen(eigVal, ham->spH(k), nStates, 0.0);
+    eigs_gen(eigVal, ham->spH(k), nStates, en);
     vec realEig = vec(nStates, fill::zeros);
     for(int i = 0; i < nStates; i++){
       realEig[i] = eigVal[i].real();
@@ -147,11 +148,12 @@ double LocalizationStats::lsr(int nStates, double * k){
     double res = 0;
     double max, min;
     if(size(eigVal)[0] != nStates){
+      cout << "Found " << size(eigVal)[0] << " states" << endl;
       throw runtime_error("Diagonalization failed.");
     }
     double * s = new double[nStates-2];
     for(int i = 0; i < nStates - 2; i++){
-      if(realEig[i+1] <= 0){
+      if(realEig[i+1] <= en){
 	s[i] = realEig[i+1] - realEig[i];
       }
       else{

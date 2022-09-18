@@ -118,8 +118,8 @@ void ParallelMPI::run(){
     int countSent = 0;
     int countDone = 0;
 
-    if(nJobs < nProcs){
-      nProcs = nJobs;
+    if(nJobs < nProcs - 1){
+      nProcs = nJobs + 1;
     }
 
     MPI_Request req;

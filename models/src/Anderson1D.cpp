@@ -34,14 +34,14 @@ void Anderson1D::generateDisorder(){
   ham->generateDisorder();
 }
 
-double Anderson1D::ipr(int nStates){
+double Anderson1D::ipr(int nStates, double en){
   int bC[2] = {2};
   ham->setBC(bC);
   ham->setSparse(true);
   int vol = ham->getSize()[0];
 
   LocalizationStats loc(ham);
-  return loc.ipr(vol, 1, nStates);
+  return loc.ipr(vol, 1, nStates, en);
 }
 
 cx_mat Anderson1D::getHam(){

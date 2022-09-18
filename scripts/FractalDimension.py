@@ -30,7 +30,8 @@ def plot(name, fileName, show = True):
 
     fig, ax = plt.subplots()
 
-    ax.errorbar(data[1][0:nPoints], d, yerr = dErr, capsize = 5, linestyle = '-')
+    #ax.errorbar(data[1][0:nPoints], d, yerr = dErr, capsize = 5, linestyle = '-')
+    ax.plot(data[1][0:nPoints], d, linestyle = '-')
 
     ax.set(xlabel = r'$W$', ylabel = r'$D_2$')
     #ax.legend()

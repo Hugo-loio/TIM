@@ -2,7 +2,7 @@
 #include "DisorderedSOTAI.h"
 #include "ParallelMPI.h"
 
-int sampPerJob = 40;
+int sampPerJob = 1;
 double m = 1.1;
 int l[2] = {50,50};
 int nStates = 10;
@@ -18,7 +18,7 @@ void iprConstL(double * res, double * params){
     res[i] = sotai.getIPR(nStates);
     }
     catch(const runtime_error & error){
-      cout << "Matrix diagonalization failed for w = " << params[0] << endl;
+      cout << "Matrix diagonalization failed for w = " << params[0] << " at iteration " << i << endl;
       i--;
     }
   }
@@ -36,14 +36,14 @@ void ipr(double * res, double * params){
       res[i] = sotai.getIPR(nStates);
     }
     catch(const runtime_error & error){
-      cout << "Matrix diagonalization failed for w = " << params[1] << " and L = " << params[0] << endl;
+      cout << "Matrix diagonalization failed for w = " << params[1] << " and L = " << params[0] << " at iteration " << i << endl;
       i--;
     }
   }
 }
 
 int main (int argc, char ** argv) {
-  int sampMult = 1;
+  int sampMult = 40;
 
   vector<vector<double>> paramList1;
   int nPoints = 100;
@@ -55,8 +55,8 @@ int main (int argc, char ** argv) {
 
   int nPointsFit = 15;
   vector<vector<double>> paramList2;
-  for(int i = 0; i <= nPointsFit; i++){
-    for(int e = 0; e <= nPoints; e++){
+  for(int i = 8; i <= 8; i++){
+    for(int e = 0; e <= 0; e++){
       vector<double> param;
       param.push_back(50 + 10*i);
       param.push_back(9*(double)e/(double)nPoints);
@@ -74,7 +74,6 @@ int main (int argc, char ** argv) {
   p.setParamList(paramList2);
   p.setFile(argv[0], "iprSOTAI_n" + to_string(nStates) + "_m1.1.dat");
   p.setJob(ipr, sampPerJob);
-
+  p.setPrintEachSamp(true);
   p.run();
-
 }

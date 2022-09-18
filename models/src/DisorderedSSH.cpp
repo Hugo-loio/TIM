@@ -52,14 +52,14 @@ void DisorderedSSH::generateDisorder(){
   diagEnt = true;
 }
 
-double DisorderedSSH::ipr(int nStates){
+double DisorderedSSH::ipr(int nStates, double en){
   int bC[2] = {2};
   ham->setBC(bC);
   ham->setSparse(true);
   int vol = ham->getSize()[0];
 
   LocalizationStats loc(ham);
-  return loc.ipr(vol, 2, nStates);
+  return loc.ipr(vol, 2, nStates, en);
 }
 
 double DisorderedSSH::polarization(){
