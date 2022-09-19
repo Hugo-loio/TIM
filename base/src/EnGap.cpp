@@ -11,7 +11,7 @@ double EnGap::getGap(double en, double * k){
   if(ham->getIsSparse()){
     cx_vec eigVal;
     vec realEig;
-    int nStates = 4;
+    int nStates = 10;
     double res;
 
     while(1){
@@ -31,6 +31,9 @@ double EnGap::getGap(double en, double * k){
 
       for(int i = 0; i < nStates - 1; i++){
 	if(realEig[i+1] > en && realEig[i] < en){
+	  if(nStates != 10){
+	    cout << __PRETTY_FUNCTION__ << " needed " << nStates << " states" << endl;
+	  }
 	  return realEig[i+1] - realEig[i];
 	}
       }

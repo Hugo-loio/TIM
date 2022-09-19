@@ -32,6 +32,8 @@ class DisorderedSOTAI{
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
+    double getEnGap(double en);
+
     cx_mat getHam();
     void printHam(char * argv0, string fileName);
 
