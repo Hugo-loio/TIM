@@ -60,10 +60,7 @@ int main (int argc, char ** argv) {
   p.setSamples(sampMult);
   p.setParamList(paramList);
   string fileName = "constantDisorderBBH3Dquad_intra1.1_w" + rmTrailZeros(to_string(weight));
-  if(version != 0){
-    fileName += "(" + to_string(version) + ")";
-  }
-  p.setFile(argv[0], fileName + ".dat");
+  p.setFile(argv[0], fileName, version);
   p.setJob(quad, 3*sampPerJob);
   p.setPrintEachSamp(true);
   p.run();

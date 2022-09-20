@@ -56,7 +56,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   p.setSamples(sampMult);
   p.setParamList(paramList);
-  p.setFile(argv[0], "phaseDiagramBBH3Dquad_L" + to_string(l[0]) + "_intra1.1.dat");
+  p.setFile(argv[0], "phaseDiagramBBH3Dquad_L" + to_string(l[0]) + "_intra1.1");
   p.setJob(quad, 3*sampPerJob);
   p.run();
 }

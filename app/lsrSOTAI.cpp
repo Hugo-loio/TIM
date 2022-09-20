@@ -67,14 +67,14 @@ int main (int argc, char ** argv) {
   /*
      p.setSamples(sampMult);
      p.setParamList(paramList1);
-     p.setFile(argv[0], "lsrSOTAI_L" + to_string(l[0]) + "_n" + to_string(nStates) + "_m1.1.dat");
+     p.setFile(argv[0], "lsrSOTAI_L" + to_string(l[0]) + "_n" + to_string(nStates) + "_m1.1");
      p.setJob(lsrConstL, sampPerJob);
      p.run();
      */
 
   p.setSamples(sampMult);
   p.setParamList(paramList2);
-  p.setFile(argv[0], "lsrSOTAI_w" + rmTrailZeros(to_string(w))  + "_n" + to_string(nStates) + "_m1.1.dat");
+  p.setFile(argv[0], "lsrSOTAI_w" + rmTrailZeros(to_string(w))  + "_n" + to_string(nStates) + "_m1.1");
   p.setJob(lsrConstW, sampPerJob);
   p.run();
 }

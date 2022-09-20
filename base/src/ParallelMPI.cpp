@@ -21,7 +21,11 @@ void ParallelMPI::setSamples(int nSamples){
   this->nSamples = nSamples;
 }
 
-void ParallelMPI::setFile(char * argv0, string fileName){
+void ParallelMPI::setFile(char * argv0, string fileName, int version){
+  if(version != 0){
+    fileName += "(" + to_string(version) + ")";
+  }
+  fileName += ".dat";
   this->fileName = fileName;
   if(isFileSet){
     delete out;

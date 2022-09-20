@@ -57,7 +57,8 @@ class Wilson {
   + cx_mat nestedNestedWilsonLoopSupercell()
 }
 
-class DOS #yellow{
+class DOS{
+  + double kpm(double en, ...)
 }
 
 class MultipoleOp{
@@ -67,11 +68,12 @@ class MultipoleOp{
   + double octupole()
 }
 
-class LocalizationStats #yellow{
+class LocalizationProps #yellow{
   + LocalizationStats(Hamiltonian *)
   + double ipr()
   + double tmm()
   + double lsr()
+  + double gap()
 }
 
 class TBCleanH{

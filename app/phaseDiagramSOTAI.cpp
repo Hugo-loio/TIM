@@ -50,9 +50,9 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   p.setSamples(sampMult);
   p.setParamList(paramList);
-  //p.setFile(argv[0], "phaseDiagramSOTAI_" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1.dat");
+  //p.setFile(argv[0], "phaseDiagramSOTAI_" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1");
   //p.setJob(quad, sampPerJob);
-  p.setFile(argv[0], "phaseDiagramSOTAIpol_" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1.dat");
+  p.setFile(argv[0], "phaseDiagramSOTAIpol_" + to_string(l[0]) + "x" + to_string(l[1]) + "_m1.1");
   p.setJob(pol, 2*sampPerJob);
   p.run();
 }

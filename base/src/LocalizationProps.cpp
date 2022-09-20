@@ -1,23 +1,17 @@
-#include "LocalizationStats.h"
+#include "LocalizationProps.h"
 
-LocalizationStats::LocalizationStats(Hamiltonian * ham){
+LocalizationProps::LocalizationProps(Hamiltonian * ham){
   this->ham = ham;
 }
 
-LocalizationStats::~LocalizationStats(){
+LocalizationProps::~LocalizationProps(){
 }
 
-double LocalizationStats::ipr(int vol, int nOrb, int nStates, double en, double * k){
+double LocalizationProps::ipr(int vol, int nOrb, int nStates, double en, double * k){
   if(ham->getIsSparse()){
-    cx_vec eigVal;
-    cx_mat eigVec;
-    eigs_gen(eigVal, eigVec, ham->spH(k), nStates, en);
+    sparseDiag(nStates, en, k);
     double res = 0;
     double amp = 0;
-    if(size(eigVal)[0] != nStates){
-      cout << "Found " << size(eigVal)[0] << " states" << endl;
-      throw runtime_error("Diagonalization failed.");
-    }
     for(int i = 0; i < nStates; i++){
       //cout << eigVal[i] << endl;
       eigVec.col(i) = normalise(eigVec.col(i));
@@ -37,7 +31,7 @@ double LocalizationStats::ipr(int vol, int nOrb, int nStates, double en, double 
   }
 }
 
-double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
+double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
   int size = ham->blockH(0,0,k).n_cols;
   int tSize = 2*size;
   double * c = new double[tSize];
@@ -112,7 +106,7 @@ double LocalizationStats::tmm(int nLayers, int qrIt, double en, double * k){
   return res;
 }
 
-bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, int & minIndex){
+bool LocalizationProps::testTmmConv(double * c, double * d, int size, int nQR, int & minIndex){
   minIndex = 0; 
   double minAbs = abs(c[0]);
   double thisAbs = 0;
@@ -136,21 +130,12 @@ bool LocalizationStats::testTmmConv(double * c, double * d, int size, int nQR, i
   return false;
 }
 
-double LocalizationStats::lsr(int nStates, double en, double * k){
+double LocalizationProps::lsr(int nStates, double en, double * k){
   if(ham->getIsSparse()){
-    cx_vec eigVal;
-    eigs_gen(eigVal, ham->spH(k), nStates, en);
-    vec realEig = vec(nStates, fill::zeros);
-    for(int i = 0; i < nStates; i++){
-      realEig[i] = eigVal[i].real();
-    }
-    realEig = sort(realEig);
+    sparseDiag(nStates, en, k);
+    vec realEig = sort(eigVal);
     double res = 0;
     double max, min;
-    if(size(eigVal)[0] != nStates){
-      cout << "Found " << size(eigVal)[0] << " states" << endl;
-      throw runtime_error("Diagonalization failed.");
-    }
     double * s = new double[nStates-2];
     for(int i = 0; i < nStates - 2; i++){
       if(realEig[i+1] <= en){
@@ -178,4 +163,58 @@ double LocalizationStats::lsr(int nStates, double en, double * k){
     cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
     return -1;
   }
+}
+
+double LocalizationProps::gap(double en, double * k){
+  if(ham->getIsSparse()){
+    vec realEig;
+    int nStates = 10;
+    double res;
+
+    while(1){
+      sparseDiag(nStates, en, k);
+      realEig = sort(eigVal);
+      for(int i = 0; i < nStates; i++){
+	if(realEig[i] == en){
+	  return 0;
+	}
+      }
+      for(int i = 0; i < nStates - 1; i++){
+	if(realEig[i+1] > en && realEig[i] < en){
+	  if(nStates != 10){
+	    cout << __PRETTY_FUNCTION__ << " needed " << nStates << " states" << endl;
+	  }
+	  return realEig[i+1] - realEig[i];
+	}
+      }
+      nStates*= 2;
+    }
+    return -1;
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
+    return -1;
+  }
+}
+
+void LocalizationProps::sparseDiag(int nStates, double en, double * k){
+  if(forceDiag == false){
+    if(k == NULL && nStates <= nStatesFound && lastEn == en){
+      return;
+    }
+  }
+  else{
+    forceDiag = false;
+  }
+  cx_vec eigValTemp;
+  eigs_gen(eigValTemp, eigVec, ham->spH(k), nStates, en);
+  if(size(eigValTemp)[0] != nStates){
+    cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
+    throw runtime_error("Diagonalization failed.");
+  }
+  eigVal = vec(nStates, fill::zeros);
+  for(int i = 0; i < nStates; i++){
+    eigVal[i] = eigValTemp[i].real();
+  }
+  nStatesFound = nStates;
 }

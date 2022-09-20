@@ -3,7 +3,6 @@
 #include "BoundaryGreenH.h"
 #include "Wilson.h"
 #include "OData.h"
-#include "LocalizationStats.h"
 #include "EnGap.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
@@ -30,11 +29,13 @@ DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
     model->setOnSite(3,-delta);
   }
   ham = new DisorderedHopH2D(*model);
+  loc = new LocalizationProps(ham);
 }
 
 DisorderedSOTAI::~DisorderedSOTAI(){
   delete ham;
   delete model;
+  delete loc;
   if(dos != NULL){
     delete dos;
   }
@@ -47,7 +48,9 @@ void DisorderedSOTAI::setM(double m){
   model->getHop(2).setHop(ii*m);
   model->getHop(3).setHop(-ii*m);
   delete ham;
+  delete loc;
   ham = new DisorderedHopH2D(*model);
+  loc = new LocalizationProps(ham);
   updateDOS = true;
 }
 
@@ -65,7 +68,9 @@ void DisorderedSOTAI::setOnSite(double delta){
     model->getOnSite(3).setEn(-delta);
   }
   delete ham;
+  delete loc;
   ham = new DisorderedHopH2D(*model);
+  loc = new LocalizationProps(ham);
   updateDOS = true;
 }
 
@@ -76,11 +81,13 @@ void DisorderedSOTAI::setW(double w){
 
 void DisorderedSOTAI::generateDisorder(){
   ham->generateDisorder();
+  loc->setForceDiag();
   updateDOS = true;
 }
 
 void DisorderedSOTAI::setSize(int * l){
   ham->setSize(l);
+  loc->setForceDiag();
   updateDOS = true;
 }
 
@@ -190,7 +197,7 @@ void DisorderedSOTAI::test(char * argv0){
 
   setW(1);
 
-  LocalizationStats loc(ham);
+  LocalizationProps loc(ham);
   //loc.tmm(1,1);
 }
 
@@ -229,8 +236,7 @@ double DisorderedSOTAI::getIPR(int nStates, double en){
   ham->setSparse(true);
   int vol = ham->getSize()[0]*ham->getSize()[1];
 
-  LocalizationStats loc(ham);
-  return loc.ipr(vol, 4, nStates, en);
+  return loc->ipr(vol, 4, nStates, en);
 }
 
 double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
@@ -244,8 +250,7 @@ double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   ham->setBC(bC);
   generateDisorder();
 
-  LocalizationStats loc(ham);
-  return loc.tmm(2, qrIt, en)/(double)m;
+  return loc->tmm(2, qrIt, en)/(double)m;
 }
 
 double DisorderedSOTAI::getLSR(int nStates, double en){
@@ -257,8 +262,7 @@ double DisorderedSOTAI::getLSR(int nStates, double en){
   ham->setBC(bC);
   ham->setSparse(true);
 
-  LocalizationStats loc(ham);
-  return loc.lsr(nStates, en);
+  return loc->lsr(nStates, en);
 }
 
 double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs, double eMax){
@@ -292,6 +296,5 @@ double DisorderedSOTAI::getEnGap(double en){
   ham->setBC(bC);
   ham->setSparse(true);
 
-  EnGap g(ham);
-  return g.getGap(en);
+  return loc->gap(en);
 }

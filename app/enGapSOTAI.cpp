@@ -43,7 +43,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   p.setSamples(sampMult);
   p.setParamList(paramList1);
-  p.setFile(argv[0], "enGapSOTAI_L" + to_string(l[0]) + "_m1.1.dat");
+  p.setFile(argv[0], "enGapSOTAI_L" + to_string(l[0]) + "_m1.1");
   p.setJob(gapConstL, sampPerJob);
   p.setPrintEachSamp(true);
   p.run();

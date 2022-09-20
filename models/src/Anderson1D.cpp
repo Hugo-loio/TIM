@@ -1,6 +1,6 @@
 #include "Anderson1D.h"
 #include "OData.h"
-#include "LocalizationStats.h"
+#include "LocalizationProps.h"
 
 Anderson1D::Anderson1D(double t){
   model = new TBModel(1, 1);
@@ -40,7 +40,7 @@ double Anderson1D::ipr(int nStates, double en){
   ham->setSparse(true);
   int vol = ham->getSize()[0];
 
-  LocalizationStats loc(ham);
+  LocalizationProps loc(ham);
   return loc.ipr(vol, 1, nStates, en);
 }
 
@@ -62,7 +62,7 @@ double Anderson1D::getTMM(int qrIt, double en){
   ham->setBC(bC);
   generateDisorder();
 
-  LocalizationStats loc(ham);
+  LocalizationProps loc(ham);
   return loc.tmm(2, qrIt, en);
 }
 

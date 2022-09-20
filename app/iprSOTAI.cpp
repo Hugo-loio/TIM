@@ -68,11 +68,11 @@ int main (int argc, char ** argv) {
   p.setSamples(sampMult);
   /*
      p.setParamList(paramList1);
-     p.setFile(argv[0], "iprSOTAI_L" + to_string(l[0]) + "_n" + to_string(nStates) + "_m1.1.dat");
+     p.setFile(argv[0], "iprSOTAI_L" + to_string(l[0]) + "_n" + to_string(nStates) + "_m1.1");
      p.setJob(iprConstL, sampPerJob);
      */
   p.setParamList(paramList2);
-  p.setFile(argv[0], "iprSOTAI_n" + to_string(nStates) + "_m1.1.dat");
+  p.setFile(argv[0], "iprSOTAI_n" + to_string(nStates) + "_m1.1");
   p.setJob(ipr, sampPerJob);
   p.setPrintEachSamp(true);
   p.run();

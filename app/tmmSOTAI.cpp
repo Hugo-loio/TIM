@@ -43,11 +43,11 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   /*
      p.setParamList(paramList1);
-     p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1.dat");
+     p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
      p.setJob(tmmConstW, 1);
      */
   p.setParamList(paramList2);
-  p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1.dat");
+  p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
   p.setJob(tmmConstL, 1);
   p.run();
 

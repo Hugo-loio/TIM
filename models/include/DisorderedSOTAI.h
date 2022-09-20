@@ -2,6 +2,7 @@
 #define DISORDEREDSOTAI_H
 
 #include "DisorderedHopH2D.h"
+#include "LocalizationProps.h"
 #include "DOS.h"
 
 using namespace std;
@@ -43,6 +44,7 @@ class DisorderedSOTAI{
     TBModel * model;
     DisorderedHopH2D * ham;
     DOS * dos = NULL;
+    LocalizationProps * loc;
 
     bool updateDOS = true;
 };

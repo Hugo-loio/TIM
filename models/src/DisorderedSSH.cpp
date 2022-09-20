@@ -1,7 +1,7 @@
 #include "DisorderedSSH.h"
 #include "MultipoleOp.h"
 #include "OData.h"
-#include "LocalizationStats.h"
+#include "LocalizationProps.h"
 
 DisorderedSSH::DisorderedSSH(double t1, double t2, double delta){
   model = new TBModel(1, 2);
@@ -58,7 +58,7 @@ double DisorderedSSH::ipr(int nStates, double en){
   ham->setSparse(true);
   int vol = ham->getSize()[0];
 
-  LocalizationStats loc(ham);
+  LocalizationProps loc(ham);
   return loc.ipr(vol, 2, nStates, en);
 }
 

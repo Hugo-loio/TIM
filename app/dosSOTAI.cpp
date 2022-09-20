@@ -91,7 +91,7 @@ int main (int argc, char ** argv) {
     w = wVec[i];
     p.setSamples(1);
     p.setParamList(paramList1);
-    p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
+    p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1");
     p.setJob(dosConstW, nPoints + 1);
     //p.setPrintEachSamp(true);
     p.run();
@@ -99,7 +99,7 @@ int main (int argc, char ** argv) {
 
   p.setSamples(40);
   p.setParamList(paramList2);
-  p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_E0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1.dat");
+  p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_E0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1");
   p.setJob(dosE0PlusGap, 2);
   p.run();
 }
