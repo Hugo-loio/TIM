@@ -169,7 +169,11 @@ double LocalizationProps::gap(double en, double * k){
   if(ham->getIsSparse()){
     vec realEig;
     int nStates = 10;
+    if(nStatesFound > nStates){
+      nStates = nStatesFound;
+    }
     double res;
+    bool extraStates = false;
 
     while(1){
       sparseDiag(nStates, en, k);
@@ -181,13 +185,14 @@ double LocalizationProps::gap(double en, double * k){
       }
       for(int i = 0; i < nStates - 1; i++){
 	if(realEig[i+1] > en && realEig[i] < en){
-	  if(nStates != 10){
+	  if(extraStates){
 	    cout << __PRETTY_FUNCTION__ << " needed " << nStates << " states" << endl;
 	  }
 	  return realEig[i+1] - realEig[i];
 	}
       }
       nStates*= 2;
+      extraStates = true;
     }
     return -1;
   }
@@ -217,4 +222,5 @@ void LocalizationProps::sparseDiag(int nStates, double en, double * k){
     eigVal[i] = eigValTemp[i].real();
   }
   nStatesFound = nStates;
+  lastEn = en;
 }
