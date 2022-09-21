@@ -54,7 +54,12 @@ double LocalizationProps::lsr(int nStates, double en, double * k){
 	min = s[i+1];
 	max = s[i];
       }
-      res += min/max;
+      if(max == 0){
+	res += 1;
+      }
+      else{
+	res += min/max;
+      } 
     }
     delete s;
     return res/((double)nStates-3);
