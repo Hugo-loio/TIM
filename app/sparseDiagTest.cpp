@@ -17,6 +17,10 @@ void job(double * res, double * params){
 }
 
 int main (int argc, char ** argv) {
+  int version = 0;
+  if(argc > 1){
+    version = stoi(argv[1]);
+  }
 
   sp_mat mat = sprandu<sp_mat>(1000, 1000, 0.1);
   cx_vec eigVal;
@@ -36,7 +40,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   p.setSamples(2);
   p.setParamList(paramList);
-  p.setFile(argv[0], "dummy");
+  p.setFile(argv[0], "dummy", version);
   p.setJob(job, 1);
   p.run();
 }

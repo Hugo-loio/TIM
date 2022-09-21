@@ -12,12 +12,12 @@ class LocalizationProps{
 
     //Inverse Participation Ratio
     double ipr(int vol, int nOrb, int nStates, double en, double * k = NULL);
-    //Transfer Matrix Method, localization length
-    double tmm(int nLayers, int qrIt, double en, double * k = NULL);
     //Level spacing statistics
     double lsr(int nStates, double en, double * k = NULL);
     //Energy gap
     double gap(double en = 0, double * k = NULL);
+    //Transfer Matrix Method, localization length
+    double tmm(int nLayers, int qrIt, double en, double * k = NULL);
 
     void setForceDiag(){forceDiag = true;}
 

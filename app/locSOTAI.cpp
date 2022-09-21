@@ -18,6 +18,7 @@ void loc(double * res, double * params){
   }
 
   vector<double> resTemp;
+  cout << "Starting job" << endl;
 
   for(int i = 0; i < sampPerJob; i++){
     sotai.generateDisorder();

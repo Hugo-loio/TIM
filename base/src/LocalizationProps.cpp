@@ -13,7 +13,6 @@ double LocalizationProps::ipr(int vol, int nOrb, int nStates, double en, double 
     double res = 0;
     double amp = 0;
     for(int i = 0; i < nStates; i++){
-      //cout << eigVal[i] << endl;
       eigVec.col(i) = normalise(eigVec.col(i));
       for(int e = 0; e < vol; e++){
 	amp = 0;
@@ -29,6 +28,101 @@ double LocalizationProps::ipr(int vol, int nOrb, int nStates, double en, double 
     cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
     return -1;
   }
+}
+
+double LocalizationProps::lsr(int nStates, double en, double * k){
+  if(ham->getIsSparse()){
+    sparseDiag(nStates, en, k);
+    vec realEig = sort(eigVal.subvec(0,nStates-1));
+    double res = 0;
+    double max, min;
+    double * s = new double[nStates-2];
+    for(int i = 0; i < nStates - 2; i++){
+      if(realEig[i+1] <= en){
+	s[i] = realEig[i+1] - realEig[i];
+      }
+      else{
+	s[i] = realEig[i+2] - realEig[i+1];
+      }
+    }
+    for(int i = 0; i < nStates - 3; i++){
+      if(s[i] < s[i+1]){
+	min = s[i];
+	max = s[i+1];
+      }
+      else{
+	min = s[i+1];
+	max = s[i];
+      }
+      res += min/max;
+    }
+    delete s;
+    return res/((double)nStates-3);
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
+    return -1;
+  }
+}
+
+double LocalizationProps::gap(double en, double * k){
+  if(ham->getIsSparse()){
+    vec realEig;
+    int nStates = 10;
+    if(nStatesFound > nStates){
+      nStates = nStatesFound;
+    }
+    double res;
+    bool extraStates = false;
+
+    while(1){
+      sparseDiag(nStates, en, k);
+      realEig = sort(eigVal);
+      for(int i = 0; i < nStates; i++){
+	if(realEig[i] == en){
+	  return 0;
+	}
+      }
+      for(int i = 0; i < nStates - 1; i++){
+	if(realEig[i+1] > en && realEig[i] < en){
+	  if(extraStates){
+	    cout << __PRETTY_FUNCTION__ << " needed " << nStates << " states" << endl;
+	  }
+	  return realEig[i+1] - realEig[i];
+	}
+      }
+      nStates*= 2;
+      extraStates = true;
+    }
+    return -1;
+  }
+  else{
+    cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
+    return -1;
+  }
+}
+
+void LocalizationProps::sparseDiag(int nStates, double en, double * k){
+  if(forceDiag == false){
+    if(k == NULL && nStates <= nStatesFound && lastEn == en){
+      return;
+    }
+  }
+  else{
+    forceDiag = false;
+  }
+  cx_vec eigValTemp;
+  eigs_gen(eigValTemp, eigVec, ham->spH(k), nStates, en);
+  if(size(eigValTemp)[0] != nStates){
+    cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
+    throw runtime_error("Diagonalization failed.");
+  }
+  eigVal = vec(nStates, fill::zeros);
+  for(int i = 0; i < nStates; i++){
+    eigVal[i] = eigValTemp[i].real();
+  }
+  nStatesFound = nStates;
+  lastEn = en;
 }
 
 double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
@@ -128,99 +222,4 @@ bool LocalizationProps::testTmmConv(double * c, double * d, int size, int nQR, i
     return true;
   }
   return false;
-}
-
-double LocalizationProps::lsr(int nStates, double en, double * k){
-  if(ham->getIsSparse()){
-    sparseDiag(nStates, en, k);
-    vec realEig = sort(eigVal);
-    double res = 0;
-    double max, min;
-    double * s = new double[nStates-2];
-    for(int i = 0; i < nStates - 2; i++){
-      if(realEig[i+1] <= en){
-	s[i] = realEig[i+1] - realEig[i];
-      }
-      else{
-	s[i] = realEig[i+2] - realEig[i+1];
-      }
-    }
-    for(int i = 0; i < nStates - 3; i++){
-      if(s[i] < s[i+1]){
-	min = s[i];
-	max = s[i+1];
-      }
-      else{
-	min = s[i+1];
-	max = s[i];
-      }
-      res += min/max;
-    }
-    delete s;
-    return res/((double)nStates-3);
-  }
-  else{
-    cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
-    return -1;
-  }
-}
-
-double LocalizationProps::gap(double en, double * k){
-  if(ham->getIsSparse()){
-    vec realEig;
-    int nStates = 10;
-    if(nStatesFound > nStates){
-      nStates = nStatesFound;
-    }
-    double res;
-    bool extraStates = false;
-
-    while(1){
-      sparseDiag(nStates, en, k);
-      realEig = sort(eigVal);
-      for(int i = 0; i < nStates; i++){
-	if(realEig[i] == en){
-	  return 0;
-	}
-      }
-      for(int i = 0; i < nStates - 1; i++){
-	if(realEig[i+1] > en && realEig[i] < en){
-	  if(extraStates){
-	    cout << __PRETTY_FUNCTION__ << " needed " << nStates << " states" << endl;
-	  }
-	  return realEig[i+1] - realEig[i];
-	}
-      }
-      nStates*= 2;
-      extraStates = true;
-    }
-    return -1;
-  }
-  else{
-    cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;
-    return -1;
-  }
-}
-
-void LocalizationProps::sparseDiag(int nStates, double en, double * k){
-  if(forceDiag == false){
-    if(k == NULL && nStates <= nStatesFound && lastEn == en){
-      return;
-    }
-  }
-  else{
-    forceDiag = false;
-  }
-  cx_vec eigValTemp;
-  eigs_gen(eigValTemp, eigVec, ham->spH(k), nStates, en);
-  if(size(eigValTemp)[0] != nStates){
-    cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
-    throw runtime_error("Diagonalization failed.");
-  }
-  eigVal = vec(nStates, fill::zeros);
-  for(int i = 0; i < nStates; i++){
-    eigVal[i] = eigValTemp[i].real();
-  }
-  nStatesFound = nStates;
-  lastEn = en;
 }

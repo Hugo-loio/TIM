@@ -41,7 +41,7 @@ def plot(name):
     params = r'$ Q(L) = \frac{a}{L} + b$' '\n'  r'$a = $' + str(round(popt[0], 2)) + r'$ \pm $' + str(round(perr[0],2)) +  '\n' + r'$b = $' + str(round(popt[1], 2)) + r'$ \pm $' + str(round(perr[1],2))
     #print(params)
 
-    xdata = np.linspace(x[-1], x[0], 100)
+    xdata = np.linspace(x[0], x[-1], 100)
     ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params, color = 'orange')
     plt.legend(loc= 'upper right')
 
@@ -55,3 +55,4 @@ plot("constantDisorderBBH3Dquad_intra1.1_w3")
 plot("constantDisorderBBH3Dquad_intra1.1_w3.2")
 plot("constantDisorderBBH3Dquad_intra1.1_w3.4")
 plot("constantDisorderBBH3Dquad_intra1.1_w3.6")
+plot("constantDisorderBBH3Dquad_intra1.1_w4")
