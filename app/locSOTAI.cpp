@@ -24,7 +24,6 @@ void loc(double * res, double * params){
     try{
       nStates = 10*nStSamp;
       for(int e = 0; e < nStSamp; e++){
-	cout << "nStates: " << nStates << endl;
 	resTemp.push_back(sotai.getIPR(nStates, en));
 	resTemp.push_back(sotai.getLSR(nStates, en));
 	nStates -= 10;
@@ -44,7 +43,7 @@ void loc(double * res, double * params){
 
 
 int main (int argc, char ** argv) {
-  int sampMult = 40;
+  int sampMult = 200;
   int version = 0;
   if(argc > 1){
     version = stoi(argv[1]);
