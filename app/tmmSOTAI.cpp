@@ -25,6 +25,7 @@ int main (int argc, char ** argv) {
   if(argc > 1){
     en = stod(argv[1]);
   }
+
   vector<vector<double>> paramList1;
   int nPoints = 100;
   for(int i = 0; i <= nPoints; i++){

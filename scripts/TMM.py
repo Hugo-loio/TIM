@@ -2,12 +2,13 @@ import helper as hp
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.style.use('science')
+
 def plotTMM(name, label, ax):
     data = hp.readfile(name + ".dat")
     data = data[:, data[0,:].argsort()]
 
     ax.plot(data[0], data[1], label = label, linestyle='-')
-
 def plotConstW(name, fileNames, labels, show = True):
     fig, ax = plt.subplots()
 
@@ -29,9 +30,11 @@ def plotConstL(name, fileNames, labels, show = True):
         plotTMM(fileNames[i], labels[i], ax)
 
     ax.set(xlabel = r'$W$', ylabel = r'$\Lambda$')
+    plt.yscale('log')
     ax.legend()
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".eps")
     if(show):
         plt.show()
     plt.close()
@@ -41,10 +44,10 @@ constW1Names = ["0"]
 constW1Names = ["tmmSOTAI_E" + name + "_w3.2_m1.1" for name in constW1Names]
 constW1Labels= ["E = 0"]
 
-plotConstW("tmmSOTAI_w3.2_m1.1", constW1Names, constW1Labels, False)
+#plotConstW("tmmSOTAI_w3.2_m1.1", constW1Names, constW1Labels, False)
 
-constLVals = ["20"]
+constLVals = ["10", "20"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_m1.1" for val in constLVals]
-constLLabels = ["L = 20"]
+constLLabels = ["L = " + val for val in constLVals]
 
-plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, True)
+plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, False)

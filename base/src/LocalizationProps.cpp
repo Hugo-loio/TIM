@@ -149,10 +149,10 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
   cx_mat q,r;
 
   int i,e,minIndex;
-  double rTemp;
+  double rTemp, err;
 
   for(i = 1; i < maxItTMM; i++){
-    if(i % qrIt == 0 && i/qrIt > 1){
+    if(i % qrIt == 0){
       qr(q, r, tAux);
       tAux = q;
       for(e = 0; e < tSize; e++){
@@ -161,17 +161,16 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
 	c[e] += rTemp;
 	d[e] += rTemp*rTemp;
       }
-      if(testTmmConv(c, d, tSize, i/qrIt, minIndex)){
-	break;
+      if(i/qrIt > 1){
+	if(testTmmConv(c, d, tSize, i/qrIt, minIndex, err)){
+	  break;
+	}
       }
     }
-    e = i % nLayers;
+    e = i % (nLayers - 1);
     if(e != 0){
       ham->generateDisorder();
-      //cout << "aqui 3" << endl;
-      //cout << ham->blockH(e, e+1, k) << endl;
       v = ham->blockH(e,e+1,k).i();
-      //cout << "aqui 4" << endl;
       t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(e,e,k));
       t.submat(0, size, size -1, tSize -1) = -v*ham->blockH(e,e-1,k);
       tAux = t*tAux;
@@ -180,23 +179,23 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
       t.submat(0, 0, size -1, size -1) = enMat - ham->blockH(nLayers-1,nLayers-1,k);
       t.submat(0, size, size -1, tSize -1) = -ham->blockH(nLayers-1,nLayers-2,k);
       ham->generateDisorder();
-      //cout << "aqui 1" << endl;
       v = ham->blockH(0,1,k).i();
-      //cout << "aqui 2" << endl;
       t.submat(0, 0, size -1, size -1) = v*t.submat(0, 0, size -1, size -1);
       t.submat(0, size, size -1, tSize -1) = v*t.submat(0, size, size -1, tSize -1);
       tAux = t*tAux;
     }
   }
-  //cout << "Iterations: " << i << endl;
 
-  cout << "iterations: " << i << endl;
+
   if(i == maxItTMM){
-    cout << "Warning: transfer matrix method stopped at iteration limit" << endl;
+    cout << "Warning: transfer matrix method stopped at iteration limit " << maxItTMM << " with error " << err << endl;
+  }
+  else{
+    cout << "Iterations: " << i << endl;
   }
 
   for(e = 0; e < tSize; e++){
-    cout << abs((double)i/c[e]) << endl;
+    //cout << abs((double)i/c[e]) << endl;
   }
 
   double res = abs((double)i/c[minIndex]);
@@ -205,10 +204,10 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
   return res;
 }
 
-bool LocalizationProps::testTmmConv(double * c, double * d, int size, int nQR, int & minIndex){
+bool LocalizationProps::testTmmConv(double * c, double * d, int size, int nQR, int & minIndex, double & err){
   minIndex = 0; 
   double minAbs = abs(c[0]);
-  double thisAbs = 0;
+  double thisAbs;
   for(int e = 1; e < size; e++){
     thisAbs = abs(c[e]);
     if(thisAbs < minAbs){
@@ -216,7 +215,7 @@ bool LocalizationProps::testTmmConv(double * c, double * d, int size, int nQR, i
       minAbs = thisAbs;
     }
   }
-  double err = abs(sqrt(d[minIndex]/(double)nQR - (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR))*sqrt((double)nQR)/c[minIndex]);
+  err = abs(sqrt(d[minIndex]/(double)nQR - (c[minIndex]/(double)nQR)*(c[minIndex]/(double)nQR))*sqrt((double)nQR)/c[minIndex]);
   /*
      if(nQR % 1000 == 0){
      cout << "nQR: " << nQR << " err " << err << " d " << d[minIndex] << " c " << c[minIndex] <<  endl;

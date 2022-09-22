@@ -23,7 +23,7 @@ class LocalizationProps{
 
   private:
     Hamiltonian * ham;
-    int maxItTMM = 1E6;
+    int maxItTMM = 1E7;
     double tmmErr = 0.01;
     cx_mat eigVec;
     vec eigVal;
@@ -32,7 +32,7 @@ class LocalizationProps{
     bool forceDiag = false;
 
     void sparseDiag(int nStates, double en, double * k);
-    bool testTmmConv(double * c, double * d, int size, int nQR, int & minIndex);
+    bool testTmmConv(double * c, double * d, int size, int nQR, int & minIndex, double & err);
 };
 
 #endif

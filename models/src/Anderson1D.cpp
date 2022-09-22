@@ -56,14 +56,12 @@ cx_mat Anderson1D::getHam(){
 }
 
 double Anderson1D::getTMM(int qrIt, double en){
-  int bC[2] = {0};
-  int lVec[2] = {3};
-  setSize(lVec);
+  int bC[1] = {0};
   ham->setBC(bC);
   generateDisorder();
 
   LocalizationProps loc(ham);
-  return loc.tmm(2, qrIt, en);
+  return loc.tmm(ham->getSize()[0], qrIt, en);
 }
 
 void Anderson1D::test(char * argv0){
@@ -73,8 +71,8 @@ void Anderson1D::test(char * argv0){
   ham->setBC(bC);
   generateDisorder();
 
-  cout << ham->blockH(0,1) << endl;
-  cout << ham->blockH(1,2) << endl;
+  //cout << ham->blockH(0,1) << endl;
+  //cout << ham->blockH(1,2) << endl;
   //cout << ham->blockH(2,3) << endl;
   cout << ham->H() << endl;
 }

@@ -250,7 +250,7 @@ double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   ham->setBC(bC);
   generateDisorder();
 
-  return loc->tmm(2, qrIt, en)/(double)m;
+  return loc->tmm(3, qrIt, en)/(double)m;
 }
 
 double DisorderedSOTAI::getLSR(int nStates, double en){
