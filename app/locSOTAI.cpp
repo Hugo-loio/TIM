@@ -14,7 +14,7 @@ void loc(double * res, double * params){
   int nStates;
   double en = 0;
   if(params[1] == 0){
-    en = 1e-4;
+    en = 1e-5;
   }
 
   vector<double> resTemp;

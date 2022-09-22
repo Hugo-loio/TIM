@@ -6,9 +6,9 @@ plt.style.use('science')
 
 def plotCurve(ax, x, y, label, errors):
     if(errors):
-        ax.errorbar(x, np.average(y, axis=0), label = label, yerr = np.std(y, axis = 0)/np.sqrt(len(y)) , capsize = 5, linestyle='-')
+        ax.errorbar(x, np.average(y, axis=0), label = label, yerr = np.std(y, axis = 0)/np.sqrt(len(y)) , capsize = 5, linestyle='-', linewidth = 0.5)
     else:
-        ax.plot(x, np.average(y, axis=0), label = label, linestyle='-')
+        ax.plot(x, np.average(y, axis=0), label = label, linestyle='-', linewidth = 0.5)
 
 def plot(title, fileName, specs, errors = False, show = False):
     data = hp.readfile(fileName + ".dat")
@@ -42,6 +42,8 @@ def plot(title, fileName, specs, errors = False, show = False):
                 plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
 
         ax.set(xlabel = r'$W$', ylabel = r'LSR')
+        ax.axhline(y = 0.53, color = 'black', linestyle = '--', linewidth = 0.5)
+        ax.axhline(y = 0.386, color = 'black', linestyle = '--', linewidth = 0.5)
         ax.legend(fontsize = 6)
 
         fig.savefig(hp.plot_dir() + title + "LSR.png", dpi = 300)
@@ -69,13 +71,13 @@ def plot(title, fileName, specs, errors = False, show = False):
 
 specs = {
         'nStSamp' : 5,
-        'iprSizes' : [50],
-        'iprNStates' : [50,40,30,20,10],
+        'iprSizes' : [50,60,70],
+        'iprNStates' : [50,30,10],
         'fractalNStates' : [50,40,30,20,10],
-        'fractalSizes' : [50],
-        'lsrSizes' : [50],
-        'lsrNStates' : [50,40,30,20,10],
-        'enGapSizes' : [50]
+        'fractalSizes' : [50,60],
+        'lsrSizes' : [50,60,70],
+        'lsrNStates' : [50,30],
+        'enGapSizes' : [50,60,70]
         }
 
 plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
