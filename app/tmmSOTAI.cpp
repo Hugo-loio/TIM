@@ -7,7 +7,7 @@ double m = 1.1;
 double w = 3.2;
 double en = 0;
 int qrIt = 10;
-int l = 20;
+int l = 40;
 
 void tmmConstW(double * res, double * params){
   DisorderedSOTAI sotai(m);
@@ -23,7 +23,7 @@ void tmmConstL(double * res, double * params){
 
 int main (int argc, char ** argv) {
   if(argc > 1){
-    en = stod(argv[1]);
+    l = stoi(argv[1]);
   }
 
   vector<vector<double>> paramList1;
@@ -35,7 +35,7 @@ int main (int argc, char ** argv) {
   }
 
   vector<vector<double>> paramList2;
-  for(int i = 0; i <= nPoints; i++){
+  for(int i = 50; i <= nPoints; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)nPoints);
     paramList2.push_back(param);

@@ -46,8 +46,8 @@ constW1Labels= ["E = 0"]
 
 #plotConstW("tmmSOTAI_w3.2_m1.1", constW1Names, constW1Labels, False)
 
-constLVals = ["10", "20"]
+constLVals = ["10", "20", "40"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_m1.1" for val in constLVals]
-constLLabels = ["L = " + val for val in constLVals]
+constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
-plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, False)
+plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, True)

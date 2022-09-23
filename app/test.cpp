@@ -17,19 +17,59 @@ using namespace arma;
 
 int main (int argc, char ** argv) {
 
-  Anderson1D a(1);
-  a.setW(3);
-  int l[1] = {2};
-  a.setSize(l);
-  //a.test();
-  cout << "E = 1:\n" << 1/a.getTMM(1, 1) << endl;
-  cout << "E = 1:\n" << 1/a.getTMM(10, 1) << endl;
-  l[0] = {4};
-  a.setSize(l);
-  cout << "4 layers" << endl;
-  cout << "E = 1:\n" << 1/a.getTMM(1, 1) << endl;
-  //cout << "E = 1:\n" << 1/a.getTMM(5, 1) << endl;
-  //cout << "E = 1:\n" << 1/a.getTMM(10, 1) << endl;
+  DisorderedSOTAI sotai(1.1);
+  int l[2] = {10,10};
+  sotai.setSize(l);
+
+  sotai.setW(0);
+  sotai.generateDisorder();
+  cout << "w = 0" << endl;
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
+
+  cout << "w = 1" << endl;
+  sotai.setW(1);
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
+
+  cout << "w = 2" << endl;
+  sotai.setW(2);
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
+
+  cout << "w = 3" << endl;
+  sotai.setW(3);
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
+
+  cout << "w = 4" << endl;
+  sotai.setW(4);
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
+
+  cout << "w = 5" << endl;
+  sotai.setW(5);
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
+
+  cout << "w = 9" << endl;
+  sotai.setW(9);
+  for(int i = 0; i < 10 ; i++){
+    sotai.generateDisorder();
+    sotai.test(argv[0]);
+  }
 
   return 0;
 }

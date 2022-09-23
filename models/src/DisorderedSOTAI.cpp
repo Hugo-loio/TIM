@@ -185,20 +185,18 @@ double DisorderedSOTAI::getBoundPolarization(int dir){
 
 void DisorderedSOTAI::test(char * argv0){
   int bC[2] = {2,2};
-  int l[2] = {5,2};
   int order[2] = {0,1};
 
   bool layerDir[2] = {true, true};
   setLayers(layerDir);
-  ham->setSize(l);
   ham->setBC(bC);
   ham->setSparse(false);
   ham->setOrder(order);
+  
+  vec eigVal;
 
-  setW(1);
-
-  LocalizationProps loc(ham);
-  //loc.tmm(1,1);
+  eig_sym(eigVal, ham->H(NULL));
+  cout << "Min: " <<  eigVal(0) << ", max: "  << eigVal(size(eigVal)[0] - 1) << endl;
 }
 
 void DisorderedSOTAI::setLayers(bool * layerDir){
