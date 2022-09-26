@@ -54,13 +54,12 @@ int main (int argc, char ** argv) {
   double wVec[6] = {2.4, 2.8, 3.2, 3.6, 4, 9};
 
   ParallelMPI p(&argc, &argv);
-  for(int i = 0; i < 0; i++){
+  for(int i = 0; i < 6; i++){
     w = wVec[i];
     p.setSamples(1);
     p.setParamList(paramList1);
     p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1");
     p.setJob(dosConstW, 2*nPoints + 1);
-    //p.setPrintEachSamp(true);
     p.run();
   }
 

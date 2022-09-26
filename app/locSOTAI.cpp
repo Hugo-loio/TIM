@@ -20,22 +20,15 @@ void loc(double * res, double * params){
   vector<double> resTemp;
 
   for(int i = 0; i < sampPerJob; i++){
-    cout << "aqui 1" << endl;
     sotai.generateDisorder();
     try{
       nStates = 10*nStSamp;
-      cout << "aqui 2" << endl;
       for(int e = 0; e < nStSamp; e++){
-	//cout << "nStates " << nStates << endl;
 	resTemp.push_back(sotai.getIPR(nStates, en));
 	resTemp.push_back(sotai.getLSR(nStates, en));
-	//cout << "IPR " << resTemp[resTemp.size() - 2] << endl;
-	//cout << "LSR " << resTemp[resTemp.size() - 1] << endl;
 	nStates -= 10;
       }
-      cout << "aqui 3" << endl;
       resTemp.push_back(sotai.getEnGap(en));
-      //cout << "En Gap " << resTemp[resTemp.size() - 1] << endl;
     }
     catch(const runtime_error & error){
       cout << "Matrix diagonalization failed for w = " << params[1] << " and L = " << params[0] << " at iteration " << i << endl;
