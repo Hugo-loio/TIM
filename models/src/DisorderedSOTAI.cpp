@@ -296,3 +296,19 @@ double DisorderedSOTAI::getEnGap(double en){
 
   return loc->gap(en);
 }
+
+double DisorderedSOTAI::getMaxE(){
+  int bC[2] = {2,2};
+  int order[2] = {0,1};
+
+  bool layerDir[2] = {true, true};
+  setLayers(layerDir);
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setOrder(order);
+  
+  vec eigVal;
+
+  eig_sym(eigVal, ham->H(NULL));
+  return eigVal(size(eigVal)[0] - 1);
+}

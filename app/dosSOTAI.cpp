@@ -9,64 +9,25 @@ int l[2] = {100,100};
 double w = 2;
 int nMoments = 8192;
 int nRandVecs = 1;
-double eMax = 12;
 int nPoints = 2000;
 
-void dosConstW(double * res, double * params){
-  DisorderedSOTAI sotai(m);
-  sotai.setSize(l);
-  sotai.setW(w);
-  sotai.generateDisorder();
-
-  for(int i = 0; i <= nPoints; i++){
-    res[i] = sotai.getDOS(params[i], nMoments, nRandVecs, eMax);
-  }
-}
-
-double searchEdge(double step, double tol, double err, DisorderedSOTAI & sotai){
-  double en = 0;
-  bool cond = true;
-  while(abs(step) > err){
-    en += step;
-    if(cond){
-      if(sotai.getDOS(en, nMoments, nRandVecs, eMax) > tol){
-	step = -step/2;
-	cond = false;
-      }
-    }
-    else{
-      if(sotai.getDOS(en, nMoments, nRandVecs, eMax) < tol){
-	step = -step/2;
-	cond = true;
-      }
-    }
-  }
-  return en;
-}
-
-void dosE0PlusGap(double * res, double * params){
+void dos(double * res, double * params){
   DisorderedSOTAI sotai(m);
   sotai.setSize(l);
   sotai.setW(params[0]);
   sotai.generateDisorder();
-  res[0] = sotai.getDOS(0, nMoments, nRandVecs, eMax);
 
-  double tol = 0.001;
-  if(res[0] > tol){
-    res[1] = 0;
-  }
-  else{
-    double sGap = searchEdge(-0.1, tol, 0.001, sotai);
-    double eGap = searchEdge(0.1, tol, 0.001, sotai);
+  double eMax = (7/9)*params[0] + 4
 
-    res[1] = eGap-sGap;
+  for(int i = 0; i <= nPoints; i++){
+    res[i] = sotai.getDOS(params[i+1], nMoments, nRandVecs, eMax);
   }
 }
 
 int main (int argc, char ** argv) {
   int sampMult = 200;
 
-  vector<vector<double>> paramList1;
+  vector<vector<double>> paramList;
   vector<double> param;
   double deltaE = (20)/(double)nPoints;
   for(int i = 0; i <= nPoints; i++){

@@ -35,6 +35,8 @@ class DisorderedSOTAI{
 
     double getEnGap(double en);
 
+    double getMaxE();
+
     cx_mat getHam();
     void printHam(char * argv0, string fileName);
 
