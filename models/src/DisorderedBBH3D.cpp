@@ -48,11 +48,16 @@ DisorderedBBH3D::DisorderedBBH3D(double t1, double t2, double delta){
   }
   ham = new DisorderedHopH3D(*model);
   ham->setDisType(1);
+  loc = new LocalizationProps(ham);
 };
 
 DisorderedBBH3D::~DisorderedBBH3D(){
   delete model;
   delete ham;
+  delete loc;
+  if(dos != NULL){
+    delete dos;
+  }
 };
 
 void DisorderedBBH3D::setIntraHop(double t1){
@@ -67,6 +72,9 @@ void DisorderedBBH3D::setIntraHop(double t1){
   delete ham;
   ham = new DisorderedHopH3D(*model);
   ham->setDisType(1);
+  delete loc;
+  loc = new LocalizationProps(ham);
+  updateDOS = true;
 }
 
 void DisorderedBBH3D::setInterHop(double t2){
@@ -81,6 +89,9 @@ void DisorderedBBH3D::setInterHop(double t2){
   delete ham;
   ham = new DisorderedHopH3D(*model);
   ham->setDisType(1);
+  updateDOS = true;
+  delete loc;
+  loc = new LocalizationProps(ham);
 }
 
 void DisorderedBBH3D::setOnSite(double delta){
@@ -107,6 +118,9 @@ void DisorderedBBH3D::setOnSite(double delta){
   delete ham;
   ham = new DisorderedHopH3D(*model);
   ham->setDisType(1);
+  updateDOS = true;
+  delete loc;
+  loc = new LocalizationProps(ham);
 }
 
 
@@ -116,6 +130,14 @@ void DisorderedBBH3D::setW(double w){
 
 void DisorderedBBH3D::generateDisorder(){
   ham->generateDisorder();
+  loc->setForceDiag();
+  updateDOS = true;
+}
+
+void DisorderedBBH3D::setSize(int * l){
+  ham->setSize(l);
+  loc->setForceDiag();
+  updateDOS = true;
 }
 
 void DisorderedBBH3D::setLayers(bool * layerDir){
@@ -210,5 +232,94 @@ double DisorderedBBH3D::getOctupoleManyBody(){
   MultipoleOp o(ham, l, 3, 8);
   o.setOcc(4*l[0]*l[1]*l[2]);
   return o.octupole(0,1,2);
+}
+
+double DisorderedBBH3D::getIPR(int nStates, double en){
+  int order[3] = {0,1,2};
+  int bC[3] = {2,2,2};
+  bool layerDir[3] = {false,false,false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+  int vol = ham->getSize()[0]*ham->getSize()[1]*ham->getSize()[2];
+
+  return loc->ipr(vol, 8, nStates, en);
+}
+
+double DisorderedBBH3D::getTMM(int qrIt, double en, int m){
+  int order[3] = {0,1,2};
+  int bC[3] = {2,2,0};
+  int lvec[3] = {m, m, 2};
+  setSize(lvec);
+  bool layerDir[3] = {true,true,true};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  generateDisorder();
+
+  return loc->tmm(3, qrIt, en)/(double)m;
+}
+
+double DisorderedBBH3D::getLSR(int nStates, double en){
+  int order[3] = {0,1,2};
+  int bC[3] = {2,2,2};
+  bool layerDir[3] = {false,false,false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+
+  return loc->lsr(nStates, en);
+}
+
+double DisorderedBBH3D::getDOS(double en, int nMoments, int nRandVecs, double eMax){
+  if(updateDOS){
+    int order[3] = {0,1,2};
+    int bC[3] = {2,2,2};
+    bool layerDir[3] = {false,false,false};
+    setLayers(layerDir);
+    ham->setOrder(order);
+    ham->setBC(bC);
+    ham->setSparse(true);
+
+    if(dos != NULL){
+      delete dos;
+    }
+    dos = new DOS(ham);
+    if(eMax != 0){
+      dos->setKpmERange(-eMax, eMax);
+    }
+    updateDOS = false;
+  }
+  return dos->kpm(en, nMoments, nRandVecs);
+}
+
+double DisorderedBBH3D::getEnGap(double en){
+  int order[3] = {0,1,2};
+  int bC[3] = {2,2,2};
+  bool layerDir[3] = {false, false, false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+
+  return loc->gap(en);
+}
+
+double DisorderedBBH3D::getMaxE(){
+  int bC[3] = {2,2,2};
+  int order[3] = {0,1,2};
+
+  bool layerDir[3] = {true, true, true};
+  setLayers(layerDir);
+  ham->setBC(bC);
+  ham->setSparse(false);
+  ham->setOrder(order);
+
+  vec eigVal;
+
+  eig_sym(eigVal, ham->H(NULL));
+  return eigVal(size(eigVal)[0] - 1);
 }
 

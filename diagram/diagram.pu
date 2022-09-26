@@ -68,7 +68,7 @@ class MultipoleOp{
   + double octupole()
 }
 
-class LocalizationProps #yellow{
+class LocalizationProps {
   + LocalizationStats(Hamiltonian *)
   + double ipr()
   + double tmm()

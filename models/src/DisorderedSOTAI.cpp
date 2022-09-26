@@ -3,7 +3,6 @@
 #include "BoundaryGreenH.h"
 #include "Wilson.h"
 #include "OData.h"
-#include "EnGap.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   model = new TBModel(2,4);
