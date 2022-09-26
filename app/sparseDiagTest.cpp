@@ -6,7 +6,7 @@ using namespace std;
 using namespace arma;
 
 void job(double * res, double * params){
-  sp_mat mat = sprandu<sp_mat>(1000, 1000, 0.1);
+  sp_cx_mat mat = sprandu<sp_cx_mat>(1000, 1000, 0.1);
   cx_vec eigVal;
   cx_mat eigVec;
 
