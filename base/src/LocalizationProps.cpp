@@ -37,15 +37,14 @@ double LocalizationProps::lsr(int nStates, double en, double * k){
     double res = 0;
     double max, min;
     double * s = new double[nStates-2];
+    int countS = 0;
     for(int i = 0; i < nStates - 2; i++){
       if(realEig[i+1] <= en){
 	s[i] = realEig[i+1] - realEig[i];
-      }
-      else{
-	s[i] = realEig[i+2] - realEig[i+1];
+	countS++;
       }
     }
-    for(int i = 0; i < nStates - 3; i++){
+    for(int i = 0; i < countS - 1; i++){
       if(s[i] < s[i+1]){
 	min = s[i];
 	max = s[i+1];
@@ -62,7 +61,7 @@ double LocalizationProps::lsr(int nStates, double en, double * k){
       } 
     }
     delete s;
-    return res/((double)nStates-3);
+    return res/((double)countS-1);
   }
   else{
     cout << __PRETTY_FUNCTION__ << " hasn't been implemented for dense Hamiltonians" << endl;

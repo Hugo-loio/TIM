@@ -6,8 +6,8 @@ plt.style.use('science')
 
 def plotEnGap(name, label, ax, detail):
     data = hp.readfile(name + ".dat")
-    nPoints = int(len(data)/2)
-    rho = np.average(data[2::2], axis = 0)
+    nPoints = int(len(data))
+    rho = np.average(data[1:], axis = 0)
     #print(rho)
     #print(np.average(rho))
 
@@ -33,10 +33,8 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plt.show()
     plt.close()
 
-size = ["100"]
-mu = ["8192"]
-rand = ["1"]
-names = ["dosSOTAI_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
-labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
+size = ["50"]
+names = ["enGapSOTAI_L" + size[i] + "_m1.1" for i in range(len(size))]
+labels = ["L = " + size[i] for i in range(len(size))]
 
-plot("EnGapSOTAI_intra1.1_test", names, labels, False, True)
+plot("EnGapSOTAI_intra1.1", names, labels, False, True)

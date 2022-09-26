@@ -6,13 +6,13 @@ plt.style.use('science')
 
 def plotDOS(name, label, ax, detail):
     data = hp.readfile(name + ".dat")
-    rho = np.average(data[1::2], axis = 0)
+    rho = np.average(data[1:], axis = 0)
     #print(rho)
     #print(np.average(rho))
 
     if(detail):
-        nPoints = len(data[1::2,0])
-        errRho = np.std(data[1::2], axis = 0)/np.sqrt(nPoints)
+        nPoints = len(data[1:,0])
+        errRho = np.std(data[1:], axis = 0)/np.sqrt(nPoints)
         ax.errorbar(data[0], rho, label = label, yerr = errRho , capsize = 5, linestyle='-', linewidth=0.5)
     else:
         ax.plot(data[0], rho, label = label, linestyle='-', linewidth=0.5, alpha = 1)
@@ -32,9 +32,9 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plt.show()
     plt.close()
 
-size = ["100"]
-mu = ["8192"]
-rand = ["1"]
+size = ["10", "10"]
+mu = ["200", "8192"]
+rand = ["1", "1"]
 names = ["dosSOTAI_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
 
