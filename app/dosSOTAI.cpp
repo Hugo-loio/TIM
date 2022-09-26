@@ -59,7 +59,7 @@ int main (int argc, char ** argv) {
     p.setSamples(1);
     p.setParamList(paramList1);
     p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1");
-    p.setJob(dosConstW, 2*nPoints + 1);
+    p.setJob(dosConstW, 2*(nPoints + 1));
     p.run();
   }
 
