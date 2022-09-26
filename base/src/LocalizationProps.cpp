@@ -149,9 +149,10 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
 
   int i,e,minIndex;
   double rTemp, err;
+  int printIt = maxItTMM/10;
 
   for(i = 1; i < maxItTMM; i++){
-    if(i % 100000 == 0){
+    if(i % printIt == 0){
       cout << __PRETTY_FUNCTION__ << " in iteration " << i << endl;
     }
     if(i % qrIt == 0){
