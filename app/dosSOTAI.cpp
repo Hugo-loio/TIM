@@ -17,7 +17,7 @@ void dos(double * res, double * params){
   sotai.setW(params[0]);
   sotai.generateDisorder();
 
-  double eMax = (7/9)*params[0] + 4
+  double eMax = (7/9)*params[0] + 4;
 
   for(int i = 0; i <= nPoints; i++){
     res[i] = sotai.getDOS(params[i+1], nMoments, nRandVecs, eMax);
@@ -27,6 +27,7 @@ void dos(double * res, double * params){
 int main (int argc, char ** argv) {
   int sampMult = 200;
 
+  /*
   vector<vector<double>> paramList;
   vector<double> param;
   double deltaE = (20)/(double)nPoints;
@@ -63,4 +64,5 @@ int main (int argc, char ** argv) {
   p.setFile(argv[0], "dosSOTAI_L" + to_string(l[0]) + "_E0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_m1.1");
   p.setJob(dosE0PlusGap, 2);
   p.run();
+  */
 }
