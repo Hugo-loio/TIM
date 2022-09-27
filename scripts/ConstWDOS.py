@@ -7,8 +7,8 @@ plt.style.use('science')
 def plotDOS(name, label, ax, detail):
     data = hp.readfile(name + ".dat")
     nPoints = int(len(data)/2)
-    en = data[0:nPoints,0]
-    rho = np.average(data[nPoints:,:], axis = 1)
+    en = data[0::2,0]
+    rho = np.average(data[1::2,:], axis = 1)
     #print(rho)
     #print(np.average(rho))
 
