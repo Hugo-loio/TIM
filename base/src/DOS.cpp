@@ -117,6 +117,6 @@ void DOS::randomize(cx_vec & rand, int d){
 
 void DOS::setKpmERange(double eMin, double eMax){
   customERange = true;
-  a = (eMax - eMin)/2;
+  a = (eMax - eMin)/(2 - err);
   b = (eMax + eMin)/2;
 }
