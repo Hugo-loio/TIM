@@ -44,11 +44,11 @@ int main (int argc, char ** argv) {
 
   int sampMult = 100;
 
-  int nPoints = 10;
+  int nPoints = 5;
   vector<vector<double>> paramList;
-  for(int i = 0; i <= nPoints; i++){
+  for(int i = 0; i < nPoints; i++){
     vector<double> param; 
-    param.push_back(20 + i*2);
+    param.push_back(10 + i*2);
     paramList.push_back(param);
   }
 
