@@ -43,7 +43,7 @@ void loc(double * res, double * params){
 
 
 int main (int argc, char ** argv) {
-  int sampMult = 200;
+  int sampMult = 1;
   int version = 0;
   if(argc > 1){
     version = stoi(argv[1]);

@@ -1,5 +1,6 @@
 import helper as hp
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 import numpy as np
 
 plt.style.use('science')
@@ -16,9 +17,14 @@ def plotConstW(name, fileNames, labels, show = True):
         plotTMM(fileNames[i], labels[i], ax)
 
     ax.set(xlabel = r'$L_x$', ylabel = r'$\Lambda$')
+    plt.xscale('log')
+    plt.yscale('log')
     ax.legend()
+    ax.xaxis.set_minor_formatter(mticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mticker.ScalarFormatter())
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".eps")
     if(show):
         plt.show()
     plt.close()
@@ -40,14 +46,14 @@ def plotConstL(name, fileNames, labels, show = True):
     plt.close()
 
 
-constW1Names = ["0"]
+constW1Names = ["3.2", "0"]
 constW1Names = ["tmmSOTAI_E" + name + "_w3.2_m1.1" for name in constW1Names]
-constW1Labels= ["E = 0"]
+constW1Labels= ["E = 3.2", "E = 0"]
 
-#plotConstW("tmmSOTAI_w3.2_m1.1", constW1Names, constW1Labels, False)
+plotConstW("tmmSOTAI_w3.2_m1.1", constW1Names, constW1Labels, False)
 
 constLVals = ["10", "16", "20", "30", "40"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_m1.1" for val in constLVals]
 constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
-plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, True)
+#plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, True)

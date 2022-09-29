@@ -23,33 +23,33 @@ void tmmConstL(double * res, double * params){
 
 int main (int argc, char ** argv) {
   if(argc > 1){
-    l = stoi(argv[1]);
+    en = stod(argv[1]);
   }
 
   vector<vector<double>> paramList1;
-  int nPoints = 100;
+  int nPoints = 20;
   for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
-    param.push_back(20 + i);
+    param.push_back(12 + 4*i);
     paramList1.push_back(param);
   }
 
   vector<vector<double>> paramList2;
-  for(int i = 51; i <= nPoints; i++){
+  for(int i = 59; i <= nPoints; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)nPoints);
     paramList2.push_back(param);
   }
 
   ParallelMPI p(&argc, &argv);
+  p.setParamList(paramList1);
+  p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
+  p.setJob(tmmConstW, 1);
   /*
-     p.setParamList(paramList1);
-     p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
-     p.setJob(tmmConstW, 1);
+     p.setParamList(paramList2);
+     p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
+     p.setJob(tmmConstL, 1);
      */
-  p.setParamList(paramList2);
-  p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
-  p.setJob(tmmConstL, 1);
   p.run();
 
 }
