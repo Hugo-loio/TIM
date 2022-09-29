@@ -35,7 +35,7 @@ void dosE0(double * res, double * params){
 }
 
 int main (int argc, char ** argv) {
-  int sampMult = 200;
+  int sampMult = 800;
 
   vector<vector<double>> paramList1;
   vector<double> param;
@@ -54,7 +54,7 @@ int main (int argc, char ** argv) {
   double wVec[6] = {2.4, 2.8, 3.2, 3.6, 4, 9};
 
   ParallelMPI p(&argc, &argv);
-  for(int i = 0; i < 6; i++){
+  for(int i = 5; i < 6; i++){
     w = wVec[i];
     p.setSamples(1);
     p.setParamList(paramList1);

@@ -2,6 +2,8 @@ import helper as hp
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.style.use('science')
+
 def plotPol():
     data = hp.readfile(namesPol[i] + ".dat")
 
@@ -28,8 +30,8 @@ namesQuad = ["phaseDiagramSOTAI_20x20_m1.1","phaseDiagramSOTAI_40x40_m1.1","phas
 labelsQuad = ["L = 20", "L = 40", "L = 60"]
 #namesPol = ["phaseDiagramSOTAIpol_10x10_m1.1", "phaseDiagramSOTAIpol_50x50_m1.1"]
 #labelsPol = ["L = 10", "L = 50"]
-namesPol = ["phaseDiagramSOTAIpol_100x100_m1.1","phaseDiagramSOTAIpol_200x200_m1.1", "phaseDiagramSOTAIpol_300x300_m1.1", "phaseDiagramSOTAIpol_400x400_m1.1", "phaseDiagramSOTAIpol_500x500_m1.1"]
-labelsPol = ["L = 100", "L = 200", "L = 300", "L = 400", "L = 500"]
+namesPol = ["phaseDiagramSOTAIpol_300x300_m1.1", "phaseDiagramSOTAIpol_400x400_m1.1", "phaseDiagramSOTAIpol_500x500_m1.1"]
+labelsPol = ["L = 300", "L = 400", "L = 500"]
 
 
 fig, ax = plt.subplots()
@@ -41,7 +43,8 @@ for i in range(0, len(namesPol)):
     plotPol()
 
 ax.set(xlabel = r'$W$')
-ax.legend()
+ax.legend(fontsize = 8)
 
-fig.savefig(hp.plot_dir() + plot_name + ".png", dpi = 200)
-plt.show()
+fig.savefig(hp.plot_dir() + plot_name + ".png", dpi = 300)
+fig.savefig(hp.plot_dir() + plot_name + ".eps")
+#plt.show()
