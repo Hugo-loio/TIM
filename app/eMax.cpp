@@ -6,7 +6,7 @@
 
 int nHam = 50;
 double m = 1.1;
-int l = 20;
+int l = 10;
 
 void eMaxSOTAI(double * res, double * params){
   DisorderedSOTAI sotai(m);
