@@ -4,20 +4,40 @@ import numpy as np
 
 plt.style.use('science')
 
-def plotIPR(name, label, ax):
+def plotEMax(name, label, ax):
     data = hp.readfile(name + ".dat")
 
     ax.plot(data[0], data[1], label = label, linestyle='-')
 
-def plot(name, fileNames, labels, show = True):
+def plotSOTAI(name, fileNames, labels, show = True):
     fig, ax = plt.subplots()
 
     for i in range(0, len(fileNames)):
-        plotIPR(fileNames[i], labels[i], ax)
+        plotEMax(fileNames[i], labels[i], ax)
 
     x = np.linspace(0, 9, 100)
     b = 4
     m = (11-4)/9
+    f = m*x + b
+    ax.plot(x, f, label = r'Safe limit')
+
+    ax.set(xlabel = r'$W$', ylabel = r'E Max')
+    ax.legend(fontsize = 8)
+
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
+    if(show):
+        plt.show()
+    plt.close()
+
+def plotBBH3D(name, fileNames, labels, show = True):
+    fig, ax = plt.subplots()
+
+    for i in range(0, len(fileNames)):
+        plotEMax(fileNames[i], labels[i], ax)
+
+    x = np.linspace(0, 9, 100)
+    b = 5
+    m = (14-5)/9
     f = m*x + b
     ax.plot(x, f, label = r'Safe limit')
 
@@ -35,4 +55,10 @@ nHam = ["100", "50", "50", "50"]
 names = ["eMaxSOTAI_L" + size[i] + "_nHam" + nHam[i]  + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + " , n = " + nHam[i] for i in range(len(size))]
 
-plot("EMaxSOTAI_intra1.1", names, labels, False)
+#plotSOTAI("EMaxSOTAI_intra1.1", names, labels, False)
+
+size = ["5", "5", "8"]
+nHam = ["50", "100", "50"]
+names = ["eMaxBBH3D_L" + size[i] + "_nHam" + nHam[i]  + "_m1.1" for i in range(len(size))]
+labels = ["L = " + size[i] + " , n = " + nHam[i] for i in range(len(size))]
+plotBBH3D("EMaxBBH3D_intra1.1", names, labels, False)

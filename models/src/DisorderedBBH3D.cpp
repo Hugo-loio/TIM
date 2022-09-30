@@ -319,7 +319,10 @@ double DisorderedBBH3D::getMaxE(){
 
   vec eigVal;
 
-  eig_sym(eigVal, ham->H(NULL));
+  //eig_sym(eigVal, ham->H(NULL));
+  //eigs_sym(eigVal, real(ham->spH(NULL)), 10);
+  eigs_sym(eigVal, real(ham->spH(NULL)), 10);
+  eigVal = sort(eigVal);
   return eigVal(size(eigVal)[0] - 1);
 }
 
