@@ -1,4 +1,5 @@
 #include "LocalizationProps.h"
+#include "AuxFunctions.h"
 
 LocalizationProps::LocalizationProps(Hamiltonian * ham){
   this->ham = ham;
@@ -146,6 +147,8 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
   tAux.submat(0, size, size -1, tSize -1) = -v;
   cx_mat t = tAux;
   cx_mat q,r;
+
+  auto tStart = chrono::high_resolution_clock::now();
 
   int i,e,minIndex;
   double rTemp, err;

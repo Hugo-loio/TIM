@@ -30,7 +30,7 @@ void dosE0(double * res, double * params){
   bbh3d.setSize(l);
   bbh3d.setW(params[0]);
   bbh3d.generateDisorder();
-  double eMax = (double)params[0] + 4;
+  double eMax = (double)params[0] + 5;
   res[0] = bbh3d.getDOS(0, nMoments, nRandVecs, eMax);
 }
 

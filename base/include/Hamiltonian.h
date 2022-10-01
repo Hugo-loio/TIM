@@ -20,8 +20,11 @@ class Hamiltonian{
     void setTwists(double * theta);
     double * getTwists(){return theta;};
     int getNDim(){return nDim;};
+    void setIsReal(bool isReal){this->isReal = isReal;};
+    bool getIsReal(){return isReal;};
   protected:
     bool isSparse = true;
+    bool isReal = false;
     double * theta;
     int nDim;
 };

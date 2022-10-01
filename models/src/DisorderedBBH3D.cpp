@@ -282,6 +282,7 @@ double DisorderedBBH3D::getDOS(double en, int nMoments, int nRandVecs, double eM
     ham->setOrder(order);
     ham->setBC(bC);
     ham->setSparse(true);
+    ham->setIsReal(true);
 
     if(dos != NULL){
       delete dos;
@@ -290,7 +291,6 @@ double DisorderedBBH3D::getDOS(double en, int nMoments, int nRandVecs, double eM
     if(eMax != 0){
       dos->setKpmERange(-eMax, eMax);
     }
-    dos->setRealHam(true);
     updateDOS = false;
   }
   return dos->kpm(en, nMoments, nRandVecs);
