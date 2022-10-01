@@ -159,7 +159,6 @@ double LocalizationProps::tmm(int nLayers, int qrIt, double en, double * k){
       qr(q, r, tAux);
       tAux = q;
       for(e = 0; e < tSize; e++){
-	//TODO: do this if r is complex?
 	rTemp = log(abs(r(e,e)));
 	c[e] += rTemp;
 	d[e] += rTemp*rTemp;

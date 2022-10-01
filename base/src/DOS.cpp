@@ -32,7 +32,12 @@ double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
       }
       this->nMoments = nMoments;
       this->nRandVecs = nRandVecs;
-      calculateMoments(k);
+      if(realHam){
+	calculateMoments<sp_mat>(real(ham->spH(k)));
+      }
+      else{
+	calculateMoments<sp_cx_mat>(ham->spH(k));
+      }
       momentsFound = true;
     }
     double res = jacksonKernel(0)*mu[0];
@@ -70,10 +75,9 @@ double DOS::chebyshev(int n, double x){
   return cos(n * acos(x));
 }
 
-void DOS::calculateMoments(double * k){
-  sp_cx_mat h = ham->spH(k);
+template <class mat> void DOS::calculateMoments(mat h){
   int d = size(h)[0];
-  h = (h - b*speye<sp_cx_mat>(size(h)))/a;
+  h = (h - b*speye<mat>(size(h)))/a;
   cx_vec rand(d);
   int i,e;
   int n = nMoments/2;
@@ -105,14 +109,11 @@ void DOS::randomize(cx_vec & rand, int d){
   random_device dev;
   mt19937 generator(dev());
   uniform_real_distribution<double> uni(0, 2*M_PI);
-  //uniform_real_distribution<double> uni2(0,10);
   double norm = 1/sqrt((double)d);
   complex<double> ii(0,1);
   for(int i = 0; i < d; i++){
-    //rand[i] = uni2(generator)*exp(ii*uni(generator));
     rand[i] = norm*exp(ii*uni(generator));
   }
-  //rand = normalise(rand);
 }
 
 void DOS::setKpmERange(double eMin, double eMax){

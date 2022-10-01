@@ -37,14 +37,14 @@ def plotBBH3D(name, fileNames, labels, show = True):
 
     x = np.linspace(0, 9, 100)
     b = 5
-    m = (14-5)/9
+    m = 1
     f = m*x + b
     ax.plot(x, f, label = r'Safe limit')
 
-    ax.set(xlabel = r'$W$', ylabel = r'E Max')
+    ax.set(xlabel = r'$W$', ylabel = r'$E_{\textnormal{max}}$')
     ax.legend(fontsize = 8)
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     if(show):
         plt.show()
     plt.close()
@@ -57,8 +57,8 @@ labels = ["L = " + size[i] + " , n = " + nHam[i] for i in range(len(size))]
 
 #plotSOTAI("EMaxSOTAI_intra1.1", names, labels, False)
 
-size = ["5", "5", "8"]
-nHam = ["50", "100", "50"]
+size = ["5", "5", "8", "6", "8", "10"]
+nHam = ["50", "100", "50", "50", "50", "50"]
 names = ["eMaxBBH3D_L" + size[i] + "_nHam" + nHam[i]  + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + " , n = " + nHam[i] for i in range(len(size))]
 plotBBH3D("EMaxBBH3D_intra1.1", names, labels, False)

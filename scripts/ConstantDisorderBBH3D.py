@@ -39,9 +39,8 @@ def plot(name):
     popt, pcov = optimize.curve_fit(fitFunc, xfit, yfit, sigma = yfiterr, absolute_sigma = True)
     perr = np.sqrt(np.diag(pcov))
     params = r'$ Q(L) = \frac{a}{L} + b$' '\n'  r'$a = $' + str(round(popt[0], 2)) + r'$ \pm $' + str(round(perr[0],2)) +  '\n' + r'$b = $' + str(round(popt[1], 2)) + r'$ \pm $' + str(round(perr[1],2))
-    #print(params)
 
-    xdata = np.linspace(x[0], x[-1], 100)
+    xdata = np.linspace(0, x[-1], 100)
     ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params, color = 'orange')
     plt.legend(loc= 'upper right')
 

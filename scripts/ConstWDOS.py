@@ -66,8 +66,8 @@ labels = ["W = " + weight[i] for i in range(len(weight))]
 #plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
 
 names = ["dosSOTAI_L100" + "_w" + weight[i] + "_nMu8192_nR1_m1.1" for i in range(len(weight))]
-plot("ConstWDosSOTAI_intra1.1_v2", names, labels, False, False)
-plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names, labels, False, False)
+#plot("ConstWDosSOTAI_intra1.1_v2", names, labels, False, False)
+#plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names, labels, False, False)
 
 size = ["50", "50"]
 weight = ["1", "2"]
@@ -79,4 +79,43 @@ labels = ["L = " + size[i] + ", W = " + weight[i] + ", N = " + mu[i] + ", R = " 
 #plot("ConstWDosSOTAI_intra1.1_test", names, labels, False, False)
 #plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
 
+size = ["10", "20","30"]
+weight = ["3"]
+mu = ["1000", "2000", "4000", "8000"]
+rand = ["1", "2"]
+count = 0
+for s in size:
+    for w in weight:
+        for m in mu:
+            for r in rand:
+                names = ["dosBBH3D_L" + s + "_w" + w + "_nMu" + m + "_nR" + r + "_intra1.1"]
+                labels = ["L = " + s + ", W = " + w + ", N = " + m + ", R = " + r]
+                #plot("ConstWDosBBH3D_intra1.1_test" + str(count), names, labels, False, False)
+                #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
+                count += 1
 
+size = ["50"]
+weight = ["3"]
+mu = ["2000", "4000"]
+rand = ["1","2"]
+for s in size:
+    for w in weight:
+        for m in mu:
+            for r in rand:
+                names = ["dosBBH3D_L" + s + "_w" + w + "_nMu" + m + "_nR" + r + "_intra1.1"]
+                labels = ["L = " + s + ", W = " + w + ", N = " + m + ", R = " + r]
+                plot("ConstWDosBBH3D_intra1.1_test" + str(count), names, labels, False, False)
+                #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
+                count += 1
+
+size = ["80"]
+rand = ["1"]
+for s in size:
+    for w in weight:
+        for m in mu:
+            for r in rand:
+                names = ["dosBBH3D_L" + s + "_w" + w + "_nMu" + m + "_nR" + r + "_intra1.1"]
+                labels = ["L = " + s + ", W = " + w + ", N = " + m + ", R = " + r]
+                plot("ConstWDosBBH3D_intra1.1_test" + str(count), names, labels, False, False)
+                #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
+                count += 1

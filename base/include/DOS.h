@@ -12,6 +12,7 @@ class DOS{
 
     double kpm(double en, int nMoments, int nRandVecs, double * k = NULL);
     void setKpmERange(double eMin, double eMax);
+    void setRealHam(bool realHam){this-> realHam = realHam;}
 
   private:
     Hamiltonian * ham;
@@ -23,9 +24,10 @@ class DOS{
     bool momentsFound = false;
     bool rescalingFound = false;
     bool customERange = false;
+    bool realHam = false;
 
     void findRescaling(double * k = NULL);
-    void calculateMoments(double * k = NULL);
+    template <class mat> void calculateMoments(mat h);
     void randomize(cx_vec & rand, int d);
     double jacksonKernel(int n);
     double chebyshev(int n, double x);

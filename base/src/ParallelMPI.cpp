@@ -103,8 +103,6 @@ void ParallelMPI::run(){
     //Master
     fullRes.clear();
     int nJobs = nParams*nSamples;
-    cout << "Printing to file: " << fileName << endl;
-    cout << "Running " << nJobs << " jobs in " << nProcs - 1 << " processes" << endl;
 
     int * done = new int[nParams];
     int * sent = new int[nParams];
@@ -126,6 +124,8 @@ void ParallelMPI::run(){
       nProcs = nJobs + 1;
     }
 
+    cout << "Printing to file: " << fileName << endl;
+    cout << "Running " << nJobs << " jobs in " << nProcs - 1 << " processes" << endl;
     MPI_Request req;
     for(int i = 0; i < nProcs - 1; i++){
       e = i/nSamples;
@@ -189,6 +189,9 @@ void ParallelMPI::run(){
   }
   else{
     //Slaves
+    if(nParams*nSamples < rank){
+      return;
+    }
     double * res = new double[resSize];
     int pIndex;
     int countSent;

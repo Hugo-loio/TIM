@@ -45,7 +45,7 @@ int main (int argc, char ** argv) {
 
   vector<vector<double>> paramList2;
   int nPoints2 = 100;
-  for(int i = 75; i <= nPoints2; i++){
+  for(int i = 97; i <= nPoints2; i++){
     vector<double> param2;
     param2.push_back(9*(double)i/(double)nPoints2);
     paramList2.push_back(param2);
