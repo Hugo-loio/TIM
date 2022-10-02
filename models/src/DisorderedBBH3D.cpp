@@ -258,8 +258,8 @@ vector<double> DisorderedBBH3D::getTMM(int qrIt, double en, int m){
   ham->setBC(bC);
   generateDisorder();
 
-  vector<double> res = loc->tmmSpecial(3, qrIt, en);
-  res[0] /= (double)m;
+  vector<double> res = loc->tmmSpecialReal(3, qrIt, en);
+  res[0] /= (double)(m*m);
 
   return res;
 }

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "DisorderedSOTAI.h"
+#include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
 #include "AuxFunctions.h"
 
@@ -10,17 +10,17 @@ int qrIt = 10;
 int l = 40;
 
 void tmmConstW(double * res, double * params){
-  DisorderedSOTAI sotai(m);
-  sotai.setW(w);
-  vector<double> tmm = sotai.getTMM(qrIt, en, params[0]);
+  DisorderedBBH3D bbh3d(m);
+  bbh3d.setW(w);
+  vector<double> tmm = bbh3d.getTMM(qrIt, en, params[0]);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
 
 void tmmConstL(double * res, double * params){
-  DisorderedSOTAI sotai(m);
-  sotai.setW(params[0]);
-  vector<double> tmm = sotai.getTMM(qrIt, en, l);
+  DisorderedBBH3D bbh3d(m);
+  bbh3d.setW(params[0]);
+  vector<double> tmm = bbh3d.getTMM(qrIt, en, l);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
@@ -56,12 +56,12 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
-    p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
     p.setJob(tmmConstW, 2);
   }
   else{
     p.setParamList(paramList2);
-    p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
     p.setJob(tmmConstL, 2);
   }
   p.run();

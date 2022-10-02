@@ -23,8 +23,17 @@ int main (int argc, char ** argv) {
 
   sotai.setW(3);
   sotai.generateDisorder();
+  //cout << "w = 3" << endl;
+  //cout << sotai.getTMM(10, 0, 8)[0] << endl;
+
+  DisorderedBBH3D bbh3d(1.1);
+  int l2[3] = {4,4,4};
+  sotai.setSize(l);
+
+  sotai.setW(3);
+  sotai.generateDisorder();
   cout << "w = 3" << endl;
-  cout << sotai.getTMM(10, 0, 8)[0] << endl;
+  cout <<  bbh3d.getTMM(10,0,6)[0] << endl;
 
   return 0;
 }

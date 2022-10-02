@@ -38,4 +38,12 @@ rand = ["1"]
 names = ["dosSOTAI_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
 
-plot("DOSE0SOTAI_intra1.1_test", names, labels, False, False)
+plot("DOSE0SOTAI_intra1.1", names, labels, False, False)
+
+size = ["80"]
+mu = ["2048"]
+rand = ["1"]
+names = ["dosBBH3D_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
+labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
+
+plot("DOSE0BBH3D_intra1.1", names, labels, False, False)
