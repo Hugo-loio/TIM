@@ -79,6 +79,20 @@ labels = ["L = " + size[i] + ", W = " + weight[i] + ", N = " + mu[i] + ", R = " 
 #plot("ConstWDosSOTAI_intra1.1_test", names, labels, False, False)
 #plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
 
+weight = ["2", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
+names = ["dosBBH3D_L80_w" + weight[i] + "_nMu2048_nR1_intra1.1" for i in range(len(weight))]
+labels = ["W = " + weight[i] for i in range(len(weight))]
+
+plot("ConstWDosSOTAI_intra1.1_L80_nMu2048_nR1", names, labels, False, False)
+plotZoom("ConstWDosSOTAI_intra1.1_L80_nMu2048_nR1_zoom", names, labels, False, False)
+
+weight = ["2", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
+names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
+labels = ["W = " + weight[i] for i in range(len(weight))]
+
+plot("ConstWDosSOTAI_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("ConstWDosSOTAI_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+
 '''
 size = ["10", "20","30"]
 weight = ["3"]
@@ -121,12 +135,3 @@ for s in size:
                 #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
                 count += 1
                 '''
-
-weight = ["1", "2"]
-mu = ["100", "100"]
-rand = ["1", "1"]
-names = ["dosBBH3D_L80" + "_w" + weight[i] + "_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
-labels = ["L = " + size[i] + ", W = " + weight[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
-
-plot("ConstWDosSOTAI_intra1.1", names, labels, False, False)
-plotZoom("ConstWDosSOTAI_intra1.1", names, labels, False, False)

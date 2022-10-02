@@ -7,7 +7,7 @@
 double intra = 1.1;
 int l[3] = {80,80,80};
 double w = 2;
-int nMoments = 2048;
+int nMoments = 4096;
 int nRandVecs = 1;
 int nPoints = 2000;
 

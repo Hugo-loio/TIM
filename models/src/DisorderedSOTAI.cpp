@@ -236,7 +236,7 @@ double DisorderedSOTAI::getIPR(int nStates, double en){
   return loc->ipr(vol, 4, nStates, en);
 }
 
-double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
+vector<double> DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   int order[2] = {0,1};
   int bC[2] = {2,0};
   int lvec[2] = {m, 2};
@@ -246,8 +246,11 @@ double DisorderedSOTAI::getTMM(int qrIt, double en, int m){
   ham->setOrder(order);
   ham->setBC(bC);
   generateDisorder();
+   
+  vector<double> res = loc->tmmSpecial(3, qrIt, en);
+  res[0] /= (double)m;
 
-  return loc->tmm(3, qrIt, en)/(double)m;
+  return res;
 }
 
 double DisorderedSOTAI::getLSR(int nStates, double en){

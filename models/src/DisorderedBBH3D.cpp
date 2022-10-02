@@ -247,7 +247,7 @@ double DisorderedBBH3D::getIPR(int nStates, double en){
   return loc->ipr(vol, 8, nStates, en);
 }
 
-double DisorderedBBH3D::getTMM(int qrIt, double en, int m){
+vector<double> DisorderedBBH3D::getTMM(int qrIt, double en, int m){
   int order[3] = {0,1,2};
   int bC[3] = {2,2,0};
   int lvec[3] = {m, m, 2};
@@ -258,7 +258,10 @@ double DisorderedBBH3D::getTMM(int qrIt, double en, int m){
   ham->setBC(bC);
   generateDisorder();
 
-  return loc->tmm(3, qrIt, en)/(double)m;
+  vector<double> res = loc->tmmSpecial(3, qrIt, en);
+  res[0] /= (double)m;
+
+  return res;
 }
 
 double DisorderedBBH3D::getLSR(int nStates, double en){

@@ -47,9 +47,11 @@ void printElapsedTime(chrono::high_resolution_clock::time_point tStart){
   auto dM = chrono::duration_cast<chrono::minutes>(tNow-tStart);
   auto dS = chrono::duration_cast<chrono::seconds>(tNow-tStart);
   auto dMS = chrono::duration_cast<chrono::milliseconds>(tNow-tStart);
+  auto dMuS = chrono::duration_cast<chrono::microseconds>(tNow-tStart);
   int h = dH.count();
   int m = dM.count() % 60;
   int s = dS.count() % 60;
   int ms = dMS.count() % 1000;
-  cout << h << ":" << m << ":" << s << ":" << ms << endl;
+  int mus = dMuS.count() % 1000;
+  cout << h << ":" << m << ":" << s << ":" << ms << ":" << mus << endl;
 }

@@ -21,55 +21,10 @@ int main (int argc, char ** argv) {
   int l[2] = {10,10};
   sotai.setSize(l);
 
-  sotai.setW(0);
-  sotai.generateDisorder();
-  cout << "w = 0" << endl;
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
-
-  cout << "w = 1" << endl;
-  sotai.setW(1);
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
-
-  cout << "w = 2" << endl;
-  sotai.setW(2);
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
-
-  cout << "w = 3" << endl;
   sotai.setW(3);
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
-
-  cout << "w = 4" << endl;
-  sotai.setW(4);
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
-
-  cout << "w = 5" << endl;
-  sotai.setW(5);
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
-
-  cout << "w = 9" << endl;
-  sotai.setW(9);
-  for(int i = 0; i < 10 ; i++){
-    sotai.generateDisorder();
-    sotai.test(argv[0]);
-  }
+  sotai.generateDisorder();
+  cout << "w = 3" << endl;
+  cout << sotai.getTMM(10, 0, 8)[0] << endl;
 
   return 0;
 }

@@ -33,7 +33,6 @@ double DOS::kpm(double en, int nMoments, int nRandVecs, double * k){
       this->nMoments = nMoments;
       this->nRandVecs = nRandVecs;
       if(ham->getIsReal()){
-	cout << __PRETTY_FUNCTION__ << " real h" << endl;
 	calculateMoments<sp_mat>(real(ham->spH(k)));
       }
       else{

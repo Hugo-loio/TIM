@@ -55,7 +55,7 @@ cx_mat Anderson1D::getHam(){
   return ham->H(NULL);
 }
 
-double Anderson1D::getTMM(int qrIt, double en){
+vector<double> Anderson1D::getTMM(int qrIt, double en){
   int bC[1] = {0};
   ham->setBC(bC);
   generateDisorder();
