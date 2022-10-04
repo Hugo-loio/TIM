@@ -138,6 +138,13 @@ void LocalizationProps::sparseDiag(int nStates, double en, double * k){
       eigVal[i] = eigValTemp[i].real();
     }
   }
+  //Sort eigVals and eigVecs
+  uvec sortIndex(nStates);
+  for(int i = 0; i < nStates; i++){
+    for(int e = 0; e < nStates; e++){
+    }
+  }
+  cx_mat eigVecTemp = eigVec;
   nStatesFound = nStates;
   lastEn = en;
 }
