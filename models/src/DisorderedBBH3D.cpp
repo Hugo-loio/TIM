@@ -242,6 +242,7 @@ double DisorderedBBH3D::getIPR(int nStates, double en){
   ham->setOrder(order);
   ham->setBC(bC);
   ham->setSparse(true);
+  ham->setIsReal(true);
   int vol = ham->getSize()[0]*ham->getSize()[1]*ham->getSize()[2];
 
   return loc->ipr(vol, 8, nStates, en);
@@ -272,6 +273,7 @@ double DisorderedBBH3D::getLSR(int nStates, double en){
   ham->setOrder(order);
   ham->setBC(bC);
   ham->setSparse(true);
+  ham->setIsReal(true);
 
   return loc->lsr(nStates, en);
 }
@@ -307,6 +309,7 @@ double DisorderedBBH3D::getEnGap(double en){
   ham->setOrder(order);
   ham->setBC(bC);
   ham->setSparse(true);
+  ham->setIsReal(false);
 
   return loc->gap(en);
 }

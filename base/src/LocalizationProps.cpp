@@ -35,6 +35,7 @@ double LocalizationProps::lsr(int nStates, double en, double * k){
   if(ham->getIsSparse()){
     sparseDiag(nStates, en, k);
     vec realEig = sort(eigVal.subvec(0,nStates-1));
+    cout << nStates << realEig << endl;
     double res = 0;
     double max, min;
     double * s = new double[nStates-2];
@@ -116,15 +117,26 @@ void LocalizationProps::sparseDiag(int nStates, double en, double * k){
   else{
     forceDiag = false;
   }
-  cx_vec eigValTemp;
-  eigs_gen(eigValTemp, eigVec, ham->spH(k), nStates, en);
-  if(size(eigValTemp)[0] != nStates){
-    cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
-    throw runtime_error("Diagonalization failed.");
+  if(ham->getIsReal()){
+    mat eigVecTemp;
+    eigs_sym(eigVal, eigVecTemp, real(ham->spH(k)), nStates, en);
+    if(size(eigVal)[0] != nStates){
+      cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
+      throw runtime_error("Diagonalization failed.");
+    }
+    eigVec = cx_mat(eigVecTemp, mat(size(eigVecTemp)[0], size(eigVecTemp)[1], fill::zeros));
   }
-  eigVal = vec(nStates, fill::zeros);
-  for(int i = 0; i < nStates; i++){
-    eigVal[i] = eigValTemp[i].real();
+  else{
+    cx_vec eigValTemp;
+    eigs_gen(eigValTemp, eigVec, ham->spH(k), nStates, en);
+    if(size(eigValTemp)[0] != nStates){
+      cout << "Found " << size(eigValTemp)[0] << " states out of " << nStates << endl;
+      throw runtime_error("Diagonalization failed.");
+    }
+    eigVal = vec(nStates, fill::zeros);
+    for(int i = 0; i < nStates; i++){
+      eigVal[i] = eigValTemp[i].real();
+    }
   }
   nStatesFound = nStates;
   lastEn = en;
