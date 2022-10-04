@@ -29,7 +29,7 @@ int main (int argc, char ** argv) {
   bool doConstW = true;
   if(argc > 2){
     if(stoi(argv[1]) == 0){
-      en = stod(argv[2]);
+      w = stod(argv[2]);
     }
     else if(stoi(argv[1]) == 1){
       l = stoi(argv[2]);
@@ -55,14 +55,19 @@ int main (int argc, char ** argv) {
 
   ParallelMPI p(&argc, &argv);
   if(doConstW){
-    p.setParamList(paramList1);
-    p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
-    p.setJob(tmmConstW, 2);
+    double enVec[7] = {-3, -2.5, -2, -1.5, -1, -0.5, 0};
+    for(int i = 0; i < 7; i++){
+      en = enVec[i];
+      p.setParamList(paramList1);
+      p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
+      p.setJob(tmmConstW, 2);
+      p.run();
+    }
   }
   else{
     p.setParamList(paramList2);
     p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
     p.setJob(tmmConstL, 2);
+    p.run();
   }
-  p.run();
 }
