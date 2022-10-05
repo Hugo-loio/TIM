@@ -27,9 +27,14 @@ void tmmConstL(double * res, double * params){
 
 int main (int argc, char ** argv) {
   bool doConstW = true;
+  bool singleE = false;
   if(argc > 2){
     if(stoi(argv[1]) == 0){
       w = stod(argv[2]);
+      if(argc > 3){
+	singleE = true;
+	en = stod(argv[3]);
+      }
     }
     else if(stoi(argv[1]) == 1){
       l = stoi(argv[2]);
@@ -57,7 +62,12 @@ int main (int argc, char ** argv) {
   if(doConstW){
     double enVec[7] = {-3, -2.5, -2, -1.5, -1, -0.5, 0};
     for(int i = 0; i < 7; i++){
-      en = enVec[i];
+      if(singleE){
+	i = 7;
+      }
+      else{
+	en = enVec[i];
+      }
       p.setParamList(paramList1);
       p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
       p.setJob(tmmConstW, 2);
