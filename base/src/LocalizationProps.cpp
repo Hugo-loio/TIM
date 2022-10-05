@@ -35,7 +35,7 @@ double LocalizationProps::lsr(int nStates, double en, double * k){
   if(ham->getIsSparse()){
     sparseDiag(nStates, en, k);
     vec realEig = sort(eigVal.subvec(0,nStates-1));
-    cout << nStates << realEig << endl;
+    //cout << nStates << realEig << endl;
     double res = 0;
     double max, min;
     double * s = new double[nStates-2];
@@ -140,11 +140,30 @@ void LocalizationProps::sparseDiag(int nStates, double en, double * k){
   }
   //Sort eigVals and eigVecs
   uvec sortIndex(nStates);
+  vector<int> unSorted;
   for(int i = 0; i < nStates; i++){
-    for(int e = 0; e < nStates; e++){
+    unSorted.push_back(i);
+  }
+  double absMin;
+  int index;
+  for(int i = 0; i < nStates; i++){
+    absMin = abs(eigVal[unSorted[0]]);
+    index = 0;
+    for(int e = 1; e < unSorted.size(); e++){
+      if(abs(eigVal[unSorted[e]]) < absMin){
+	absMin = abs(eigVal[unSorted[e]]);
+	index = e;
+      }
     }
+    sortIndex(i) = unSorted[index];
+    unSorted.erase(unSorted.begin() + index);
   }
   cx_mat eigVecTemp = eigVec;
+  vec eigValTemp = eigVal;
+  for(int i = 0; i < nStates; i++){
+    eigVal(i) = eigValTemp(sortIndex(i));
+    eigVec.col(i) = eigVecTemp.col(sortIndex(i));
+  }
   nStatesFound = nStates;
   lastEn = en;
 }

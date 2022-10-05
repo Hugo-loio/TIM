@@ -58,7 +58,7 @@ constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
 #plotConstL("tmmSOTAI_E0_m1.1", constLNames, constLLabels, False)
 
-constLVals = ["4"]
+constLVals = ["4", "6", "8", "10"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_m1.1" for val in constLVals]
 constLLabels = [r'$L = $ ' + val for val in constLVals]
 

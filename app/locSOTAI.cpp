@@ -43,7 +43,7 @@ void loc(double * res, double * params){
 
 
 int main (int argc, char ** argv) {
-  int sampMult = 1;
+  int sampMult = 200;
   int version = 0;
   if(argc > 1){
     version = stoi(argv[1]);
@@ -52,7 +52,7 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList;
   int nPointsW = 100;
   int nPointsL = 20;
-  for(int i = 0; i <= 0; i++){
+  for(int i = 0; i <= nPointsL; i++){
     for(int e = 0; e <= nPointsW; e++){
       vector<double> param; 
       param.push_back(40 + 10*i);
