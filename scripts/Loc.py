@@ -20,7 +20,7 @@ def plot(title, fileName, specs, errors = False, show = False):
             dataPlot = data[:,np.where(data[0] == i)[0]] 
             for e in specs['iprNStates']:
                 start = int(2 + 2*(specs['nStSamp'] - e/10))
-                label = r'$L = $' + str(i) + r' $ n = $' + str(e)
+                label = r'$L = $ ' + str(i) + r' $ n = $ ' + str(e)
                 plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
 
         ax.set(xlabel = r'$W$', ylabel = r'IPR')
@@ -38,7 +38,7 @@ def plot(title, fileName, specs, errors = False, show = False):
             dataPlot = data[:,np.where(data[0] == i)[0]] 
             for e in specs['lsrNStates']:
                 start = int(3 + 2*(specs['nStSamp'] - e/10))
-                label = r'$L = $' + str(i) + r' $ n = $' + str(e)
+                label = r'$L = $ ' + str(i) + r' $ n = $ ' + str(e)
                 plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
 
         ax.set(xlabel = r'$W$', ylabel = r'LSR')
@@ -76,7 +76,7 @@ specs = {
         'fractalNStates' : [50,40,30,20,10],
         'fractalSizes' : [50,60],
         'lsrSizes' : [40],
-        'lsrNStates' : [50,30],
+        'lsrNStates' : [50,30,10],
         'enGapSizes' : [40]
         }
 
