@@ -71,27 +71,27 @@ def plot(title, fileName, specs, errors = False, show = False):
 
 specs = {
         'nStSamp' : 5,
-        'iprSizes' : [40],
+        'iprSizes' : [40,60],
         'iprNStates' : [50,30,10],
         'fractalNStates' : [50,40,30,20,10],
         'fractalSizes' : [50,60],
-        'lsrSizes' : [40],
-        'lsrNStates' : [50,30],
-        'enGapSizes' : [40]
+        'lsrSizes' : [40,60],
+        'lsrNStates' : [50,30,10],
+        'enGapSizes' : [40,60]
         }
 
 plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
 
 specs = {
         'nStSamp' : 5,
-        'iprSizes' : [4],
+        'iprSizes' : [4, 6, 8],
         'iprNStates' : [50,30,10],
         'fractalNStates' : [50,40,30,20,10],
-        'fractalSizes' : [4],
-        'lsrSizes' : [4],
+        'fractalSizes' : [4, 6, 8],
+        'lsrSizes' : [4, 6, 8],
         'lsrNStates' : [50,30,10],
-        'enGapSizes' : [4]
+        'enGapSizes' : [4, 6, 8]
         }
 
-#plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs)
+plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs)
 #plot("LocBBH3D_intra1.1", "locBBH3D_intra1.1", specs)

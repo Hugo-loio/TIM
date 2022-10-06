@@ -83,15 +83,15 @@ weight = ["2", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu2048_nR1_intra1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
 
-plot("ConstWDosSOTAI_intra1.1_L80_nMu2048_nR1", names, labels, False, False)
-plotZoom("ConstWDosSOTAI_intra1.1_L80_nMu2048_nR1_zoom", names, labels, False, False)
+plot("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1", names, labels, False, False)
+plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1_zoom", names, labels, False, False)
 
 weight = ["2", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
 
-plot("ConstWDosSOTAI_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom("ConstWDosSOTAI_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
 
 '''
 size = ["10", "20","30"]
