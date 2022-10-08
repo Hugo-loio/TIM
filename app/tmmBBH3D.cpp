@@ -8,11 +8,12 @@ double w = 3.2;
 double en = 0;
 int qrIt = 10;
 int l = 40;
+int dir = 2;
 
 void tmmConstW(double * res, double * params){
   DisorderedBBH3D bbh3d(m);
   bbh3d.setW(w);
-  vector<double> tmm = bbh3d.getTMM(qrIt, en, params[0]);
+  vector<double> tmm = bbh3d.getTMM(qrIt, en, params[0], dir);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
@@ -20,7 +21,7 @@ void tmmConstW(double * res, double * params){
 void tmmConstL(double * res, double * params){
   DisorderedBBH3D bbh3d(m);
   bbh3d.setW(params[0]);
-  vector<double> tmm = bbh3d.getTMM(qrIt, en, l);
+  vector<double> tmm = bbh3d.getTMM(qrIt, en, l, dir);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
@@ -29,11 +30,20 @@ int main (int argc, char ** argv) {
   bool doConstW = true;
   if(argc > 2){
     if(stoi(argv[1]) == 0){
-      en = stod(argv[2]);
+      w = stod(argv[2]);
+      if(argc > 3){
+	en = stod(argv[3]);
+      }
+      if(argc > 4){
+	dir = stod(argv[4]);
+      }
     }
     else if(stoi(argv[1]) == 1){
       l = stoi(argv[2]);
       doConstW = false;
+      if(argc > 3){
+	dir = stod(argv[3]);
+      }
     }
   }
 
@@ -47,7 +57,7 @@ int main (int argc, char ** argv) {
 
   int nPoints2 = 150;
   vector<vector<double>> paramList2;
-  for(int i = 100; i <= nPoints2; i++){
+  for(int i = 0; i <= nPoints2; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)100);
     paramList2.push_back(param);
@@ -56,12 +66,12 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
-    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
     p.setJob(tmmConstW, 2);
   }
   else{
     p.setParamList(paramList2);
-    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1");
     p.setJob(tmmConstL, 2);
   }
   p.run();

@@ -248,18 +248,42 @@ double DisorderedBBH3D::getIPR(int nStates, double en){
   return loc->ipr(vol, 8, nStates, en);
 }
 
-vector<double> DisorderedBBH3D::getTMM(int qrIt, double en, int m){
+vector<double> DisorderedBBH3D::getTMM(int qrIt, double en, int m, int dir){
   int order[3] = {0,1,2};
   int bC[3] = {2,2,0};
-  int lvec[3] = {m, m, 2};
-  setSize(lvec);
+  int lVec[3] = {m, m, 2};
+  if(dir == 0){
+    bC[0] = 0;
+    bC[2] = 2;
+    lVec[0] = 2;
+    lVec[2] = m;
+    order[0] = 2;
+    order[1] = 0;
+    order[2] = 1;
+  }
+  else if(dir == 1){
+    bC[1] = 0;
+    bC[2] = 2;
+    lVec[1] = 2;
+    lVec[2] = m;
+    order[1] = 2;
+    order[0] = 0;
+    order[2] = 1;
+  }
+  setSize(lVec);
   bool layerDir[3] = {true,true,true};
   setLayers(layerDir);
   ham->setOrder(order);
   ham->setBC(bC);
   generateDisorder();
 
-  vector<double> res = loc->tmmSpecialReal(3, qrIt, en);
+  vector<double> res;
+  if(bC[2] == 0){
+    res = loc->tmmSpecialReal(3, qrIt, en);
+  }
+  else{
+    res = loc->tmmSpecialReal2(3, qrIt, en);
+  }
   res[0] /= (double)(m*m);
 
   return res;
