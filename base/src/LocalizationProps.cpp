@@ -394,12 +394,11 @@ vector<double> LocalizationProps::tmmSpecial2(int nLayers, int qrIt, double en, 
     }
     else{
       t.submat(0, 0, size -1, size -1) = enMat - ham->blockH(nLayers-1,nLayers-1,k);
-      t.submat(0, size, size -1, tSize -1) = -ham->blockH(nLayers-1,nLayers-2,k);
       ham->generateDisorder();
       v = ham->blockH(0,1,k); 
       diagInverse<cx_mat>(v, size);
       t.submat(0, 0, size -1, size -1) = diagLeftMult<cx_mat>(v, t.submat(0, 0, size-1, size-1), size);
-      t.submat(0, size, size -1, tSize -1) = diagDoubleMult<cx_mat>(v, t.submat(0, size, size -1, tSize -1), size);
+      t.submat(0, size, size -1, tSize -1) = -diagDoubleMult<cx_mat>(v, interV, size);
       tAux = updateT<cx_mat>(t, tAux, size);
     }
   }
