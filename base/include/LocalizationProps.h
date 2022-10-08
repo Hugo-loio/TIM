@@ -19,7 +19,9 @@ class LocalizationProps{
     //Transfer Matrix Method, localization length + error
     vector<double> tmm(int nLayers, int qrIt, double en, double * k = NULL);
     vector<double> tmmSpecial(int nLayers, int qrIt, double en, double * k = NULL);
+    vector<double> tmmSpecial2(int nLayers, int qrIt, double en, double * k = NULL);
     vector<double> tmmSpecialReal(int nLayers, int qrIt, double en, double * k = NULL);
+    vector<double> tmmSpecialReal2(int nLayers, int qrIt, double en, double * k = NULL);
 
     void setForceDiag(){forceDiag = true;}
   private:

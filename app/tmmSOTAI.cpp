@@ -7,12 +7,13 @@ double m = 1.1;
 double w = 3.2;
 double en = 0;
 int qrIt = 10;
-int l = 40;
+int l = 20;
+int dir = 1;
 
 void tmmConstW(double * res, double * params){
   DisorderedSOTAI sotai(m);
   sotai.setW(w);
-  vector<double> tmm = sotai.getTMM(qrIt, en, params[0]);
+  vector<double> tmm = sotai.getTMM(qrIt, en, params[0], dir);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
@@ -20,7 +21,7 @@ void tmmConstW(double * res, double * params){
 void tmmConstL(double * res, double * params){
   DisorderedSOTAI sotai(m);
   sotai.setW(params[0]);
-  vector<double> tmm = sotai.getTMM(qrIt, en, l);
+  vector<double> tmm = sotai.getTMM(qrIt, en, l, dir);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
@@ -69,14 +70,14 @@ int main (int argc, char ** argv) {
 	en = enVec[i];
       }
       p.setParamList(paramList1);
-      p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_m1.1");
+      p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
       p.setJob(tmmConstW, 2);
       p.run();
     }
   }
   else{
     p.setParamList(paramList2);
-    p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_m1.1");
+    p.setFile(argv[0], "tmmSOTAI_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1");
     p.setJob(tmmConstL, 2);
     p.run();
   }

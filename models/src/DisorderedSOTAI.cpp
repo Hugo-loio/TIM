@@ -191,7 +191,7 @@ void DisorderedSOTAI::test(char * argv0){
   ham->setBC(bC);
   ham->setSparse(false);
   ham->setOrder(order);
-  
+
   vec eigVal;
 
   eig_sym(eigVal, ham->H(NULL));
@@ -236,18 +236,32 @@ double DisorderedSOTAI::getIPR(int nStates, double en){
   return loc->ipr(vol, 4, nStates, en);
 }
 
-vector<double> DisorderedSOTAI::getTMM(int qrIt, double en, int m){
+vector<double> DisorderedSOTAI::getTMM(int qrIt, double en, int m, int dir){
   int order[2] = {0,1};
   int bC[2] = {2,0};
-  int lvec[2] = {m, 2};
-  setSize(lvec);
+  int lVec[2] = {m, 2};
+  if(dir == 0){
+    bC[0] = 0;
+    bC[1] = 2;
+    lVec[0] = 2;
+    lVec[1] = m;
+    order[0] = 1;
+    order[1] = 0;
+  }
+  setSize(lVec);
   bool layerDir[2] = {true,true};
   setLayers(layerDir);
   ham->setOrder(order);
   ham->setBC(bC);
   generateDisorder();
-   
-  vector<double> res = loc->tmmSpecial(3, qrIt, en);
+
+  vector<double> res;
+  if(dir == 1){
+    res = loc->tmmSpecial(3, qrIt, en);
+  }
+  else if(dir == 0){
+    res = loc->tmmSpecial2(3, qrIt, en);
+  }
   res[0] /= (double)m;
 
   return res;
@@ -308,7 +322,7 @@ double DisorderedSOTAI::getMaxE(){
   ham->setBC(bC);
   ham->setSparse(false);
   ham->setOrder(order);
-  
+
   vec eigVal;
 
   eig_sym(eigVal, ham->H(NULL));
