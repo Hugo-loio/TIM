@@ -36,10 +36,16 @@ int main (int argc, char ** argv) {
 	singleE = true;
 	en = stod(argv[3]);
       }
+      if(argc > 4){
+	dir = stod(argv[4]);
+      }
     }
     else if(stoi(argv[1]) == 1){
       l = stoi(argv[2]);
       doConstW = false;
+      if(argc > 3){
+	dir = stod(argv[3]);
+      }
     }
   }
 
