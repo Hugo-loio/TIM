@@ -8,7 +8,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 # Compiler options
-add_compile_options(-std=c++11 -pthread -g)
+add_compile_options(-std=c++11 -pthread -g -O3)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 # Armadillo
@@ -18,6 +18,12 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 # MPI
 find_package (MPI REQUIRED)
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
+
+# LAPACK
+find_package(LAPACK)
+
+# BLAS
+find_package(BLAS)
 
 # base library
 file(GLOB base_sources ${PROJECT_SOURCE_DIR}/base/src/*.cpp)
@@ -41,5 +47,5 @@ file(GLOB app_sources ${PROJECT_SOURCE_DIR}/app/*.cpp)
 foreach(app ${app_sources})
   get_filename_component(exe ${app} NAME_WE)
   add_executable(${exe} ${app})
-  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES} PRIVATE base PRIVATE models PRIVATE ${MPI_CXX_LIBRARIES})
+  target_link_libraries(${exe} PRIVATE ${ARMADILLO_LIBRARIES} PRIVATE base PRIVATE models PRIVATE ${MPI_CXX_LIBRARIES} PRIVATE ${LAPACK_LIBRARIES} PRIVATE ${BLAS_LIBRARIES})
 endforeach(app ${app_sources})
