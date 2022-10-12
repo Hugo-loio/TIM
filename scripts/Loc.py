@@ -80,17 +80,17 @@ specs = {
         'enGapSizes' : [40,60]
         }
 
-plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
+#plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
 
 specs = {
         'nStSamp' : 5,
-        'iprSizes' : [4, 6, 8],
-        'iprNStates' : [50,30,10],
+        'iprSizes' : [12, 14, 16],
+        'iprNStates' : [50,10],
         'fractalNStates' : [50,40,30,20,10],
         'fractalSizes' : [4, 6, 8],
-        'lsrSizes' : [4, 6, 8],
-        'lsrNStates' : [50,30,10],
-        'enGapSizes' : [4, 6, 8]
+        'lsrSizes' : [12, 14, 16],
+        'lsrNStates' : [50,10],
+        'enGapSizes' : [12, 14, 16]
         }
 
 plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs)

@@ -14,7 +14,7 @@ void loc(double * res, double * params){
   int nStates;
   double en = 0;
   if(params[1] == 0){
-    en = 1e-5;
+    en = -0.01;
   }
 
   vector<double> resTemp;
@@ -53,7 +53,7 @@ int main (int argc, char ** argv) {
   int nPointsW = 100;
   int nPointsL = 20;
   for(int i = 7; i <= nPointsL; i++){
-    for(int e = 0; e <= nPointsW; e++){
+    for(int e = 1; e <= nPointsW; e++){
       vector<double> param; 
       param.push_back(4 + 2*i);
       param.push_back(9*(double)e/(double)nPointsW);

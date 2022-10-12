@@ -52,7 +52,7 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList;
   int nPointsW = 100;
   int nPointsL = 20;
-  for(int i = 2; i <= nPointsL; i++){
+  for(int i = 3; i <= nPointsL; i++){
     for(int e = 0; e <= nPointsW; e++){
       if(i != 8){
 	vector<double> param; 
