@@ -118,10 +118,8 @@ void LocalizationProps::sparseDiag(int nStates, double en, double * k){
     forceDiag = false;
   }
   if(ham->getIsReal()){
-    cout << size(ham->spH(k))[0] << endl;
     mat eigVecTemp;
     eigs_sym(eigVal, eigVecTemp, real(ham->spH(k)), nStates, en);
-    cout << "diagonalized real" << endl;
     if(size(eigVal)[0] != nStates){
       cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
       throw runtime_error("Diagonalization failed.");
@@ -129,10 +127,8 @@ void LocalizationProps::sparseDiag(int nStates, double en, double * k){
     eigVec = cx_mat(eigVecTemp, mat(size(eigVecTemp)[0], size(eigVecTemp)[1], fill::zeros));
   }
   else{
-    cout << size(ham->spH(k))[0] << endl;
     cx_vec eigValTemp;
     eigs_gen(eigValTemp, eigVec, ham->spH(k), nStates, en);
-    cout << "diagonalized" << endl;
     if(size(eigValTemp)[0] != nStates){
       cout << "Found " << size(eigValTemp)[0] << " states out of " << nStates << endl;
       throw runtime_error("Diagonalization failed.");
