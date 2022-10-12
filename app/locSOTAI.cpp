@@ -52,12 +52,14 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList;
   int nPointsW = 100;
   int nPointsL = 20;
-  for(int i = 0; i <= nPointsL; i++){
+  for(int i = 2; i <= nPointsL; i++){
     for(int e = 0; e <= nPointsW; e++){
-      vector<double> param; 
-      param.push_back(40 + 20*i);
-      param.push_back(9*(double)e/(double)nPointsW);
-      paramList.push_back(param);
+      if(i != 8){
+	vector<double> param; 
+	param.push_back(40 + 20*i);
+	param.push_back(9*(double)e/(double)nPointsW);
+	paramList.push_back(param);
+      }
     }
   }
 

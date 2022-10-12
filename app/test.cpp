@@ -28,21 +28,18 @@ int main (int argc, char ** argv) {
 
   DisorderedBBH3D bbh3d(1.1);
   int l2[3] = {4,4,4};
-  sotai.setSize(l);
+  //sotai.setSize(l);
 
   sotai.setW(3);
   sotai.generateDisorder();
+  cout << sotai.getTMM(10, 0, 8, 0)[0] << endl;
+  cout << sotai.getTMM(10, 0, 8, 1)[0] << endl;
+  cout << sotai.getTMM(10, -1, 8, 0)[0] << endl;
+  cout << sotai.getTMM(10, -1, 8, 1)[0] << endl;
+  cout << sotai.getTMM(10, 1, 8, 0)[0] << endl;
+  cout << sotai.getTMM(10, 1, 8, 1)[0] << endl;
   //cout << "w = 3" << endl;
   //cout <<  bbh3d.getTMM(10,0,6)[0] << endl;
   
-  mat A(10,5, fill::randu);
-  cout << A << endl;
-  mat B(10,5, fill::zeros);
-  cx_mat C(A,mat(10,5,fill::zeros));
-
-  cout << C << endl;
-
-  cout << size(B)[0] << " " << size(B)[1] << endl;
-
   return 0;
 }
