@@ -55,3 +55,12 @@ void printElapsedTime(chrono::high_resolution_clock::time_point tStart){
   int mus = dMuS.count() % 1000;
   cout << h << ":" << m << ":" << s << ":" << ms << ":" << mus << endl;
 }
+
+void printVec(vector<vector<double>> vec){
+  for(int i = 0; i < vec.size(); i++){
+    for(int e = 0; e < vec[i].size(); e++){
+      cout << vec[i][e] << " " ;
+    }
+    cout << endl;
+  }
+}

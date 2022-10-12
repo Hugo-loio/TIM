@@ -48,20 +48,38 @@ int main (int argc, char ** argv) {
   }
 
   vector<vector<double>> paramList1;
-  int nPoints = 20;
+  int nPoints = 10;
   for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
-    param.push_back(12 + 4*i);
+    param.push_back(2 + 2*i);
     paramList1.push_back(param);
   }
 
   int nPoints2 = 150;
   vector<vector<double>> paramList2;
-  for(int i = 108; i <= nPoints2; i++){
+  for(int i = 0; i <= nPoints2; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)100);
     paramList2.push_back(param);
   }
+
+  //Corrections for missing data
+  if(doConstW){
+  }
+  else{
+    if(l == 12 && dir == 2){
+      paramList2.erase(paramList2.begin() + 55, paramList2.begin() + 57);
+      paramList2.erase(paramList2.begin() + 30, paramList2.begin() + 54);
+      paramList2.erase(paramList2.begin(), paramList2.begin() + 28);
+      //printVec(paramList2);
+    }
+    if(l == 14 && dir == 2){
+      paramList2.erase(paramList2.begin() + 47, paramList2.begin() + 51);
+      paramList2.erase(paramList2.begin() + 31, paramList2.begin() + 46);
+      //printVec(paramList2);
+    }
+  }
+
 
   ParallelMPI p(&argc, &argv);
   if(doConstW){

@@ -10,3 +10,5 @@ string rmTrailZeros(string str);
 double cot(double x);
 
 void printElapsedTime(chrono::high_resolution_clock::time_point tStart);
+
+void printVec(vector<vector<double>> vec);
