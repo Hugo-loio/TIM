@@ -52,7 +52,7 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList;
   int nPointsW = 100;
   int nPointsL = 20;
-  for(int i = 9; i <= nPointsL; i++){
+  for(int i = 12; i <= nPointsL; i++){
     for(int e = 1; e <= nPointsW; e++){
       vector<double> param; 
       param.push_back(40 + 20*i);
