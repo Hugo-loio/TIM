@@ -2,7 +2,7 @@ import helper as hp
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.rcParams.update({'font.size': 14})
+plt.style.use('science')
 
 def plotQuad(name, label, ax, detail):
     data = hp.readfile(name + ".dat")
@@ -18,7 +18,7 @@ def plotQuad(name, label, ax, detail):
         ax.plot(data[0], np.average(qxz,axis=0), label = r'$q_{xz}$, ' + label,  linestyle='-')
         ax.plot(data[0], np.average(qxy,axis=0), label = r'$q_{xy}$, ' + label,  linestyle='-')
 
-    ax.plot(data[0], np.average(q,axis=0), label = r'$Q$, ' + label,  linestyle='-')
+    ax.plot(data[0], np.average(q,axis=0), label = label,  linestyle='-')
 
 def plot(name, fileNames, labels, detail = True, show = True):
     fig, ax = plt.subplots()
@@ -26,10 +26,11 @@ def plot(name, fileNames, labels, detail = True, show = True):
     for i in range(0, len(fileNames)):
         plotQuad(fileNames[i], labels[i], ax, detail)
 
-    ax.set(xlabel = r'$W$')
+    ax.set(xlabel = r'$W$', ylabel = r'$Q$')
     ax.legend()
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 200)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".eps")
     if(show):
         plt.show()
     plt.close()
