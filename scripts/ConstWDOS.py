@@ -33,7 +33,7 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plt.show()
     plt.close()
 
-def plotZoom(name, fileNames, labels, detail = True, show = True):
+def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
     fig, ax = plt.subplots()
 
     for i in range(0, len(fileNames)):
@@ -42,6 +42,8 @@ def plotZoom(name, fileNames, labels, detail = True, show = True):
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
     ax.legend(loc = 'upper right', fontsize = 7)
     plt.xlim([-0.5,0.5])
+    if(ylim != 0):
+        plt.ylim([0, ylim])
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -83,15 +85,22 @@ weight = ["2", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu2048_nR1_intra1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
 
-plot("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1", names, labels, False, False)
-plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1_zoom", names, labels, False, False)
+#plot("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1", names, labels, False, False)
+#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1_zoom", names, labels, False, False)
 
 weight = ["2", "2.4", "2.5", "2.6", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
 
-plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+
+intra = ["0.5","0.9", "1", "1.1", "2"]
+names = ["dosBBH3D_L80_intra" + i + "_w0_nMu4096_nR1" for i in intra]
+labels = ["$\gamma$ " + i for i in intra]
+
+plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
 
 '''
 size = ["10", "20","30"]

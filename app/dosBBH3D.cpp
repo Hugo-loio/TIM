@@ -34,9 +34,24 @@ void dosE0(double * res, double * params){
   res[0] = bbh3d.getDOS(0, nMoments, nRandVecs, eMax);
 }
 
+void dosClean(double * res, double * params){
+  DisorderedBBH3D bbh3d(intra);
+  bbh3d.setSize(l);
+  bbh3d.setW(0);
+  bbh3d.generateDisorder();
+  double eMax = 5;
+  double deltaE = 2*eMax/(double)nPoints;
+
+  for(int i = 0; i <= nPoints; i++){
+    res[2*i] = -eMax + deltaE*i;
+    res[2*i + 1] = bbh3d.getDOS(res[2*i], nMoments, nRandVecs, eMax);
+  }
+}
+
 int main (int argc, char ** argv) {
   if(argc > 1){
-    w = stod(argv[1]);
+    //w = stod(argv[1]);
+    intra = stod(argv[1]);
   }
   int sampMult = 1;
 
@@ -58,7 +73,9 @@ int main (int argc, char ** argv) {
   if(argc > 1){
     p.setSamples(1);
     p.setParamList(paramList1);
-    p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_intra1.1");
+    //p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_intra1.1");
+    //p.setJob(dosConstW, 2*(nPoints + 1));
+    p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_intra" + rmTrailZeros(to_string(intra)) + "_w0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs));
     p.setJob(dosConstW, 2*(nPoints + 1));
     p.run();
   }

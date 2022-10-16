@@ -35,7 +35,7 @@ void Anderson1D::generateDisorder(){
 }
 
 double Anderson1D::ipr(int nStates, double en){
-  int bC[2] = {2};
+  int bC[1] = {2};
   ham->setBC(bC);
   ham->setSparse(true);
   int vol = ham->getSize()[0];
@@ -65,8 +65,8 @@ vector<double> Anderson1D::getTMM(int qrIt, double en){
 }
 
 void Anderson1D::test(char * argv0){
-  int bC[2] = {0};
-  int lVec[2] = {3};
+  int bC[1] = {0};
+  int lVec[1] = {3};
   setSize(lVec);
   ham->setBC(bC);
   generateDisorder();

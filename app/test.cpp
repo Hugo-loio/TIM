@@ -6,6 +6,7 @@
 #include "DisorderedSSH.h"
 #include "DisorderedBBH3D.h"
 #include "Anderson1D.h"
+#include "Anderson3D.h"
 #include "BBH2D.h"
 #include "BBH3D.h"
 #include <thread>
@@ -32,14 +33,11 @@ int main (int argc, char ** argv) {
 
   sotai.setW(3);
   sotai.generateDisorder();
-  cout << sotai.getTMM(10, 0, 8, 0)[0] << endl;
-  cout << sotai.getTMM(10, 0, 8, 1)[0] << endl;
-  cout << sotai.getTMM(10, -1, 8, 0)[0] << endl;
-  cout << sotai.getTMM(10, -1, 8, 1)[0] << endl;
-  cout << sotai.getTMM(10, 1, 8, 0)[0] << endl;
-  cout << sotai.getTMM(10, 1, 8, 1)[0] << endl;
+  //cout << sotai.getTMM(10, 0, 8, 0)[0] << endl;
   //cout << "w = 3" << endl;
   //cout <<  bbh3d.getTMM(10,0,6)[0] << endl;
   
+  Anderson3D and3d(1);
+  and3d.test();
   return 0;
 }
