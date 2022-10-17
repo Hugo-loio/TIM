@@ -257,12 +257,10 @@ vector<double> DisorderedSOTAI::getTMM(int qrIt, double en, int m, int dir){
 
   vector<double> res;
   if(dir == 1){
-    //res = loc->tmmSpecial(3, qrIt, en);
-    res = loc->tmm(3, qrIt, en);
+    res = loc->tmmSpecial(3, qrIt, en);
   }
   else if(dir == 0){
-    //res = loc->tmmSpecial(3, qrIt, en);
-    res = loc->tmm(3, qrIt, en);
+    res = loc->tmmSpecial2(3, qrIt, en);
   }
   res[0] /= (double)m;
 

@@ -38,7 +38,7 @@ void DisorderedAnderson3D::generateDisorder(){
 	  for(e = 0; e < l[0]; e++){
 	    for(j = 0; j < l[1]; j++){
 	      for(k = 0; k < l[2]; k++){
-		disOnSite[i][e][j][i] = en + w*uni(generator);
+		disOnSite[i][e][j][k] = en + w*uni(generator);
 	      }
 	    }
 	  }

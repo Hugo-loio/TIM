@@ -17,7 +17,7 @@ class Anderson3D{
     void generateDisorder();
 
     double ipr(int nStates, double en = 0);
-    vector<double> getTMM(int qrIt, double en);
+    vector<double> getTMM(int qrIt, double en, int m);
 
     cx_mat getHam();
     void test(char * argv0 = NULL);

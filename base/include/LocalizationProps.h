@@ -22,6 +22,7 @@ class LocalizationProps{
     vector<double> tmmSpecial2(int nLayers, int qrIt, double en, double * k = NULL);
     vector<double> tmmSpecialReal(int nLayers, int qrIt, double en, double * k = NULL);
     vector<double> tmmSpecialReal2(int nLayers, int qrIt, double en, double * k = NULL);
+    vector<double> tmmSpecialReal3(int nLayers, int qrIt, double en, double * k = NULL);
 
     void setForceDiag(){forceDiag = true;}
   private:

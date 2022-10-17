@@ -210,7 +210,6 @@ vector<double> LocalizationProps::tmm(int nLayers, int qrIt, double en, double *
     }
     e = i % (nLayers - 1);
     if(e != 0){
-      ham->generateDisorder();
       v = ham->blockH(e,e+1,k).i();
       t.submat(0, 0, size -1, size -1) = v*(enMat - ham->blockH(e,e,k));
       t.submat(0, size, size -1, tSize -1) = -v*ham->blockH(e,e-1,k);
@@ -289,13 +288,11 @@ vector<double> LocalizationProps::tmmSpecial(int nLayers, int qrIt, double en, d
     e = i % (nLayers - 1);
     if(e != 0){
       if(e % 2 == 1){
-	ham->generateDisorder();
 	t.submat(0, 0, size -1, size -1) = enMat - ham->blockH(e,e,k);
 	t.submat(0, size, size -1, tSize -1) = -ham->blockH(e,e-1,k);
 	tAux = updateT<cx_mat>(t, tAux, size);
       }
       else{
-	ham->generateDisorder();
 	cx_mat v = ham->blockH(e,e+1,k);
 	diagInverse(v, size);
 	t.submat(0, 0, size -1, size -1) = diagLeftMult<cx_mat>(v, enMat - ham->blockH(e,e,k), size);
@@ -378,13 +375,11 @@ vector<double> LocalizationProps::tmmSpecial2(int nLayers, int qrIt, double en, 
     e = i % (nLayers - 1);
     if(e != 0){
       if(e % 2 == 1){
-	ham->generateDisorder();
 	t.submat(0, 0, size -1, size -1) = diagLeftMult<cx_mat>(interV, enMat - ham->blockH(e,e,k), size);
 	t.submat(0, size, size -1, tSize -1) = -diagDoubleMult<cx_mat>(interV, ham->blockH(e,e-1,k), size);
 	tAux = updateT<cx_mat>(t, tAux, size);
       }
       else{
-	ham->generateDisorder();
 	cx_mat v = ham->blockH(e,e+1,k);
 	diagInverse(v, size);
 	t.submat(0, 0, size -1, size -1) = diagLeftMult<cx_mat>(v, enMat - ham->blockH(e,e,k), size);
@@ -465,13 +460,11 @@ vector<double> LocalizationProps::tmmSpecialReal(int nLayers, int qrIt, double e
     e = i % (nLayers - 1);
     if(e != 0){
       if(e % 2 == 1){
-	ham->generateDisorder();
 	t.submat(0, 0, size -1, size -1) = enMat - real(ham->blockH(e,e,k));
 	t.submat(0, size, size -1, tSize -1) = -real(ham->blockH(e,e-1,k));
 	tAux = updateT<mat>(t, tAux, size);
       }
       else{
-	ham->generateDisorder();
 	mat v = real(ham->blockH(e,e+1,k));
 	diagInverse(v, size);
 	t.submat(0, 0, size -1, size -1) = diagLeftMult<mat>(v, enMat - real(ham->blockH(e,e,k)), size);
@@ -554,13 +547,11 @@ vector<double> LocalizationProps::tmmSpecialReal2(int nLayers, int qrIt, double 
     e = i % (nLayers - 1);
     if(e != 0){
       if(e % 2 == 1){
-	ham->generateDisorder();
 	t.submat(0, 0, size -1, size -1) = diagLeftMult<mat>(interV, enMat - real(ham->blockH(e,e,k)), size);
 	t.submat(0, size, size -1, tSize -1) = -diagDoubleMult<mat>(interV, real(ham->blockH(e,e-1,k)), size);
 	tAux = updateT<mat>(t, tAux, size);
       }
       else{
-	ham->generateDisorder();
 	mat v = real(ham->blockH(e,e+1,k));
 	diagInverse(v, size);
 	t.submat(0, 0, size -1, size -1) = diagLeftMult<mat>(v, enMat - real(ham->blockH(e,e,k)), size);
@@ -576,6 +567,71 @@ vector<double> LocalizationProps::tmmSpecialReal2(int nLayers, int qrIt, double 
       t.submat(0, 0, size -1, size -1) = diagLeftMult<mat>(v, t.submat(0, 0, size-1, size-1), size);
       t.submat(0, size, size -1, tSize -1) = -diagDoubleMult<mat>(v, interV, size);
       tAux = updateT<mat>(t, tAux, size);
+    }
+  }
+
+
+  if(i == maxItTMM){
+    cout << "Warning: transfer matrix method stopped at iteration limit " << maxItTMM << " with error " << err << endl;
+  }
+  else{
+    cout << "Iterations: " << i << endl;
+  }
+
+  vector<double> res;
+  res.push_back(abs((double)i/c[minIndex]));
+  res.push_back(err);
+  delete[] c;
+  delete[] d;
+  return res;
+}
+
+vector<double> LocalizationProps::tmmSpecialReal3(int nLayers, int qrIt, double en, double * k){
+  int size = ham->blockH(0,0,k).n_cols;
+  int tSize = 2*size;
+  double * c = new double[tSize];
+  double * d = new double[tSize];
+  for(int i = 0; i < tSize; i++){
+    c[i] = 0;
+    d[i] = 0;
+  }
+  mat tAux(tSize, tSize, fill::zeros);
+  tAux.submat(size, 0, tSize -1, size -1) = eye<mat>(size, size);
+  mat enMat = en*eye<mat>(size,size);
+  tAux.submat(0, 0, size -1, size -1) = enMat - real(ham->blockH(0,0,k));
+  tAux.submat(0, size, size -1, tSize -1) = -eye<mat>(size, size);
+  mat t = tAux;
+  mat q,r;
+
+  int i,e,minIndex;
+  double rTemp, err;
+  double deltaErr = tmmErr;
+  int printIt = maxItTMM/10;
+
+  for(i = 1; i < maxItTMM; i++){
+    if(i % printIt == 0){
+      tmmErr += deltaErr;
+      cout << __PRETTY_FUNCTION__ << " in iteration " << i << endl;
+    }
+    if(i % qrIt == 0){
+      qr(q, r, tAux);
+      tAux = q;
+      for(e = 0; e < tSize; e++){
+	rTemp = log(abs(r(e,e)));
+	c[e] += rTemp;
+	d[e] += rTemp*rTemp;
+      }
+      if(i/qrIt > 10){
+	if(testTmmConv(c, d, tSize, i/qrIt, minIndex, err)){
+	  break;
+	}
+      }
+    }
+    e = i % nLayers;
+    t.submat(0, 0, size -1, size -1) = enMat - real(ham->blockH(e,e,k));
+    tAux = updateT<mat>(t, tAux, size);
+    if(e == 0){
+      ham->generateDisorder();
     }
   }
 

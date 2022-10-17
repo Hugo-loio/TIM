@@ -16,6 +16,15 @@
 using namespace std;
 using namespace arma;
 
+template <class T> T sum(T a, T b){
+  return a+b;
+}
+
+int add(int a, int b){
+  int (*func)(int, int) = &sum<int>;
+  return func(a, b);
+}
+
 int main (int argc, char ** argv) {
 
   DisorderedSOTAI sotai(1.1);
@@ -36,8 +45,12 @@ int main (int argc, char ** argv) {
   //cout << sotai.getTMM(10, 0, 8, 0)[0] << endl;
   //cout << "w = 3" << endl;
   //cout <<  bbh3d.getTMM(10,0,6)[0] << endl;
-  
+
   Anderson3D and3d(1);
-  and3d.test();
+  and3d.setW(9);
+  cout << and3d.getTMM(10, 0, 6)[0] << endl;
+  //and3d.test();
+  //int (*func)(int, int) = &sum<int>;
+
   return 0;
 }

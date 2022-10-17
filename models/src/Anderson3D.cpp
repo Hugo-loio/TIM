@@ -59,17 +59,24 @@ cx_mat Anderson3D::getHam(){
   return ham->H(NULL);
 }
 
-vector<double> Anderson3D::getTMM(int qrIt, double en){
-  int bC[1] = {0};
+vector<double> Anderson3D::getTMM(int qrIt, double en, int m){
+  int bC[3] = {2,2,0};
+  int order[3] = {0,1,2};
+  int lVec[3] = {m, m, 2};
   ham->setBC(bC);
+  setSize(lVec);
+  ham->setOrder(order);
   generateDisorder();
 
   LocalizationProps loc(ham);
-  return loc.tmm(ham->getSize()[0], qrIt, en);
+  vector<double> res = loc.tmmSpecialReal3(2, qrIt, en);
+  res[0] /= (double)(m);
+
+  return res;
 }
 
 void Anderson3D::test(char * argv0){
-  int bC[3] = {0,0,0};
+  int bC[3] = {2,2,0};
   int order[3] = {0, 1, 2};
   ham->setBC(bC);
   ham->setSparse(false);
@@ -78,7 +85,8 @@ void Anderson3D::test(char * argv0){
   setSize(lVec);
   generateDisorder();
 
-  cout << ham->blockH(0,1) << endl;
-  cout << ham->blockH(1,2) << endl;
-  cout << ham->H() << endl;
+  cout << real(ham->blockH(0,0)) << endl;
+  cout << real(ham->blockH(1,1)) << endl;
+  cout << real(ham->blockH(2,2)) << endl;
+  //cout << ham->H() << endl;
 }
