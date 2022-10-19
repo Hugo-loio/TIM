@@ -27,7 +27,7 @@ void fractal(double * res, double * params){
 
 
 int main (int argc, char ** argv) {
-  int sampMult = 50;
+  int sampMult = 200;
   int version = 0;
   if(argc > 1){
     w = stod(argv[1]);
