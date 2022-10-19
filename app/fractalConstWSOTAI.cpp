@@ -32,7 +32,7 @@ int main (int argc, char ** argv) {
   if(argc > 1){
     w = stod(argv[1]);
     if(argc > 2){
-      version = stoi(argv[1]);
+      version = stoi(argv[2]);
     }
   }
 
