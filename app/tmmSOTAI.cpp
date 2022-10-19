@@ -66,6 +66,7 @@ int main (int argc, char ** argv) {
   }
 
   //Corrections for missing data
+  /*
   if(doConstW){
     if(w == 4.6 && en == -3 && dir == 0){
       paramList1.erase(paramList1.end() - 3);
@@ -85,6 +86,7 @@ int main (int argc, char ** argv) {
       //printVec(paramList2);
     }
   }
+  */
 
   ParallelMPI p(&argc, &argv);
   if(doConstW){

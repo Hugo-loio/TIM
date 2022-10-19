@@ -21,6 +21,10 @@ def plotDOS(name, label, ax, detail):
 def plot(name, fileNames, labels, detail = True, show = True):
     fig, ax = plt.subplots()
 
+    colormap = plt.cm.turbo
+    colors = [colormap(i) for i in np.linspace(0, 1, len(fileNames))]
+    ax.set_prop_cycle('color', colors)
+
     for i in range(0, len(fileNames)):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
@@ -35,6 +39,10 @@ def plot(name, fileNames, labels, detail = True, show = True):
 
 def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
     fig, ax = plt.subplots()
+
+    colormap = plt.cm.turbo
+    colors = [colormap(i) for i in np.linspace(0, 1, len(fileNames))]
+    ax.set_prop_cycle('color', colors)
 
     for i in range(0, len(fileNames)):
         plotDOS(fileNames[i], labels[i], ax, detail)
@@ -88,19 +96,19 @@ labels = ["W = " + weight[i] for i in range(len(weight))]
 #plot("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1", names, labels, False, False)
 #plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu2048_nR1_zoom", names, labels, False, False)
 
-weight = ["2", "2.4", "2.5", "2.6", "2.8", "3", "3.2", "3.4", "3.6", "4", "9"]
+weight = ["2", "2.5", "2.6", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
 
-#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
 
 intra = ["0.5","0.9", "1", "1.1", "2"]
 names = ["dosBBH3D_L80_intra" + i + "_w0_nMu4096_nR1" for i in intra]
-labels = ["$\gamma$ " + i for i in intra]
+labels = ["$\gamma$ = " + i for i in intra]
 
-plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
+#plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
+#plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
 
 '''
 size = ["10", "20","30"]

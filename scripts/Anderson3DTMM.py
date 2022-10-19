@@ -13,7 +13,7 @@ def plot(name, fileName, show = True):
     print(nPointsW)
     fig, ax = plt.subplots()
 
-    colormap = plt.cm.nipy_spectral
+    colormap = plt.cm.turbo
     colors = [colormap(i) for i in np.linspace(0, 1, nPointsW)]
     ax.set_prop_cycle('color', colors)
 

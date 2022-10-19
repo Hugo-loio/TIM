@@ -9,7 +9,7 @@ def plotCurve(ax, x, y, label, errors):
     if(errors):
         ax.errorbar(x, np.average(y, axis=0), label = label, yerr = np.std(y, axis = 0)/np.sqrt(len(y)) , capsize = 5, linestyle='-', linewidth = 0.5)
     else:
-        ax.plot(x, np.average(y, axis=0), label = label, linestyle='-', linewidth = 0.5)
+        ax.plot(x, np.average(y, axis=0), label = label, linestyle='-')
 
 def fitFunc(x, a, b):
     return b*(1/x)**a
@@ -115,20 +115,22 @@ specs = {
         'fractalSizes' : [100,120,140,160,180,200,220,260],
         'lsrSizes' : [260],
         'lsrNStates' : [50,30,10],
-        'enGapSizes' : [260]
+        'enGapSizes' : [260],
+        'phases' : 0
         }
 
 plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
 
 specs = {
         'nStSamp' : 5,
-        'iprSizes' : [12, 14, 16],
-        'iprNStates' : [50,10],
-        'fractalNStates' : [50,40,30,20,10],
-        'fractalSizes' : [4,6,8,10,12,14,16],
-        'lsrSizes' : [12, 14, 16],
-        'lsrNStates' : [50,10],
-        'enGapSizes' : [12, 14, 16]
+        'iprSizes' : [20],
+        'iprNStates' : [50, 30, 10],
+        'fractalNStates' : [50,30,10],
+        'fractalSizes' : [10,12,14,16,18,20],
+        'lsrSizes' : [20],
+        'lsrNStates' : [50, 30,10],
+        'enGapSizes' : [20],
+        'phases' : 1
         }
 
 #plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs)
