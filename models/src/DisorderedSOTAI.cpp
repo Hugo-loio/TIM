@@ -183,19 +183,21 @@ double DisorderedSOTAI::getBoundPolarization(int dir){
 
 
 void DisorderedSOTAI::test(char * argv0){
-  int bC[2] = {2,2};
+  int bC[2] = {2,0};
   int order[2] = {0,1};
+  int lVec[2] = {2, 10};
 
   bool layerDir[2] = {true, true};
   setLayers(layerDir);
   ham->setBC(bC);
   ham->setSparse(false);
   ham->setOrder(order);
+  ham->setSize(lVec);
+  generateDisorder();
 
-  vec eigVal;
-
-  eig_sym(eigVal, ham->H(NULL));
-  cout << "Min: " <<  eigVal(0) << ", max: "  << eigVal(size(eigVal)[0] - 1) << endl;
+  for(int i = 0; i < lVec[1] - 1; i++){
+    cout << ham->blockH(i, i + 1) << endl;
+  }
 }
 
 void DisorderedSOTAI::setLayers(bool * layerDir){

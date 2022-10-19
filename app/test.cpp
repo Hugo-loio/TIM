@@ -33,8 +33,9 @@ int main (int argc, char ** argv) {
 
   sotai.setW(3);
   sotai.generateDisorder();
-  //cout << "w = 3" << endl;
-  //cout << sotai.getTMM(10, 0, 8)[0] << endl;
+  cout << "w = 3" << endl;
+  cout << sotai.getTMM(10, 0, 2, 1)[0] << endl;
+  //sotai.test(argv[0]);
 
   DisorderedBBH3D bbh3d(1.1);
   int l2[3] = {4,4,4};
@@ -48,7 +49,7 @@ int main (int argc, char ** argv) {
 
   Anderson3D and3d(1);
   and3d.setW(9);
-  cout << and3d.getTMM(10, 0, 6)[0] << endl;
+  //cout << and3d.getTMM(10, 0, 6)[0] << endl;
   //and3d.test();
   //int (*func)(int, int) = &sum<int>;
 

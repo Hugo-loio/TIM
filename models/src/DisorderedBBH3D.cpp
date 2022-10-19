@@ -284,7 +284,7 @@ vector<double> DisorderedBBH3D::getTMM(int qrIt, double en, int m, int dir){
   else{
     res = loc->tmmSpecialReal2(3, qrIt, en);
   }
-  res[0] /= (double)(m*m);
+  res[0] /= (double)m;
 
   return res;
 }

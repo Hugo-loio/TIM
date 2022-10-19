@@ -628,11 +628,11 @@ vector<double> LocalizationProps::tmmSpecialReal3(int nLayers, int qrIt, double 
       }
     }
     e = i % nLayers;
-    t.submat(0, 0, size -1, size -1) = enMat - real(ham->blockH(e,e,k));
-    tAux = updateT<mat>(t, tAux, size);
     if(e == 0){
       ham->generateDisorder();
     }
+    t.submat(0, 0, size -1, size -1) = enMat - real(ham->blockH(e,e,k));
+    tAux = updateT<mat>(t, tAux, size);
   }
 
 

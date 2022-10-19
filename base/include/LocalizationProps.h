@@ -16,7 +16,7 @@ class LocalizationProps{
     double lsr(int nStates, double en, double * k = NULL);
     //Energy gap
     double gap(double en = 0, double * k = NULL);
-    //Transfer Matrix Method, localization length + error
+    //Transfer Matrix Method, localization length + relative error
     vector<double> tmm(int nLayers, int qrIt, double en, double * k = NULL);
     vector<double> tmmSpecial(int nLayers, int qrIt, double en, double * k = NULL);
     vector<double> tmmSpecial2(int nLayers, int qrIt, double en, double * k = NULL);
