@@ -43,7 +43,10 @@ for i in range(0, len(namesPol)):
     plotPol()
 
 ax.set(xlabel = r'$W$')
-ax.legend(fontsize = 8)
+ax.margins(x = 0)
+ax.set_ylim(-0.04, 1.15)
+hp.sotaiPhases(ax)
+ax.legend(fontsize = 6, bbox_to_anchor=(0.66,0.8))
 
 fig.savefig(hp.plot_dir() + plot_name + ".png", dpi = 300)
 fig.savefig(hp.plot_dir() + plot_name + ".eps")

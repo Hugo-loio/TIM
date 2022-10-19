@@ -45,3 +45,20 @@ def writeToFile(fname, data):
 
 def plot_dir():
     return os.path.dirname(os.path.realpath(__file__)) + "/plots/"
+
+def sotaiPhases(ax, textPos=0):
+    ymin, ymax = ax.get_ylim()
+    xmin, xmax = ax.get_xlim()
+    ax.axvline(2.1, color='black', linestyle='dashed', linewidth=0.8)
+    ax.axvline(3, color='black', linestyle='dashed', linewidth=0.8)
+    ax.axvline(3.5, color='black', linestyle='dashed', linewidth=0.8)
+    ax.axvline(6, color='black', linestyle='dashed', linewidth=0.8)
+    if(textPos == 0):
+        textPos = 0.9*ymax
+    else:
+        textPos *= ymax
+    ax.text((xmin + 2.1)/2, textPos, r'I', ha = 'center', fontsize=8)
+    ax.text((2.1 + 3)/2, textPos, r'II', ha = 'center', fontsize=8)
+    ax.text((3 + 3.5)/2, textPos, r'III', ha = 'center', fontsize=8)
+    ax.text((3.5 + 6)/2, textPos, r'IV', ha = 'center', fontsize=8)
+    ax.text((6 + xmax)/2, textPos, r'V', ha = 'center', fontsize=8)
