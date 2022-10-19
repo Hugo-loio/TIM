@@ -27,10 +27,13 @@ void fractal(double * res, double * params){
 
 
 int main (int argc, char ** argv) {
-  int sampMult = 200;
+  int sampMult = 50;
   int version = 0;
   if(argc > 1){
     w = stod(argv[1]);
+    if(argc > 2){
+      version = stoi(argv[1]);
+    }
   }
 
   vector<vector<double>> paramList;
