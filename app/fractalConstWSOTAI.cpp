@@ -39,12 +39,14 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList;
   int nPointsE = 20;
   int nPointsL = 20;
-  for(int i = 11; i <= nPointsL; i++){
+  for(int i = 0; i <= nPointsL; i++){
     for(int e = 0; e <= nPointsE; e++){
       vector<double> param; 
-      param.push_back(40 + 20*i);
-      param.push_back(-3 + 3*(double)e/(double)nPointsE);
-      paramList.push_back(param);
+      if((160 + 4*i) % 20 != 0){
+	param.push_back(160 + 4*i);
+	param.push_back(-3 + 3*(double)e/(double)nPointsE);
+	paramList.push_back(param);
+      }
     }
   }
 

@@ -50,7 +50,7 @@ def plot(name, fileNames, labels, sizes, show = True):
 
 
 weights = ["3.2", "4.6"]
-sizes = [40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240]
+sizes = [100, 120, 140, 160, 180, 200, 220, 240]
 names = ["fractalSOTAI_w" + w + "_m1.1" for w in weights]
 labels = ["W = " + w for w in weights]
 plot("FractalConstWSOTAI", names, labels, sizes, False)
