@@ -53,4 +53,11 @@ weights = ["3.2", "4.6"]
 sizes = [100, 120, 140, 160, 180, 200, 220, 240]
 names = ["fractalSOTAI_w" + w + "_m1.1" for w in weights]
 labels = ["W = " + w for w in weights]
-plot("FractalConstWSOTAI", names, labels, sizes, False)
+#plot("FractalConstWSOTAI", names, labels, sizes, False)
+
+weights = ["3.4", "5"]
+sizes = [4, 6, 8, 10, 12, 14, 16]
+names = ["fractalBBH3D_w" + w + "_m1.1" for w in weights]
+labels = ["W = " + w for w in weights]
+plot("FractalConstWBBH3D", names, labels, sizes, False)
+
