@@ -39,6 +39,7 @@ def plotConstL(name, fileNames, labels, show = True):
     ax.set(xlabel = r'$W$', ylabel = r'$\Lambda$')
     plt.yscale('log')
     ax.margins(x = 0)
+    ax.set_xlim([0,9])
     hp.sotaiPhases(ax, 0.75)
     ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
 
@@ -53,13 +54,13 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmSOTAI_E" + val + "_w4.6_d1_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-plotConstW("tmmSOTAI_w4.6_d1_m1.1", constWNames, constWLabels, r'$L_x$', False)
+#plotConstW("tmmSOTAI_w4.6_d1_m1.1", constWNames, constWLabels, r'$L_x$', False)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmSOTAI_E" + val + "_w3.2_d1_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-plotConstW("tmmSOTAI_w3.2_d1_m1.1", constWNames, constWLabels, r'$L_x$', False)
+#plotConstW("tmmSOTAI_w3.2_d1_m1.1", constWNames, constWLabels, r'$L_x$', False)
 
 constLVals = ["20", "40", "60", "80", "100"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d1_m1.1" for val in constLVals]
@@ -85,13 +86,13 @@ constLLabels = [r'$L_y = $ ' + val for val in constLVals]
 
 #plotConstL("tmmSOTAI_E0_d0_m1.1", constLNames, constLLabels, False)
 
-constLVals = ["20"]
-constLNames = ["tmmSOTAI_E0_L" + val + "_d0_m1.1" for val in constLVals]
-constLLabels = [r'$L_y = $ ' + val for val in constLVals]
+constLVals = ["20", "40"]
+constLNames = ["tmmSOTAI_E0_L" + val + "_d1_m1.1" for val in constLVals]
+constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
-#plotConstL("tmmSOTAI_E0_d0_m1.1", constLNames, constLLabels, False)
+plotConstL("tmmSOTAI_E0_d1_m1.1", constLNames, constLLabels, False)
 
-constLVals = ["2","4", "6", "8", "10"]
+constLVals = ["4", "5"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1" for val in constLVals]
 constLLabels = [r'$L_{x/y} = $ ' + val for val in constLVals]
 
