@@ -64,6 +64,7 @@ int main (int argc, char ** argv) {
   }
 
   //Corrections for missing data
+  /*
   if(doConstW){
   }
   else{
@@ -79,6 +80,7 @@ int main (int argc, char ** argv) {
       //printVec(paramList2);
     }
   }
+  */
 
 
   ParallelMPI p(&argc, &argv);

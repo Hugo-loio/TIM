@@ -66,27 +66,15 @@ int main (int argc, char ** argv) {
   }
 
   //Corrections for missing data
-  /*
   if(doConstW){
-    if(w == 4.6 && en == -3 && dir == 0){
-      paramList1.erase(paramList1.end() - 3);
-      paramList1.erase(paramList1.end() - 1);
-      paramList1.erase(paramList1.begin(), paramList1.end() - 2);
+    if(w == 4.6 && en == 0 && dir == 1){
+      paramList1.erase(paramList1.end() - 8, paramList1.end() - 5);
+      paramList1.erase(paramList1.begin(), paramList1.end() - 6);
       //printVec(paramList1);
     }
   }
   else{
-    if(l == 100 && dir == 1){
-      paramList2.erase(paramList2.begin() , paramList2.begin() + 69);
-      //printVec(paramList2);
-    }
-    if(l == 120 && dir == 1){
-      paramList2.erase(paramList2.begin() + 47 , paramList2.begin() + 53);
-      paramList2.erase(paramList2.begin(), paramList2.begin() + 46);
-      //printVec(paramList2);
-    }
   }
-  */
 
   ParallelMPI p(&argc, &argv);
   if(doConstW){
