@@ -24,11 +24,20 @@ def plot(title, fileName, specs, errors = False, show = False):
             dataPlot = data[:,np.where(data[0] == i)[0]] 
             for e in specs['iprNStates']:
                 start = int(2 + 2*(specs['nStSamp'] - e/10))
-                label = r'$L = $ ' + str(i) + r' $ n = $ ' + str(e)
+                if(len(specs['iprSizes']) == 1):
+                    label = r'$ n = $ ' + str(e)
+                else:
+                    label = r'$L = $ ' + str(i) + r' $ n = $ ' + str(e)
                 plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
 
         ax.set(xlabel = r'$W$', ylabel = r'IPR')
-        ax.legend(fontsize = 6)
+        ax.margins(x = 0)
+        if(specs['phases'] == 0):
+            hp.sotaiPhases(ax)
+            #ax.legend(fontsize = 6)
+            ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.4,0.7))
+        else:
+            ax.legend(fontsize = 6)
 
         fig.savefig(hp.plot_dir() + title + "IPR.png", dpi = 300)
         fig.savefig(hp.plot_dir() + title + "IPR.eps")
@@ -42,12 +51,18 @@ def plot(title, fileName, specs, errors = False, show = False):
             dataPlot = data[:,np.where(data[0] == i)[0]] 
             for e in specs['lsrNStates']:
                 start = int(3 + 2*(specs['nStSamp'] - e/10))
-                label = r'$L = $ ' + str(i) + r' $ n = $ ' + str(e)
+                if(len(specs['lsrSizes']) == 1):
+                    label = r'$ n = $ ' + str(e)
+                else:
+                    label = r'$L = $ ' + str(i) + r' $ n = $ ' + str(e)
                 plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
 
         ax.set(xlabel = r'$W$', ylabel = r'LSR')
         ax.axhline(y = 0.53, color = 'black', linestyle = '--', linewidth = 0.5)
         ax.axhline(y = 0.386, color = 'black', linestyle = '--', linewidth = 0.5)
+        ax.margins(x = 0)
+        if(specs['phases'] == 0):
+            hp.sotaiPhases(ax, 0.95)
         ax.legend(fontsize = 6)
 
         fig.savefig(hp.plot_dir() + title + "LSR.png", dpi = 300)
@@ -65,7 +80,11 @@ def plot(title, fileName, specs, errors = False, show = False):
             plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
 
         ax.set(xlabel = r'$W$', ylabel = r'Gap')
-        ax.legend(fontsize = 6)
+        ax.margins(x = 0)
+        if(len(specs['enGapSizes']) > 1): 
+            ax.legend(fontsize = 6)
+        if(specs['phases'] == 0):
+            hp.sotaiPhases(ax)
 
         fig.savefig(hp.plot_dir() + title + "Gap.png", dpi = 300)
         fig.savefig(hp.plot_dir() + title + "Gap.eps")
@@ -100,7 +119,12 @@ def plot(title, fileName, specs, errors = False, show = False):
             ax.plot(dataPlot[1][0:nPoints], d, linestyle = '-', label = "n = " + str(n))
 
         ax.set(xlabel = r'$W$', ylabel = r'$D_2$')
-        ax.legend(fontsize = 6)
+        ax.margins(x = 0)
+        if(specs['phases'] == 0):
+            hp.sotaiPhases(ax)
+            ax.legend(fontsize = 6, bbox_to_anchor=(0.71,0.8))
+        else:
+            ax.legend(fontsize = 6)
         fig.savefig(hp.plot_dir() + title + "Fractal.png", dpi = 300)
         fig.savefig(hp.plot_dir() + title + "Fractal.eps")
         if(show):

@@ -103,12 +103,33 @@ labels = ["W = " + weight[i] for i in range(len(weight))]
 #plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
 #plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
 
+weight = ["2.5", "2.55", "2.6"]
+names = ["dosBBH3D_L80_w" + weight[i] + "_nMu8192_nR1_intra1.1" for i in range(len(weight))]
+labels = ["W = " + weight[i] for i in range(len(weight))]
+
+plot("ConstWDosBBH3D_intra1.1_L80_nMu8192_nR1", names, labels, False, False)
+plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu8192_nR1_zoom", names, labels, False, False)
+
 intra = ["0.5","0.9", "1", "1.1", "2"]
 names = ["dosBBH3D_L80_intra" + i + "_w0_nMu4096_nR1" for i in intra]
 labels = ["$\gamma$ = " + i for i in intra]
 
-plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
+#plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
+#plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
+
+intra = ["0.5","0.9", "1", "1.1", "2"]
+names = ["dosBBH3D_L80_intra" + i + "_w0_nMu2048_nR1" for i in intra]
+labels = ["$\gamma$ = " + i for i in intra]
+
+#plot("CleanDosBBH3D_L80_nMu2048_nR1", names, labels, False, False)
+#plotZoom("CleanDosBBH3D_L80_nMu2048_nR1_zoom", names, labels, False, False, 0.03)
+
+intra = ["0.5","0.9", "1", "1.1", "2"]
+names = ["dosBBH3D_L80_intra" + i + "_w0_nMu1024_nR1" for i in intra]
+labels = ["$\gamma$ = " + i for i in intra]
+
+#plot("CleanDosBBH3D_L80_nMu1024_nR1", names, labels, False, False)
+#plotZoom("CleanDosBBH3D_L80_nMu1024_nR1_zoom", names, labels, False, False, 0.03)
 
 '''
 size = ["10", "20","30"]

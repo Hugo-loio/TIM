@@ -24,7 +24,10 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$W$', ylabel = r'$\rho(0)$')
-    ax.legend(loc = 'upper left', fontsize = 7)
+    ax.margins(x = 0)
+    if(len(fileNames) > 1):
+        ax.legend(loc = 'upper left', fontsize = 7)
+    #hp.sotaiPhases(ax)
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -46,4 +49,4 @@ rand = ["1", "1"]
 names = ["dosBBH3D_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = ["N = " + mu[i]  for i in range(len(size))]
 
-plot("DOSE0BBH3D_intra1.1", names, labels, False, False)
+#plot("DOSE0BBH3D_intra1.1", names, labels, False, False)

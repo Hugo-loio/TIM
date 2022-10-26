@@ -27,7 +27,11 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plotQuad(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$W$', ylabel = r'$Q$')
-    ax.legend()
+    ymin, ymax = ax.get_ylim()
+    ax.margins(x = 0)
+    ax.set_ylim([ymin, ymax*1.2])
+    hp.totaiPhases(ax)
+    ax.legend(bbox_to_anchor=(0.55,0.4))
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -43,19 +47,22 @@ labelsQuad = ["L = 5", "L = 7", "L = 10", "L = 12", "L = 13", "L = 15", "L = 17"
 #plot("PhaseDiagramBBH3D_intra1.1", namesQuad[2:], labelsQuad[2:], True, False)
 #plot("PhaseDiagramBBH3D_intra1.1_Q", namesQuad[2:], labelsQuad[2:], False, False)
 
-plot("PhaseDiagramBBH3Dpretty", namesQuad[7:], labelsQuad[7:], False, False)
+sizesQuad = ["18", "20", "22", "24"]
+namesQuad = ["phaseDiagramBBH3Dquad_L" + name + "_intra1.1" for name in sizesQuad]
+labelsQuad = ["L = " + name for name in sizesQuad]
+plot("PhaseDiagramBBH3Dpretty", namesQuad, labelsQuad, False, False)
 
 namesQuad2 = ["phaseDiagramBBH3Dquad_L7_intra0.9"]
 labelsQuad2 = ["L=7"]
 
-plot("PhaseDiagramBBH3D_intra0.9", namesQuad2, labelsQuad2, True, False)
+#plot("PhaseDiagramBBH3D_intra0.9", namesQuad2, labelsQuad2, True, False)
 
 namesQuad3 = ["phaseDiagramBBH3Dquad_L7_intra0.5"]
 labelsQuad3 = ["L=7"]
 
-plot("PhaseDiagramBBH3D_intra0.5", namesQuad3, labelsQuad3, True, False)
+#plot("PhaseDiagramBBH3D_intra0.5", namesQuad3, labelsQuad3, True, False)
 
 namesQuad4 =["", "_twistPi"]
 namesQuad4 =["phaseDiagramBBH3Dquad_L15_intra1.1" + name for name in namesQuad4]
 labelsQuad4 =[r'$L = 15, \theta = 0$', r'$L = 15, \theta = \pi$']
-plot("PhaseDiagramBBH3D_L15_intra1.1_twist", namesQuad4, labelsQuad4, False, False)
+#plot("PhaseDiagramBBH3D_L15_intra1.1_twist", namesQuad4, labelsQuad4, False, False)

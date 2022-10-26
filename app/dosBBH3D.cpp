@@ -7,7 +7,7 @@
 double intra = 1.1;
 int l[3] = {80,80,80};
 double w = 2;
-int nMoments = 4096;
+int nMoments = 8192;
 int nRandVecs = 1;
 int nPoints = 2000;
 
@@ -50,8 +50,8 @@ void dosClean(double * res, double * params){
 
 int main (int argc, char ** argv) {
   if(argc > 1){
-    //w = stod(argv[1]);
-    intra = stod(argv[1]);
+    w = stod(argv[1]);
+    //intra = stod(argv[1]);
   }
   int sampMult = 1;
 
@@ -73,10 +73,10 @@ int main (int argc, char ** argv) {
   if(argc > 1){
     p.setSamples(1);
     p.setParamList(paramList1);
-    //p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_intra1.1");
-    //p.setJob(dosConstW, 2*(nPoints + 1));
-    p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_intra" + rmTrailZeros(to_string(intra)) + "_w0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs));
-    p.setJob(dosClean, 2*(nPoints + 1));
+    p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_intra1.1");
+    p.setJob(dosConstW, 2*(nPoints + 1));
+    //p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_intra" + rmTrailZeros(to_string(intra)) + "_w0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs));
+    //p.setJob(dosClean, 2*(nPoints + 1));
     p.run();
   }
   else{

@@ -30,7 +30,7 @@ def plotConstW(name, fileNames, labels, xlabel, show = True):
         plt.show()
     plt.close()
 
-def plotConstL(name, fileNames, labels, show = True):
+def plotConstL(name, fileNames, labels, show = True, model = 0):
     fig, ax = plt.subplots()
 
     for i in range(0, len(fileNames)):
@@ -40,9 +40,16 @@ def plotConstL(name, fileNames, labels, show = True):
     plt.yscale('log')
     ax.margins(x = 0)
     ax.set_xlim([0,9])
-    #hp.sotaiPhases(ax, 0.75)
-    #ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
-    ax.legend(fontsize = 6, ncol = 2)
+    if(model == 1):
+        hp.sotaiPhases(ax, 0.75)
+        ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
+    elif(model == 2):
+        hp.totaiPhases(ax, 0.9)
+        ymin, ymax = ax.get_ylim()
+        ax.set_ylim([ymin, ymax*1.3])
+        ax.legend(fontsize = 6, ncol = 2, bbox_to_anchor=(0.4,0.69))
+    else:
+        ax.legend(fontsize = 6, ncol = 2)
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -81,6 +88,18 @@ constWLabels= ["E = " + val for val in constWVals]
 
 #plotConstW("tmmSOTAI_w3.2_d0_m1.1", constWNames, constWLabels, r'$L_y$', False)
 
+constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
+constWNames = ["tmmBBH3D_E" + val + "_w3.4_d2_m1.1" for val in constWVals]
+constWLabels= ["E = " + val for val in constWVals]
+
+plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
+
+constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
+constWNames = ["tmmBBH3D_E" + val + "_w5_d2_m1.1" for val in constWVals]
+constWLabels= ["E = " + val for val in constWVals]
+
+plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
+
 constLVals = ["20"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d0_m1.1" for val in constLVals]
 constLLabels = [r'$L_y = $ ' + val for val in constLVals]
@@ -91,10 +110,16 @@ constLVals = ["20", "40", "60", "80", "100"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d1_m1.1" for val in constLVals]
 constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
-#plotConstL("tmmSOTAI_E0_d1_m1.1", constLNames, constLLabels, False)
+#plotConstL("tmmSOTAI_E0_d1_m1.1", constLNames, constLLabels, False, 1)
 
 constLVals = ["2", "4", "5", "6", "8", "10"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1" for val in constLVals]
 constLLabels = [r'$L_{x/y} = $ ' + val for val in constLVals]
 
-plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False)
+#plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
+
+dVals = ["0", "1", "2"]
+constLNames = ["tmmBBH3D_E0_L4_d" + val + "_m1.1" for val in dVals]
+constLLabels = ["x", "y", "z"]
+
+#plotConstL("tmmBBH3D_E0_dComp_m1.1", constLNames, constLLabels, False)
