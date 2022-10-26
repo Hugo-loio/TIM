@@ -41,7 +41,8 @@ def plotConstL(name, fileNames, labels, show = True):
     ax.margins(x = 0)
     ax.set_xlim([0,9])
     #hp.sotaiPhases(ax, 0.75)
-    ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
+    #ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
+    ax.legend(fontsize = 6, ncol = 2)
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -86,13 +87,13 @@ constLLabels = [r'$L_y = $ ' + val for val in constLVals]
 
 #plotConstL("tmmSOTAI_E0_d0_m1.1", constLNames, constLLabels, False)
 
-constLVals = ["20", "40"]
+constLVals = ["20", "40", "60", "80", "100"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d1_m1.1" for val in constLVals]
 constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
 #plotConstL("tmmSOTAI_E0_d1_m1.1", constLNames, constLLabels, False)
 
-constLVals = ["4", "5", "6"]
+constLVals = ["2", "4", "5", "6", "8", "10"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1" for val in constLVals]
 constLLabels = [r'$L_{x/y} = $ ' + val for val in constLVals]
 

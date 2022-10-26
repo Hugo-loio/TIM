@@ -13,7 +13,7 @@ int dir = 2;
 void tmmConstW(double * res, double * params){
   DisorderedBBH3D bbh3d(m);
   bbh3d.setW(w);
-  vector<double> tmm = bbh3d.getTMM(qrIt, en, params[0], dir);
+  vector<double> tmm = bbh3d.getTMM(qrIt, params[0], params[1], dir);
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
@@ -32,10 +32,7 @@ int main (int argc, char ** argv) {
     if(stoi(argv[1]) == 0){
       w = stod(argv[2]);
       if(argc > 3){
-	en = stod(argv[3]);
-      }
-      if(argc > 4){
-	dir = stod(argv[4]);
+	dir = stod(argv[3]);
       }
     }
     else if(stoi(argv[1]) == 1){
@@ -48,11 +45,14 @@ int main (int argc, char ** argv) {
   }
 
   vector<vector<double>> paramList1;
-  int nPoints = 10;
-  for(int i = 0; i <= nPoints; i++){
-    vector<double> param; 
-    param.push_back(2 + 2*i);
-    paramList1.push_back(param);
+  int nPoints = 4;
+  for(int e = 0; e <= 6; e++){
+    for(int i = 0; i <= nPoints; i++){
+      vector<double> param; 
+      param.push_back(-3 + 0.5*e);
+      param.push_back(2 + 2*i);
+      paramList1.push_back(param);
+    }
   }
 
   int nPoints2 = 150;
@@ -83,7 +83,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
-    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_E" + "_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
     p.setJob(tmmConstW, 2);
   }
   else{
