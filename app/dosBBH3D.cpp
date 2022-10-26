@@ -39,7 +39,7 @@ void dosClean(double * res, double * params){
   bbh3d.setSize(l);
   bbh3d.setW(0);
   bbh3d.generateDisorder();
-  double eMax = 5;
+  double eMax = intra + 5;
   double deltaE = 2*eMax/(double)nPoints;
 
   for(int i = 0; i <= nPoints; i++){
@@ -76,7 +76,7 @@ int main (int argc, char ** argv) {
     //p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs) + "_intra1.1");
     //p.setJob(dosConstW, 2*(nPoints + 1));
     p.setFile(argv[0], "dosBBH3D_L" + to_string(l[0]) + "_intra" + rmTrailZeros(to_string(intra)) + "_w0_nMu" + to_string(nMoments) + "_nR" + to_string(nRandVecs));
-    p.setJob(dosConstW, 2*(nPoints + 1));
+    p.setJob(dosClean, 2*(nPoints + 1));
     p.run();
   }
   else{

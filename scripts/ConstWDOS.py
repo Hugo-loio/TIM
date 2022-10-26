@@ -51,7 +51,7 @@ def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
     ax.legend(loc = 'upper right', fontsize = 7)
     plt.xlim([-0.5,0.5])
     if(ylim != 0):
-        plt.ylim([0, ylim])
+        plt.ylim([-0.05*ylim, ylim])
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
@@ -107,8 +107,8 @@ intra = ["0.5","0.9", "1", "1.1", "2"]
 names = ["dosBBH3D_L80_intra" + i + "_w0_nMu4096_nR1" for i in intra]
 labels = ["$\gamma$ = " + i for i in intra]
 
-#plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
-#plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
+plot("CleanDosBBH3D_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("CleanDosBBH3D_L80_nMu4096_nR1_zoom", names, labels, False, False, 0.03)
 
 '''
 size = ["10", "20","30"]
