@@ -64,25 +64,23 @@ int main (int argc, char ** argv) {
   }
 
   //Corrections for missing data
-  /*
   if(doConstW){
   }
   else{
-    if(l == 12 && dir == 2){
-      paramList2.erase(paramList2.begin() + 55, paramList2.begin() + 57);
-      paramList2.erase(paramList2.begin() + 30, paramList2.begin() + 54);
+    if(l == 10 && dir == 2){
+      paramList2.erase(paramList2.begin() + 30, paramList2.begin() + 95);
       paramList2.erase(paramList2.begin(), paramList2.begin() + 28);
-      //printVec(paramList2);
-    }
-    if(l == 14 && dir == 2){
-      paramList2.erase(paramList2.begin() + 47, paramList2.begin() + 51);
-      paramList2.erase(paramList2.begin() + 31, paramList2.begin() + 46);
-      //printVec(paramList2);
+      paramList2.erase(paramList2.begin() + 3);
+      paramList2.erase(paramList2.begin() + 4, paramList2.begin() + 6);
+      paramList2.erase(paramList2.begin() + 5, paramList2.begin() + 7);
+      paramList2.erase(paramList2.begin() + 7);
+      paramList2.erase(paramList2.begin() + 11);
+      printVec(paramList2);
     }
   }
-  */
 
 
+  /*
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
@@ -95,4 +93,5 @@ int main (int argc, char ** argv) {
     p.setJob(tmmConstL, 2);
   }
   p.run();
+  */
 }
