@@ -75,12 +75,11 @@ int main (int argc, char ** argv) {
       paramList2.erase(paramList2.begin() + 5, paramList2.begin() + 7);
       paramList2.erase(paramList2.begin() + 7);
       paramList2.erase(paramList2.begin() + 11);
-      printVec(paramList2);
+      //printVec(paramList2);
     }
   }
 
 
-  /*
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
@@ -93,5 +92,4 @@ int main (int argc, char ** argv) {
     p.setJob(tmmConstL, 2);
   }
   p.run();
-  */
 }
