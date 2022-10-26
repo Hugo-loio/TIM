@@ -83,7 +83,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
-    p.setFile(argv[0], "tmmBBH3D_E" + "_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
     p.setJob(tmmConstW, 2);
   }
   else{
