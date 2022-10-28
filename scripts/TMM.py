@@ -62,7 +62,7 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmSOTAI_E" + val + "_w4.6_d1_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-#plotConstW("tmmSOTAI_w4.6_d1_m1.1", constWNames, constWLabels, r'$L_x$', False)
+plotConstW("tmmSOTAI_w4.6_d1_m1.1", constWNames, constWLabels, r'$L_x$', False)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmSOTAI_E" + val + "_w3.2_d1_m1.1" for val in constWVals]
@@ -92,13 +92,13 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w3.4_d2_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
+#plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w5_d2_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
+#plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
 
 constLVals = ["20"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d0_m1.1" for val in constLVals]

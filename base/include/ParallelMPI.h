@@ -11,7 +11,7 @@ class ParallelMPI{
     ParallelMPI(int * argc, char *** argv);
     ~ParallelMPI();
 
-    void setFile(char * argv0, string fileName, int version = 0); 
+    void setFile(char * argv0, string fileName, int version = 0, int part = 0); 
     void setSamples(int nSamples);
     void setParamList(double ** paramList, int paramSize, int nParams);
     void setParamList(vector<vector<double>> paramList);

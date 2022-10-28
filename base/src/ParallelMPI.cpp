@@ -21,7 +21,10 @@ void ParallelMPI::setSamples(int nSamples){
   this->nSamples = nSamples;
 }
 
-void ParallelMPI::setFile(char * argv0, string fileName, int version){
+void ParallelMPI::setFile(char * argv0, string fileName, int version, int part){
+  if(part != 0){
+    fileName += "_p" + to_string(part);
+  }
   if(version != 0){
     fileName += "(" + to_string(version) + ")";
   }

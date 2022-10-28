@@ -157,5 +157,5 @@ specs = {
         'phases' : 1
         }
 
-#plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs)
+plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs)
 #plot("LocBBH3D_intra1.1", "locBBH3D_intra1.1", specs)

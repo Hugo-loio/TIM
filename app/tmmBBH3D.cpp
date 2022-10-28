@@ -28,6 +28,9 @@ void tmmConstL(double * res, double * params){
 
 int main (int argc, char ** argv) {
   bool doConstW = true;
+  bool doCross = false;
+  int part = 0;
+  int nParts = 1;
   if(argc > 2){
     if(stoi(argv[1]) == 0){
       w = stod(argv[2]);
@@ -41,6 +44,18 @@ int main (int argc, char ** argv) {
       if(argc > 3){
 	dir = stod(argv[3]);
       }
+    }
+    else if(stoi(argv[1]) == 2){
+      l = stoi(argv[2]);
+      doConstW = false;
+      doCross = true;
+      if(argc > 3){
+	dir = stod(argv[3]);
+      }
+    }
+    if(argc > 5){
+      nParts = stod(argv[4]);
+      part = stod(argv[5]);
     }
   }
 
@@ -63,19 +78,39 @@ int main (int argc, char ** argv) {
     paramList2.push_back(param);
   }
 
-  //Corrections for missing data
-  if(doConstW){
+  int nPoints3 = 47;
+  vector<vector<double>> paramList3;
+  double wMin = 3.6;
+  double wMax = 4.2;
+  for(int i = 0; i <= nPoints3; i++){
+    vector<double> param; 
+    param.push_back(wMin + (wMax - wMin)*(double)i/(double)nPoints3);
+    paramList3.push_back(param);
   }
-  else{
-    if(l == 10 && dir == 2){
-      paramList2.erase(paramList2.begin() + 30, paramList2.begin() + 95);
-      paramList2.erase(paramList2.begin(), paramList2.begin() + 28);
-      paramList2.erase(paramList2.begin() + 3);
-      paramList2.erase(paramList2.begin() + 4, paramList2.begin() + 6);
-      paramList2.erase(paramList2.begin() + 5, paramList2.begin() + 7);
-      paramList2.erase(paramList2.begin() + 7);
-      paramList2.erase(paramList2.begin() + 11);
-      //printVec(paramList2);
+
+  //Corrections for missing data
+  /*
+     if(doConstW){
+     }
+     else{
+     if(l == 10 && dir == 2){
+     paramList2.erase(paramList2.begin() + 30, paramList2.begin() + 95);
+  //printVec(paramList2);
+  }
+  }
+  */
+
+  vector<vector<vector<double>>> paramLists;
+  paramLists.push_back(paramList1);
+  paramLists.push_back(paramList2);
+  paramLists.push_back(paramList3);
+
+  if(part != 0){
+    for(int i = 0; i < paramLists.size(); i++){
+      int n = paramLists[i].size();
+      int begin = ((double)(part-1)/(double)nParts)*n;
+      int end = ((double)part/(double)nParts)*n;
+      paramLists[i] = vector<vector<double>>(&paramLists[i][begin], &paramLists[i][end]);
     }
   }
 
@@ -83,12 +118,18 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
-    p.setFile(argv[0], "tmmBBH3D_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1");
+    p.setFile(argv[0], "tmmBBH3D_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1", 0, part);
     p.setJob(tmmConstW, 2);
   }
   else{
-    p.setParamList(paramList2);
-    p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1");
+    if(doCross){
+      p.setParamList(paramList3);
+      p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1_cross", 0, part);
+    }
+    else{
+      p.setParamList(paramList2);
+      p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1", 0, part);
+    }
     p.setJob(tmmConstL, 2);
   }
   p.run();
