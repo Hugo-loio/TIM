@@ -5,16 +5,20 @@ import numpy as np
 
 plt.style.use('science')
 
-def plotTMM(name, label, ax):
+def plotTMM(name, label, ax, mode = 0):
     data = hp.readfile(name + ".dat")
     data = data[:, data[0,:].argsort()]
 
-    ax.plot(data[0], data[1], label = label, linestyle='-')
-def plotConstW(name, fileNames, labels, xlabel, show = True):
+    if(mode == 0):
+        ax.plot(data[0], data[1], label = label, linestyle='-')
+    elif(mode == 1):
+        ax.plot(data[0][1:], data[1][1:], label = label, linestyle='-', marker='.')
+
+def plotConstW(name, fileNames, labels, xlabel, show = True, mode = 0):
     fig, ax = plt.subplots()
 
     for i in range(0, len(fileNames)):
-        plotTMM(fileNames[i], labels[i], ax)
+        plotTMM(fileNames[i], labels[i], ax, mode)
 
     ax.set(xlabel = xlabel, ylabel = r'$\Lambda$')
     plt.xscale('log')
@@ -92,13 +96,13 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w3.4_d2_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-#plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
+plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False, 1)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w5_d2_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-#plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False)
+plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False, 1)
 
 constLVals = ["20"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d0_m1.1" for val in constLVals]

@@ -153,7 +153,7 @@ specs = {
         'fractalSizes' : [10,12,14,16,18,20],
         'lsrSizes' : [20],
         'lsrNStates' : [50, 30,10],
-        'enGapSizes' : [20],
+        'enGapSizes' : [6,8,10,12,14,16,18,20],
         'phases' : 1
         }
 

@@ -114,7 +114,6 @@ int main (int argc, char ** argv) {
     }
   }
 
-
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
