@@ -110,7 +110,6 @@ int main (int argc, char ** argv) {
     }
   }
 
-  /*
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
@@ -129,5 +128,4 @@ int main (int argc, char ** argv) {
     p.setJob(tmmConstL, 2);
   }
   p.run();
-  */
 }
