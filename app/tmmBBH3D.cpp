@@ -89,16 +89,12 @@ int main (int argc, char ** argv) {
   }
 
   //Corrections for missing data
-  /*
-     if(doConstW){
-     }
-     else{
-     if(l == 10 && dir == 2){
-     paramList2.erase(paramList2.begin() + 30, paramList2.begin() + 95);
-  //printVec(paramList2);
+  if(doCross){
+    if(l == 12 && dir == 2){
+      paramList3.erase(paramList3.begin() , paramList3.begin() + 20);
+      //printVec(paramList3);
+    }
   }
-  }
-  */
 
   vector<vector<vector<double>>> paramLists;
   paramLists.push_back(paramList1);
@@ -114,6 +110,7 @@ int main (int argc, char ** argv) {
     }
   }
 
+  /*
   ParallelMPI p(&argc, &argv);
   if(doConstW){
     p.setParamList(paramList1);
@@ -132,4 +129,5 @@ int main (int argc, char ** argv) {
     p.setJob(tmmConstL, 2);
   }
   p.run();
+  */
 }
