@@ -27,10 +27,27 @@ def plot(name):
     qerr = np.std(q, axis = 0)/np.sqrt(len(q))
     qerr = qerr[sort]
 
-    ax.errorbar(x, qavg, yerr = qerr, capsize = 5, linestyle='none', marker = '_')
+    #ax.errorbar(x, qavg, yerr = qerr, capsize = 4, linestyle='none', linewidth = 0.5, capthick = 0.5, marker = '_')
+    ax.errorbar(x, qavg, yerr = qerr, capsize = 4, linestyle='none', marker = '_')
 
     ax.set(xlabel = r'$\frac{1}{L}$', ylabel = r'$Q$')
 
+    nFitPoints = [5,10,len(x)]
+    bFit = []
+    for fitEnd in nFitPoints:
+        xfit = x[:fitEnd]
+        yfit = qavg[:fitEnd]
+        yfiterr = qerr[:fitEnd] 
+
+        popt, pcov = optimize.curve_fit(fitFunc, xfit, yfit, sigma = yfiterr, absolute_sigma = True)
+        xdata = np.linspace(0, x[fitEnd-1], 100)
+        ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), linewidth = 0.5)
+        bFit.append(popt[1])
+        
+    #print(np.average(bFit))
+    #print(bFit)
+
+    '''
     fitStart = 0
     xfit = x[fitStart:]
     yfit = qavg[fitStart:]
@@ -42,12 +59,17 @@ def plot(name):
 
     xdata = np.linspace(0, x[-1], 100)
     ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params, color = 'orange')
-    plt.legend(loc= 'upper right')
+    '''
 
+    #plt.legend(loc= 'upper right')
+    text = r'$ Q(0) = $'+ str(round(np.average(bFit), 2)) + r'$ \pm $' + str(round(np.std(bFit)/np.sqrt(len(bFit)),2))
+    xmax = ax.get_xlim()[1]
+    ymax = ax.get_ylim()[1]
+    ax.text(0.7*xmax, 0.9*ymax, text, ha = 'center')
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
     #plt.show()
-    plt.close()
+    #plt.close()
 
 plot("constantDisorderBBH3Dquad_intra1.1_w2.8")
 plot("constantDisorderBBH3Dquad_intra1.1_w3")

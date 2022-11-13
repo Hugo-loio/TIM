@@ -98,7 +98,6 @@ class BoundaryGreenH{
 Wilson o-- Hamiltonian
 DOS o-- Hamiltonian
 MultipoleOp o-- Hamiltonian
-LocalizationStats o--Hamiltonian
 OData o..Hamiltonian
 
 Hamiltonian <|-- TBCleanH

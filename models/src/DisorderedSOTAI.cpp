@@ -3,6 +3,7 @@
 #include "BoundaryGreenH.h"
 #include "Wilson.h"
 #include "OData.h"
+#include "LDOS.h"
 
 DisorderedSOTAI::DisorderedSOTAI(double m,double delta){
   model = new TBModel(2,4);
@@ -301,6 +302,23 @@ double DisorderedSOTAI::getDOS(double en, int nMoments, int nRandVecs, double eM
     updateDOS = false;
   }
   return dos->kpm(en, nMoments, nRandVecs);
+}
+
+double DisorderedSOTAI::getLDOS(int * n, double en, int nMoments, double eMax){
+  int order[2] = {0,1};
+  int bC[2] = {0,0};
+  bool layerDir[2] = {false,false};
+  setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+  int startIndex = 4*(ham->getSize()[0]*n[1] + n[0]);
+
+  LDOS ldos(ham, startIndex, startIndex + 4);
+  if(eMax != 0){
+    ldos.setKpmERange(-eMax, eMax);
+  }
+  return ldos.kpm(en, nMoments);
 }
 
 double DisorderedSOTAI::getEnGap(double en){

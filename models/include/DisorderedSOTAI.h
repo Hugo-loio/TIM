@@ -30,6 +30,7 @@ class DisorderedSOTAI{
     double getLSR(int nStates, double en = 0);
 
     double getDOS(double en, int nMoments, int nRandVecs, double eMax = 0);
+    double getLDOS(int * n, double en, int nMoments, double eMax = 0);
 
     void getSupercellWannierBands(char * argv0, string fileName, int nx, int ny, int dirWilson);
 
