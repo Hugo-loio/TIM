@@ -33,10 +33,10 @@ void ldos(double * res, double * params){
 
 int main (int argc, char ** argv) {
   int sampMult = 200;
-  if(argc > 2){
-    w = stod(argv[2]);
-    if(argc > 3){
-      l[0] = stoi(argv[3]);
+  if(argc > 1){
+    w = stod(argv[1]);
+    if(argc > 2){
+      l[0] = stoi(argv[2]);
       l[1] = l[0];
     }
   }
@@ -50,7 +50,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   //p.setSamples(sampMult);
   p.setParamList(paramList1);
-  p.setFile(argv[0], "ldosSOTAI_L" + to_string(l[0]) + "_E0_nMu" + to_string(nMoments) + "_m1.1");
+  p.setFile(argv[0], "ldosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_nMu" + to_string(nMoments) + "_m1.1");
   p.setJob(ldos, 3*l[0]*l[1]);
   p.run();
 }
