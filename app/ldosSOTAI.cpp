@@ -35,6 +35,10 @@ int main (int argc, char ** argv) {
   int sampMult = 200;
   if(argc > 2){
     w = stod(argv[2]);
+    if(argc > 3){
+      l[0] = stoi(argv[3]);
+      l[1] = l[0];
+    }
   }
 
   vector<vector<double>> paramList1;
