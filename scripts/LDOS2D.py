@@ -42,5 +42,8 @@ def ldos(fname, show: bool):
 weights = ['1', '2.6', '3.4']
 names = ['ldosSOTAI_L10_w' + w + '_E0_nMu1024_m1.1' for w in weights]
 
+weights = ['2.6', '3.4']
+names = ['ldosSOTAI_L40_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+
 for name in names:
     ldos(name + ".dat", False)

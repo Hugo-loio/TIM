@@ -62,7 +62,7 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList1;
   int nPoints = 6;
   for(int e = 0; e <= 6; e++){
-    for(int i = 5; i <= nPoints; i++){
+    for(int i = 0; i <= nPoints; i++){
       vector<double> param; 
       param.push_back(-3 + 0.5*e);
       param.push_back(2 + 2*i);

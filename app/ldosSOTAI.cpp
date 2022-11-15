@@ -7,7 +7,7 @@
 double m = 1.1;
 int l[2] = {10,10};
 double w = 3;
-int nMoments = 1024;
+int nMoments = 2048;
 double en = 0;
 
 void ldos(double * res, double * params){
