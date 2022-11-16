@@ -7,7 +7,7 @@
 double m = 1.1;
 int l[2] = {10,10};
 double w = 3;
-int nMoments = 2048;
+int nMoments = 4096;
 double en = 0;
 
 void ldos(double * res, double * params){
@@ -38,6 +38,9 @@ int main (int argc, char ** argv) {
     if(argc > 2){
       l[0] = stoi(argv[2]);
       l[1] = l[0];
+      if(argc > 3){
+	nMoments = stoi(argv[3]);
+      }
     }
   }
 

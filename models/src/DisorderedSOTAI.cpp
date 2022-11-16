@@ -308,11 +308,12 @@ double DisorderedSOTAI::getLDOS(int * n, double en, int nMoments, double eMax){
   int order[2] = {0,1};
   int bC[2] = {0,0};
   bool layerDir[2] = {false,false};
-  setLayers(layerDir);
+  //setLayers(layerDir);
   ham->setOrder(order);
   ham->setBC(bC);
   ham->setSparse(true);
-  int startIndex = 4*(ham->getSize()[0]*n[1] + n[0]);
+  //int startIndex = 4*(ham->getSize()[0]*n[1] + n[0]);
+  int startIndex = ham->getIndex(0, n);
 
   LDOS ldos(ham, startIndex, startIndex + 4);
   if(eMax != 0){

@@ -5,6 +5,7 @@ LDOS::LDOS(Hamiltonian * ham, int startIndex, int endIndex){
   this->ham = ham;
   this->startIndex = startIndex;
   this->endIndex = endIndex;
+  //cout << startIndex << " " << endIndex << endl;
 }
 
 LDOS::~LDOS(){

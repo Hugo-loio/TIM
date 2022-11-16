@@ -37,6 +37,16 @@ class TBCleanH : public Hamiltonian{
     //Dimensionality  of the layers associated with each block
     void setBlockDim(int bDim);
 
+    int getIndex(int orb, int * n){
+      if(!isUpdated){
+	calcAux();
+	isUpdated = true;
+      }
+
+      int res = flatten(orb, n);
+      return res;
+    };
+
   protected:
     //Information on TB model
     TBModel model;
