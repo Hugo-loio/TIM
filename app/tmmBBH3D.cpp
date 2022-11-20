@@ -110,19 +110,21 @@ int main (int argc, char ** argv) {
     }
   }
 
+  //printVec(paramLists[2]);
+
   ParallelMPI p(&argc, &argv);
   if(doConstW){
-    p.setParamList(paramList1);
+    p.setParamList(paramLists[0]);
     p.setFile(argv[0], "tmmBBH3D_w" + rmTrailZeros(to_string(w)) + "_d" + to_string(dir) + "_m1.1", 0, part);
     p.setJob(tmmConstW, 2);
   }
   else{
     if(doCross){
-      p.setParamList(paramList3);
+      p.setParamList(paramLists[2]);
       p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1_cross", 0, part);
     }
     else{
-      p.setParamList(paramList2);
+      p.setParamList(paramLists[1]);
       p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1", 0, part);
     }
     p.setJob(tmmConstL, 2);
