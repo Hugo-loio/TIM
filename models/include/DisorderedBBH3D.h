@@ -29,6 +29,7 @@ class DisorderedBBH3D{
     vector<double> getTMM(int qrIt, double en, int m, int dir);
     double getLSR(int nStates, double en = 0);
     double getDOS(double en, int nMoments, int nRandVecs, double eMax = 0);
+    double getLDOS(int * n, double en, int nMoments, double eMax = 0);
     double getEnGap(double en);
     double getMaxE();
 

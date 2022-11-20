@@ -2,6 +2,7 @@
 #include "OData.h"
 #include "MultipoleOp.h"
 #include "BoundaryGreenH.h"
+#include "LDOS.h"
 
 DisorderedBBH3D::DisorderedBBH3D(double t1, double t2, double delta){
   model = new TBModel(3, 8);
@@ -323,6 +324,25 @@ double DisorderedBBH3D::getDOS(double en, int nMoments, int nRandVecs, double eM
     updateDOS = false;
   }
   return dos->kpm(en, nMoments, nRandVecs);
+}
+
+double DisorderedBBH3D::getLDOS(int * n, double en, int nMoments, double eMax){
+  int order[3] = {0,1,2};
+  int bC[3] = {0,0,0};
+  bool layerDir[3] = {false,false,false};
+  //setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+  //int startIndex = 4*(ham->getSize()[0]*n[1] + n[0]);
+  int startIndex = ham->getIndex(0, n);
+  //cout << startIndex << " " << ham->getIndex(7,n) << endl;
+
+  LDOS ldos(ham, startIndex, startIndex + 8);
+  if(eMax != 0){
+    ldos.setKpmERange(-eMax, eMax);
+  }
+  return ldos.kpm(en, nMoments);
 }
 
 double DisorderedBBH3D::getEnGap(double en){

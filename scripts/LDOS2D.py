@@ -29,7 +29,7 @@ def shift_matrix_ticks(shape, ax):
     ax.set_yticks(yticks)
     ax.set_yticklabels(ylabels)
 
-def ldos(fname, show: bool):
+def ldos(fname, name, show: bool):
     data = hp.readfile(fname)
     x = data[0::3,0]
     y = data[1::3,0]
@@ -37,9 +37,9 @@ def ldos(fname, show: bool):
     #print(zVec)
     zMat = np.empty([int(x[-1])+1, int(y[-1])+1])
     zMin = 0
-    zMax = 1
+    zMax = 0.01
     for i in range(len(x)):
-        z = zVec[int(y[i])*int(x[-1]) + int(x[i])]
+        z = zVec[int(y[i])*int(x[-1] + 1) + int(x[i])]
         zMat[int(x[i]),int(y[i])] = z
         if(z < zMin):
             zMin = z
@@ -57,33 +57,34 @@ def ldos(fname, show: bool):
     if(show):
         plt.show()
 
-weights = ['1', '2.6', '3.4']
-names = ['ldosSOTAI_L10_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+def plots(fileNames, names, show):
+    for i in range(len(fileNames)):
+        ldos(fileNames[i] + ".dat", names[i], show)
 
-for name in names:
-    ldos(name + ".dat", False)
+weights = ['1', '2.6', '3.4']
+fileNames = ['ldosSOTAI_L10_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
 
 weights = ['2.6', '3.4']
-names = ['ldosSOTAI_L10_w' + w + '_E0_nMu2048_m1.1' for w in weights]
-
-for name in names:
-    ldos(name + ".dat", False)
+fileNames = ['ldosSOTAI_L10_w' + w + '_E0_nMu2048_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
 
 weights = ['2.6']
-names = ['ldosSOTAI_L10_w' + w + '_E0_nMu4096_m1.1' for w in weights]
-
-for name in names:
-    ldos(name + ".dat", False)
-
+fileNames = ['ldosSOTAI_L10_w' + w + '_E0_nMu4096_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
 
 weights = ['1', '2.6', '3.4']
-names = ['ldosSOTAI_L40_w' + w + '_E0_nMu1024_m1.1' for w in weights]
-
-for name in names:
-    ldos(name + ".dat", False)
+fileNames = ['ldosSOTAI_L40_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
 
 weights = ['1', '2.6', '3.4']
-names = ['ldosSOTAI_L60_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+fileNames = ['ldosSOTAI_L60_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
 
-for name in names:
-    ldos(name + ".dat", False)
+weights = ['2.6']
+fileNames = ['ldosSOTAI_L10_w' + w + '_E0_range0.01_m1.1_diag' for w in weights]
+#plots(fileNames, fileNames, False)
+
+weights = ['2.6']
+fileNames = ['ldosSOTAI_L10_w' + w + '_E0_range0.05_m1.1_diag' for w in weights]
+#plots(fileNames, fileNames, False)

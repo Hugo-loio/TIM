@@ -13,6 +13,8 @@ class LDOS{
     double kpm(double en, int nMoments, double * k = NULL);
     void setKpmERange(double eMin, double eMax);
 
+    double diag(double en, double range, double * k = NULL);
+
   private:
     Hamiltonian * ham;
     //Unit cell vector

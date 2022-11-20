@@ -108,3 +108,20 @@ void LDOS::setKpmERange(double eMin, double eMax){
   a = (eMax - eMin)/(2 - err);
   b = (eMax + eMin)/2;
 }
+
+double LDOS::diag(double en, double range, double * k){
+  vec eigVal;
+  cx_mat psi;
+  double res = 0;
+  if(!ham->getIsSparse()){
+    eig_sym(eigVal, psi, ham->H(k));
+    for(int i = 0; i < size(eigVal)[0]; i++){
+      if(abs(eigVal[i] - en) < range){
+	for(int e = startIndex; e < endIndex; e++){
+	  res += (psi(e,i)*conj(psi(e,i))).real();
+	}
+      }
+    }
+  }
+  return res;
+}

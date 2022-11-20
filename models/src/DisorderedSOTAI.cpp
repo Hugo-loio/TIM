@@ -314,12 +314,28 @@ double DisorderedSOTAI::getLDOS(int * n, double en, int nMoments, double eMax){
   ham->setSparse(true);
   //int startIndex = 4*(ham->getSize()[0]*n[1] + n[0]);
   int startIndex = ham->getIndex(0, n);
+  //cout << startIndex << " " << ham->getIndex(3,n) << endl;
 
   LDOS ldos(ham, startIndex, startIndex + 4);
   if(eMax != 0){
     ldos.setKpmERange(-eMax, eMax);
   }
   return ldos.kpm(en, nMoments);
+}
+
+double DisorderedSOTAI::getLDOS(int * n, double en, double range){
+  int order[2] = {0,1};
+  int bC[2] = {0,0};
+  bool layerDir[2] = {false,false};
+  //setLayers(layerDir);
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(false);
+  //int startIndex = 4*(ham->getSize()[0]*n[1] + n[0]);
+  int startIndex = ham->getIndex(0, n);
+
+  LDOS ldos(ham, startIndex, startIndex + 4);
+  return ldos.diag(en, range);
 }
 
 double DisorderedSOTAI::getEnGap(double en){
