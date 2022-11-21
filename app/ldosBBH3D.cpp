@@ -1,5 +1,5 @@
 #include <iostream>
-#include "DisorderedSOTAI.h"
+#include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
 #include "AuxFunctions.h"
 
@@ -7,15 +7,15 @@
 double m = 1.1;
 int l[3] = {4,4,4};
 double w = 3;
-int nMoments = 4096;
+int nMoments = 1024;
 double en = 0;
 
 void ldos(double * res, double * params){
-  DisorderedSOTAI sotai(m);
-  sotai.setSize(l);
-  sotai.setW(w);
-  sotai.generateDisorder();
-  double eMax = w*7/9 + 4;
+  DisorderedBBH3D bbh3d(m);
+  bbh3d.setSize(l);
+  bbh3d.setW(w);
+  bbh3d.generateDisorder();
+  double eMax = w + 5;
   int count = 0;
   int n[3] = {0,0,0};
 
@@ -28,7 +28,7 @@ void ldos(double * res, double * params){
 	res[count++] = n[0];
 	res[count++] = n[1];
 	res[count++] = n[2];
-	res[count++] = sotai.getLDOS(n, en, nMoments, eMax);
+	res[count++] = bbh3d.getLDOS(n, en, nMoments, eMax);
       }
     }
   }
@@ -59,9 +59,5 @@ int main (int argc, char ** argv) {
   p.setParamList(paramList1);
   p.setFile(argv[0], "ldosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_nMu" + to_string(nMoments) + "_m1.1");
   p.setJob(ldos, 4*l[0]*l[1]*l[2]);
-  /*
-     p.setFile(argv[0], "ldosSOTAI_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_range" + rmTrailZeros(to_string(eRange)) + "_m1.1_diag");
-     p.setJob(ldos_diag, 3*l[0]*l[1]);
-     */
   p.run();
 }

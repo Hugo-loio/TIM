@@ -16,7 +16,7 @@ def ChargeDensity3D(fname, show: bool):
     ax.set_yticks(np.arange(0, data[1][-1] + 1, 2))
     ax.set_zticks(np.arange(0, data[2][-1] + 1, 2))
 
-    cbar = fig.colorbar(img, shrink = 0.4)
+    cbar = fig.colorbar(img)
     cbar.set_label("Electron Density")
     cbar.ax.ticklabel_format(useOffset=False)
 
