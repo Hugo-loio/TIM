@@ -47,7 +47,7 @@ def ldos(fname, name, show: bool):
             zMax = z
 
     fig, ax = plt.subplots();
-    im = ax.imshow(zMat, vmin = zMin, vmax = zMax)
+    im = ax.imshow(zMat, vmin = zMin, vmax = zMax, cmap = 'cividis')
     fig.colorbar(im , ax = ax)
     shift_matrix_ticks(zMat.shape, ax)
 
@@ -75,11 +75,11 @@ fileNames = ['ldosSOTAI_L10_w' + w + '_E0_nMu4096_m1.1' for w in weights]
 
 weights = ['1', '2.6', '3.4']
 fileNames = ['ldosSOTAI_L40_w' + w + '_E0_nMu1024_m1.1' for w in weights]
-#plots(fileNames, fileNames, False)
+plots(fileNames, fileNames, False)
 
 weights = ['1', '2.6', '3.4']
 fileNames = ['ldosSOTAI_L60_w' + w + '_E0_nMu1024_m1.1' for w in weights]
-#plots(fileNames, fileNames, False)
+plots(fileNames, fileNames, False)
 
 weights = ['2.6']
 fileNames = ['ldosSOTAI_L10_w' + w + '_E0_range0.01_m1.1_diag' for w in weights]

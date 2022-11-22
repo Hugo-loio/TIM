@@ -80,8 +80,8 @@ int main (int argc, char ** argv) {
 
   int nPoints3 = 47;
   vector<vector<double>> paramList3;
-  double wMin = 3.6;
-  double wMax = 4.2;
+  double wMin = 15;
+  double wMax = 50;
   for(int i = 0; i <= nPoints3; i++){
     vector<double> param; 
     param.push_back(wMin + (wMax - wMin)*(double)i/(double)nPoints3);
@@ -91,7 +91,7 @@ int main (int argc, char ** argv) {
   //Corrections for missing data
   if(doCross){
     if(l == 12 && dir == 2){
-      paramList3.erase(paramList3.begin() , paramList3.begin() + 20);
+      //paramList3.erase(paramList3.begin() , paramList3.begin() + 20);
       //printVec(paramList3);
     }
   }
@@ -121,7 +121,7 @@ int main (int argc, char ** argv) {
   else{
     if(doCross){
       p.setParamList(paramLists[2]);
-      p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1_cross", 0, part);
+      p.setFile(argv[0], "tmmBBH3D_E" + rmTrailZeros(to_string(en)) + "_L" + to_string(l) + "_d" + to_string(dir) + "_m1.1_cross2", 0, part);
     }
     else{
       p.setParamList(paramLists[1]);
