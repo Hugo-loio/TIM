@@ -19,11 +19,11 @@ void ldos(double * res, double * params){
   int count = 0;
   int n[3] = {0,0,0};
 
-  for(int j = 0; j < l[2]; j++){
+  for(int j = 0; j < l[2] || j < 5; j++){
     n[2] = j;
-    for(int i = 0; i < l[1]; i++){
+    for(int i = 0; i < l[1] || j < 5; i++){
       n[1] = i;
-      for(int e = 0; e < l[0]; e++){
+      for(int e = 0; e < l[0] || j < 5; e++){
 	n[0] = e;
 	res[count++] = n[0];
 	res[count++] = n[1];

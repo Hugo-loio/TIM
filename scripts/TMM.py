@@ -43,13 +43,13 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
     ax.set(xlabel = r'$W$', ylabel = r'$\Lambda$')
     plt.yscale('log')
     ax.margins(x = 0)
-    ax.set_xlim([0,9])
     if(model == 1):
         hp.sotaiPhases(ax, 0.75)
         ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
     elif(model == 2):
         hp.totaiPhases(ax, 0.9)
         ymin, ymax = ax.get_ylim()
+        ax.set_xlim([0,9])
         ax.set_ylim([ymin, ymax*1.3])
         ax.legend(fontsize = 6, ncol = 2, bbox_to_anchor=(0.4,0.69))
     else:
@@ -108,7 +108,7 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w50_d2_m1.1" for val in constWVals]
 constWLabels= ["E = " + val for val in constWVals]
 
-plotConstW("tmmBBH3D_w50_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False, 1)
+#plotConstW("tmmBBH3D_w50_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False, 1)
 
 constLVals = ["20"]
 constLNames = ["tmmSOTAI_E0_L" + val + "_d0_m1.1" for val in constLVals]
@@ -133,3 +133,9 @@ constLNames = ["tmmBBH3D_E0_L4_d" + val + "_m1.1" for val in dVals]
 constLLabels = ["x", "y", "z"]
 
 #plotConstL("tmmBBH3D_E0_dComp_m1.1", constLNames, constLLabels, False)
+
+constLVals = ["4", "6", "8", "10", "12"]
+constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1_cross2" for val in constLVals]
+constLLabels = [r'$L_{x/y} = $ ' + val for val in constLVals]
+
+plotConstL("tmmBBH3D_E0_d2_m1.1_cross2", constLNames, constLLabels, False)

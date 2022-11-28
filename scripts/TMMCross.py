@@ -62,7 +62,7 @@ def plotConstL(name, fileNames, labels, crossVals, show = True):
     if(show):
         plt.show()
 
-constLVals = ["4", "6", "8", "10", "12"]
+constLVals = ["4", "6", "8", "10", "12", "14"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1_cross" for val in constLVals]
 constLLabels = [r'$L_{x/y} = $ ' + val for val in constLVals]
 
