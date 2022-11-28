@@ -54,10 +54,18 @@ int main (int argc, char ** argv) {
     paramList1.push_back(param);
   }
 
+  int resSize = 4;
+  if(l[0] < 5){
+    resSize *= l[0]*l[0]*l[0];
+  }
+  else{
+    resSize *= 125;
+  }
+
   ParallelMPI p(&argc, &argv);
   //p.setSamples(sampMult);
   p.setParamList(paramList1);
   p.setFile(argv[0], "ldosBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_nMu" + to_string(nMoments) + "_m1.1");
-  p.setJob(ldos, 4*l[0]*l[1]*l[2]);
+  p.setJob(ldos, resSize);
   p.run();
 }
