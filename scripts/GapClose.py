@@ -8,36 +8,26 @@ plt.style.use('science')
 def plot(title, fileName, specs, errors = False, show = False):
     data = hp.readfile(fileName + ".dat")
     step = specs['nStSamp']*2 + 1
+    start = int(2 + 2*specs['nStSamp'])
 
     fig, ax = plt.subplots()
     for w in specs['wVals']:
         y = []
         yerr = []
         for en in specs['enGapSizes']:
-            dataEn = data[:,np.where(data[0] == i)[0]]
-            dataW = dataEn[:np.where(data[1] == w)[0]]
-            y.append(
+            dataEn = data[:,np.where(data[0] == en)[0]]
+            dataEnW = dataEn[:,np.where(dataEn[1] == w)[0]][start::step]
+            y.append(np.average(dataEnW, axis = 0)[0])
+            yerr.append(np.std(dataEnW, axis = 0)[0]/np.sqrt(len(dataEnW)))
 
-    if(len(specs['enGapSizes']) > 0):
-        fig, ax = plt.subplots()
-        for i in specs['enGapSizes']:
-            dataPlot = data[:,np.where(data[0] == i)[0]] 
-            start = int(2 + 2*specs['nStSamp'])
-            label = r'$L = $' + str(i)
-            plotCurve(ax, dataPlot[1], dataPlot[start::step], label, errors)
+        ax.errorbar(specs['enGapSizes'], y, yerr = yerr, label = "W = " + str(w), capsize = 5, linestyle='-', linewidth = 0.5)
 
-        ax.set(xlabel = r'$W$', ylabel = r'Gap')
-        ax.margins(x = 0)
-        if(len(specs['enGapSizes']) > 1): 
-            ax.legend(fontsize = 6)
-        if(specs['phases'] == 0):
-            hp.sotaiPhases(ax)
-
-        fig.savefig(hp.plot_dir() + title + "Gap.png", dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "Gap.eps")
-        if(show):
-            plt.show()
-        plt.close()
+    ax.set(xlabel = r'$L$', ylabel = r'Gap')
+    ax.margins(x = 0)
+    ax.legend(fontsize = 6)
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    plt.show()
 
 specs = {
         'nStSamp' : 5,
