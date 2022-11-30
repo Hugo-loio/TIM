@@ -63,7 +63,6 @@ int main (int argc, char ** argv) {
   else{
     resSize *= 125;
   }
-  cout << resSize << endl;
 
   ParallelMPI p(&argc, &argv);
   //p.setSamples(sampMult);
