@@ -75,9 +75,13 @@ fileNames = ['ldosSOTAI_L10_w' + w + '_E0_nMu4096_m1.1' for w in weights]
 
 weights = ['1', '2.6', '3.4']
 fileNames = ['ldosSOTAI_L40_w' + w + '_E0_nMu1024_m1.1' for w in weights]
-plots(fileNames, fileNames, False)
+#plots(fileNames, fileNames, False)
 
 weights = ['1', '2.6', '3.4']
+fileNames = ['ldosSOTAI_L60_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
+
+weights = ['5','8']
 fileNames = ['ldosSOTAI_L60_w' + w + '_E0_nMu1024_m1.1' for w in weights]
 plots(fileNames, fileNames, False)
 

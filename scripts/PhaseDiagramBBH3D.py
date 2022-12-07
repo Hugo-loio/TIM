@@ -1,6 +1,7 @@
 import helper as hp
 import matplotlib.pyplot as plt
 import numpy as np
+import ConstantDisorderBBH3D as extra
 
 plt.style.use('science')
 
@@ -26,18 +27,21 @@ def plot(name, fileNames, labels, detail = True, show = True):
     for i in range(0, len(fileNames)):
         plotQuad(fileNames[i], labels[i], ax, detail)
 
+    ax.errorbar(extra.res[0], extra.res[1], yerr = extra.res[2], label = 'extrapolation', linestyle='', marker = "_", markersize=4, markeredgewidth = 0.5, linewidth = 0.5, capsize = 2, capthick = 0.5)
+    #print(extra.res)
+
     ax.set(xlabel = r'$W$', ylabel = r'$Q$')
     ymin, ymax = ax.get_ylim()
-    ax.margins(x = 0)
-    ax.set_ylim([ymin, ymax*1.2])
+    #ax.margins(x = 0)
+    #ax.set_ylim([ymin, ymax*1.2])
     hp.totaiPhases(ax)
-    ax.legend(bbox_to_anchor=(0.55,0.4))
+    ax.legend(bbox_to_anchor=(0.5,0.4), fontsize=8)
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
     if(show):
         plt.show()
-    plt.close()
+    #plt.close()
 
 
 namesQuad = ["L5", "L7", "L10", "L12", "L13", "L15", "L17", "L18", "L20", "L22", "L24"]

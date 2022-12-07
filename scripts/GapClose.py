@@ -27,12 +27,13 @@ def plot(title, fileName, specs, errors = False, show = False):
     ax.legend(fontsize = 6)
     ax.set_xscale('log')
     ax.set_yscale('log')
-    plt.show()
+    fig.savefig(hp.plot_dir() + title + ".png", dpi = 300)
+    fig.savefig(hp.plot_dir() + title + ".eps")
 
 specs = {
         'nStSamp' : 5,
         'enGapSizes' : [6,8,10,12,14,16,18,20],
-        'wVals' : [3.69, 3.78]
+        'wVals' : [3.33, 3.42, 3.51, 3.6, 3.69, 3.78, 3.87]
         }
 
 plot("GapCloseBBH3D", "locBBH3D_m1.1", specs, False, True)

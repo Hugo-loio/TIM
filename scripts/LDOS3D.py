@@ -10,14 +10,16 @@ def ldos(fname, name, show: bool):
     x = data[0::4,0] + 1
     y = data[1::4,0] + 1
     z = data[2::4,0] + 1
-    dos = np.average(data[3::4], axis = 1) - 0.4
+    #dos = np.average(data[3::4], axis = 1) - 0.4
+    dos = np.average(data[3::4], axis = 1)
     
     vmax = np.max(dos)
     vmax = vmax if vmax > 0.01 else 1
 
     fig = plt.figure()
     ax = fig.add_subplot(projection = '3d')
-    img = ax.scatter(x, y, z, c = dos, s = 10,  vmax = vmax)
+    ax.view_init(30, 210)
+    img = ax.scatter(x, y, z, c = dos, s = 10,  vmax = vmax, cmap = 'cividis')
 
     ax.set(xlabel = r'$x$', ylabel = r'$y$', zlabel = r'$z$')
     ax.set_zlabel(r'$z$', labelpad = 2)
@@ -46,8 +48,18 @@ fileNames = ['ldosBBH3D_L20_w' + w + '_E0_nMu1024_m1.1' for w in weights]
 #plots(fileNames, fileNames, False)
 
 weights = ['2', '3', '4']
+fileNames = ['ldosBBH3D_L20_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
+
+weights = ['2', '3', '4']
 fileNames = ['ldosBBH3D_L10_w' + w + '_E0_nMu1024_m1.1' for w in weights]
+#plots(fileNames, fileNames, False)
+
+weights = ['3', '4']
+sizes = ['10', '16', '20', '24']
+fileNames = ['ldosBBH3D_L' + size + '_w' + w + '_E0_nMu1024_m1.1' for w in weights for size in sizes]
 plots(fileNames, fileNames, False)
+
 
 #weights = ['2', '3', '4']
 weights = ['3']

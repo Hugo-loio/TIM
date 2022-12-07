@@ -43,38 +43,26 @@ def plot(name):
         xdata = np.linspace(0, x[fitEnd-1], 100)
         ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), linewidth = 0.5)
         bFit.append(popt[1])
-        
-    #print(np.average(bFit))
-    #print(bFit)
-
-    '''
-    fitStart = 0
-    xfit = x[fitStart:]
-    yfit = qavg[fitStart:]
-    yfiterr = qerr[fitStart:] 
-
-    popt, pcov = optimize.curve_fit(fitFunc, xfit, yfit, sigma = yfiterr, absolute_sigma = True)
-    perr = np.sqrt(np.diag(pcov))
-    params = r'$ Q(L) = \frac{a}{L} + b$' '\n'  r'$a = $' + str(round(popt[0], 2)) + r'$ \pm $' + str(round(perr[0],2)) +  '\n' + r'$b = $' + str(round(popt[1], 2)) + r'$ \pm $' + str(round(perr[1],2))
-
-    xdata = np.linspace(0, x[-1], 100)
-    ax.plot(xdata, fitFunc(xdata, popt[0], popt[1]), label = params, color = 'orange')
-    '''
 
     #plt.legend(loc= 'upper right')
-    text = r'$ Q(0) = $'+ str(round(np.average(bFit), 2)) + r'$ \pm $' + str(round(np.std(bFit)/np.sqrt(len(bFit)),2))
+    q0 = np.average(bFit)
+    q0Err = (np.absolute(bFit-q0)).max()
+    text = r'$ Q(0) = $'+ str(round(q0, 2)) + r'$ \pm $' + str(round(q0Err,2))
     xmax = ax.get_xlim()[1]
     ymax = ax.get_ylim()[1]
     ax.text(0.7*xmax, 0.9*ymax, text, ha = 'center')
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".eps")
+    return q0, q0Err
     #plt.show()
     #plt.close()
 
-plot("constantDisorderBBH3Dquad_intra1.1_w2.8")
-plot("constantDisorderBBH3Dquad_intra1.1_w3")
-plot("constantDisorderBBH3Dquad_intra1.1_w3.2")
-plot("constantDisorderBBH3Dquad_intra1.1_w3.4")
-plot("constantDisorderBBH3Dquad_intra1.1_w3.6")
-plot("constantDisorderBBH3Dquad_intra1.1_w4")
-plot("constantDisorderBBH3Dquad_intra1.1_w9")
+wVec = [2.8, 3, 3.2, 3.4, 3.6, 4, 9] 
+q0Vec = []
+q0ErrVec = []
+for w in wVec:
+    q0, q0Err = plot("constantDisorderBBH3Dquad_intra1.1_w" + str(w))
+    q0Vec.append(q0)
+    q0ErrVec.append(q0Err)
+
+res = [wVec, q0Vec, q0ErrVec]
