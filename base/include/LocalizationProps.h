@@ -28,7 +28,7 @@ class LocalizationProps{
   private:
     Hamiltonian * ham;
     int maxItTMM = 1E7;
-    double tmmErr = 0.01;
+    double tmmErr = 0.02;
     cx_mat eigVec;
     vec eigVal;
     int nStatesFound = 0;
