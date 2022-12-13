@@ -110,7 +110,7 @@ int main (int argc, char ** argv) {
     }
   }
 
-  //printVec(paramLists[2]);
+  printVec(paramLists[2]);
 
   ParallelMPI p(&argc, &argv);
   if(doConstW){
