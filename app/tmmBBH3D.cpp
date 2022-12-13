@@ -22,6 +22,7 @@ void tmmConstL(double * res, double * params){
   DisorderedBBH3D bbh3d(m);
   bbh3d.setW(params[0]);
   vector<double> tmm = bbh3d.getTMM(qrIt, en, l, dir);
+  cout << tmm[0] << " " << tmm[1] << endl;
   res[0] = tmm[0];
   res[1] = tmm[1];
 }
