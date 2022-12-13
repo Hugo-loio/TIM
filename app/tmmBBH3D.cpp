@@ -82,8 +82,8 @@ int main (int argc, char ** argv) {
   vector<vector<double>> paramList3;
   //double wMin = 15;
   //double wMax = 50;
-  double wMin = 15;
-  double wMax = 50;
+  double wMin = 3.6;
+  double wMax = 4.2;
   for(int i = 0; i <= nPoints3; i++){
     vector<double> param; 
     param.push_back(wMin + (wMax - wMin)*(double)i/(double)nPoints3);
