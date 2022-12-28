@@ -2,7 +2,7 @@
 #include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
 
-int sampPerJob = 10;
+int sampPerJob = 1;
 int l[3] = {5,5,5};
 double intra = 1.1;
 
@@ -43,14 +43,26 @@ void quad(double * res, double * params){
 }
 
 int main (int argc, char ** argv) {
-  int sampMult = 4;
+  if(argc > 1){
+    l[0] = stoi(argv[1]);
+    l[1] = l[0];
+    l[2] = l[0];
+  }
 
+  int sampMult = 40;
   vector<vector<double>> paramList;
   int nPoints = 100;
   for(int i = 0; i <= nPoints; i++){
     vector<double> param; 
     param.push_back(9*(double)i/(double)nPoints);
     paramList.push_back(param);
+  }
+
+  if(l[0] == 24){
+    paramList.erase(paramList.begin(), paramList.begin() + 95);
+  }
+  else if(l[0] == 22){
+    paramList.erase(paramList.begin(), paramList.begin() + 49);
   }
 
   ParallelMPI p(&argc, &argv);
