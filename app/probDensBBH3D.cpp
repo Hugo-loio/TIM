@@ -63,7 +63,7 @@ int main (int argc, char ** argv) {
   ParallelMPI p(&argc, &argv);
   //p.setSamples(sampMult);
   p.setParamList(paramList1);
-  p.setFile(argv[0], "propDensBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_m1.1");
+  p.setFile(argv[0], "probDensBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_m1.1");
   p.setJob(probDens, 2*4*l[0]);
   p.run();
 }
