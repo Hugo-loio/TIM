@@ -19,18 +19,26 @@ void probDens(double * res, double * params){
   int count = 0;
   int n[3] = {0,0,0};
 
+  //Diagonal
   for(int i = 0; i < l[0]; i++){
-    for(int j = 0; j < l[1]; j++){
-      for(int k = 0; k < l[2]; k++){
-	n[0] = i;
-	n[1] = j;
-	n[2] = k;
-	res[count++] = n[0];
-	res[count++] = n[1];
-	res[count++] = n[2];
-	res[count++] = bbh3d.probDensE0(n);
-      }
-    }
+    n[0] = i;
+    n[1] = i;
+    n[2] = i;
+    res[count++] = n[0];
+    res[count++] = n[1];
+    res[count++] = n[2];
+    res[count++] = bbh3d.probDensE0(n);
+  }
+
+  //Edge
+  n[1] = 0;
+  n[2] = 0;
+  for(int i = 0; i < l[0]; i++){
+    n[0] = i;
+    res[count++] = n[0];
+    res[count++] = n[1];
+    res[count++] = n[2];
+    res[count++] = bbh3d.probDensE0(n);
   }
 }
 
@@ -56,6 +64,6 @@ int main (int argc, char ** argv) {
   //p.setSamples(sampMult);
   p.setParamList(paramList1);
   p.setFile(argv[0], "propDensBBH3D_L" + to_string(l[0]) + "_w" + rmTrailZeros(to_string(w)) + "_E0_m1.1");
-  p.setJob(probDens, 4*l[0]*l[1]*l[2]);
+  p.setJob(probDens, 2*4*l[0]);
   p.run();
 }
