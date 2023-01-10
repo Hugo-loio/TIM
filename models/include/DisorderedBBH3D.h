@@ -32,12 +32,14 @@ class DisorderedBBH3D{
     double getLDOS(int * n, double en, int nMoments, double eMax = 0);
     double getEnGap(double en);
     double getMaxE();
+    double probDensE0(int * n);
 
   private:
     TBModel * model;
     DisorderedHopH3D * ham;
     DOS * dos = NULL;
     LocalizationProps * loc;
+    vec eigVecE0;
 
     bool updateDOS = true;
 };

@@ -27,28 +27,34 @@ int add(int a, int b){
 
 int main (int argc, char ** argv) {
 
+  /*
   DisorderedSOTAI sotai(1.1);
   int l[2] = {10,10};
   sotai.setSize(l);
 
   sotai.setW(3);
   sotai.generateDisorder();
-  cout << "w = 3" << endl;
-  cout << sotai.getTMM(10, 0, 2, 1)[0] << endl;
+  //cout << "w = 3" << endl;
+  //cout << sotai.getTMM(10, 0, 2, 1)[0] << endl;
   //sotai.test(argv[0]);
-
-  DisorderedBBH3D bbh3d(1.1);
-  int l2[3] = {4,4,4};
-  //sotai.setSize(l);
 
   sotai.setW(3);
   sotai.generateDisorder();
   //cout << sotai.getTMM(10, 0, 8, 0)[0] << endl;
   //cout << "w = 3" << endl;
   //cout <<  bbh3d.getTMM(10,0,6)[0] << endl;
+  */
 
-  Anderson3D and3d(1);
-  and3d.setW(9);
+  DisorderedBBH3D bbh3d(1.1);
+  int l2[3] = {4,4,4};
+  int n[3] = {0,0,0};
+  bbh3d.setSize(l2);
+  bbh3d.setW(3);
+  bbh3d.generateDisorder();
+  cout << bbh3d.probDensE0(n) << endl;
+
+  //Anderson3D and3d(1);
+  //and3d.setW(9);
   //cout << and3d.getTMM(10, 0, 6)[0] << endl;
   //and3d.test();
   //int (*func)(int, int) = &sum<int>;

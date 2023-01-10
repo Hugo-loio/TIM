@@ -23,7 +23,7 @@ def plots(name, fileNames, labels, show):
         ldos(ax, fileNames[i] + ".dat", labels[i])
 
     plt.yscale('log')
-    #plt.xscale('log')
+    plt.xscale('log')
     #ax.margins(x = 0)
     ax.legend(fontsize = 6, ncol = 1)
 
@@ -38,7 +38,7 @@ labels = ['W = ' + w + ', L = ' + size for w in weights for size in sizes]
 plots("ldosBBH3D_2D_E0_nMu1024_edge", fileNames, labels, False)
 
 weights = ['3', '4']
-sizes = ['20', '30']
+sizes = ['20', '30', '40']
 fileNames = ['ldosBBH3D_L' + size + '_w' + w + '_E0_nMu1024_m1.1_diag' for w in weights for size in sizes]
 labels = ['W = ' + w + ', L = ' + size for w in weights for size in sizes]
 plots("ldosBBH3D_2D_E0_nMu1024_diag", fileNames, labels, False)

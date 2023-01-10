@@ -377,3 +377,42 @@ double DisorderedBBH3D::getMaxE(){
   return eigVal(size(eigVal)[0] - 1);
 }
 
+double DisorderedBBH3D::probDensE0(int * n){
+  if(size(eigVecE0)[0] == 0){
+    int nStates = 10;
+
+    int order[3] = {0,1,2};
+    int bC[3] = {0,0,0};
+    bool layerDir[3] = {false,false,false};
+    //setLayers(layerDir);
+    ham->setOrder(order);
+    ham->setBC(bC);
+    ham->setSparse(true);
+
+    vec eigVal;
+    mat eigVec;
+    eigs_sym(eigVal, eigVec, real(ham->spH(NULL)), nStates, 0.0);
+    if(size(eigVal)[0] != nStates){
+      cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
+      throw runtime_error("Diagonalization failed.");
+    }
+
+    int absMin = abs(eigVal[0]);
+    int indexMin = 0;
+    for(int i = 1; i < nStates; i++){
+      if(abs(eigVal[i]) < absMin){
+	absMin = abs(eigVal[i]);
+	indexMin = i;
+      }
+    }
+    eigVecE0 = normalise(eigVec.col(indexMin));
+  }
+
+  int startN = ham->getIndex(0, n);
+  double res = 0;
+  for(int i = startN; i < startN + 8; i++){
+    res += eigVecE0[i]*eigVecE0[i];
+  }
+
+  return res;
+}

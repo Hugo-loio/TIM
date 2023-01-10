@@ -5,10 +5,14 @@ from scipy import optimize
 
 plt.style.use('science')
 
+def fitLin(x, a, b):
+    return a*x + b
+
 def plot(title, fileName, specs, errors = False, show = False):
     data = hp.readfile(fileName + ".dat")
     step = specs['nStSamp']*2 + 1
     start = int(2 + 2*specs['nStSamp'])
+
 
     fig, ax = plt.subplots()
     for w in specs['wVals']:
@@ -20,13 +24,36 @@ def plot(title, fileName, specs, errors = False, show = False):
             y.append(np.average(dataEnW, axis = 0)[0])
             yerr.append(np.std(dataEnW, axis = 0)[0]/np.sqrt(len(dataEnW)))
 
-        ax.errorbar(specs['enGapSizes'], y, yerr = yerr, label = "W = " + str(w), capsize = 5, linestyle='-', linewidth = 0.5)
+        x = 1/np.array(specs['enGapSizes'])
+        sort = np.argsort(x)
+        x = x[sort]
+        y = np.array(y)[sort]
+        yerr = np.array(yerr)[sort]
 
-    ax.set(xlabel = r'$L$', ylabel = r'Gap')
-    ax.margins(x = 0)
+        y0 = []
+        for i in range(3):
+            x_temp = x[0:5-i]
+            y_temp = y[0:5-i]
+            #yerr_temp = yerr[0:5-i]
+            #popt, pcov = optimize.curve_fit(fitLin, x_temp, y_temp, sigma = yerr_temp, absolute_sigma = True)
+            popt, pcov = optimize.curve_fit(fitLin, x_temp, y_temp)
+            y0.append(popt[1])
+        
+        y0_avg = np.average(y0)
+        #print(y0_avg)
+        y0_err = np.amax(abs(y0-y0_avg))
+        x = np.insert(x,0,0)
+        y = np.insert(y,0,y0_avg)
+        yerr = np.insert(yerr,0,y0_err)
+
+        ax.errorbar(x, y, yerr = yerr, label = "W = " + str(w), capsize = 2, linestyle='-', linewidth = 0.5, capthick = 0.5)
+
+    ax.set(xlabel = r'$\frac{1}{L}$', ylabel = r'Gap')
+    #ax.margins(x = 0)
+    #ax.set_xlim([0, ax.get_xlim()[1]])
     ax.legend(fontsize = 6)
-    ax.set_xscale('log')
-    ax.set_yscale('log')
+    #ax.set_xscale('log')
+    #ax.set_yscale('log')
     fig.savefig(hp.plot_dir() + title + ".png", dpi = 300)
     fig.savefig(hp.plot_dir() + title + ".eps")
 

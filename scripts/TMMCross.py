@@ -115,7 +115,7 @@ for i in range(3):
 #text = r'$ W_{\times}(0) = $'+ str(round(popt[1], 2)) + r'$ \pm $' + str(round(perr[1], 2))  + '\n'  r'$\chi^2_r = $' + str(round(chi2(x,y,yerr,popt[0], popt[1]), 2))
 #ax.text(0.2, 3.65, text, ha = 'center')
 w0_avg = np.average(w0)
-w0_err = np.amax(w0-w0_avg)
+w0_err = np.amax(abs(w0-w0_avg))
 text = r'$ W_{\times}(0) = $'+ str(round(w0_avg, 2)) + r'$ \pm $' + str(round(w0_err, 2))
 ax.text(0.2, 3.65, text, ha = 'center')
 
