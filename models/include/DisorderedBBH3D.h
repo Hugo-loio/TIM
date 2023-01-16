@@ -33,6 +33,7 @@ class DisorderedBBH3D{
     double getEnGap(double en);
     double getMaxE();
     double probDensE0(int * n);
+    vec spectrumE0(int nStates);
 
   private:
     TBModel * model;

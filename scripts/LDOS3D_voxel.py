@@ -29,35 +29,46 @@ def ldos(fname, name, show: bool):
     nodes = [0.0, 1.0]
     cmap = LinearSegmentedColormap.from_list("mycmap", list(zip(nodes,colors)))
     dosColors = cmap(dos/vmax)
-    dosColors[:,-1] = np.array(s)
+    #dosColors[:,-1] = np.array(s)
+    #dosColors[:,-1] = 0.8
     norm = Normalize(vmin = 0, vmax = vmax)
 
     spec = gridspec.GridSpec(ncols=2, nrows=1, width_ratios=[40, 1])
     fig = plt.figure()
     ax = fig.add_subplot(spec[0], projection = '3d')
     #ax.view_init(30, 210)
-    img = ax.scatter(x, y, z, c = dosColors, s = 100)
+
+    voxels = np.ones((int(np.amax(x)),int(np.amax(y)),int(np.amax(z))))
+    facecolors = [[[(0,0,0,1) for z in y] for y in x] for x in voxels]
+    edgecolors = [[[(0,0,0,1) for z in y] for y in x] for x in voxels]
+    for i,c in enumerate(dosColors):
+        facecolors[int(x[i]-1)][int(y[i]-1)][int(z[i]-1)] = dosColors[i]
+        edgecolors[int(x[i]-1)][int(y[i]-1)][int(z[i]-1)] = (0,0,0,dosColors[i,-1])
+    ax.voxels(voxels, edgecolors = np.array(edgecolors), facecolors = np.array(facecolors), shade = False)
 
     ax.set(xlabel = r'$x$', ylabel = r'$y$', zlabel = r'$z$')
     ax.set_zlabel(r'$z$', labelpad = 0)
     ax.invert_xaxis()
     ax.invert_zaxis()
 
-    '''
-    ax.set_xticks(np.arange(0, x[-1] + 1, 5))
-    ax.set_yticks(np.arange(0, y[-1] + 1, 5))
-    ax.set_zticks(np.arange(0, z[-1] + 1, 5))
-    '''
+    xticks = ax.get_xticks()[ax.get_xticks().tolist().index(0):-2] + 0.5
+    xlabels = [str(int(tick + 0.5)) for tick in xticks]
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(xlabels)
+    yticks = ax.get_yticks()[ax.get_yticks().tolist().index(0):-2] + 0.5
+    ylabels = [str(int(tick + 0.5)) for tick in yticks]
+    ax.set_yticks(yticks)
+    ax.set_yticklabels(ylabels)
+    zticks = ax.get_zticks()[ax.get_zticks().tolist().index(0):-1] + 0.5
+    zlabels = [str(int(tick + 0.5)) for tick in zticks]
+    ax.set_zticks(zticks)
+    ax.set_zticklabels(zlabels)
+
     ax.tick_params(axis='both', which='major', pad=0)
     ax2 = fig.add_subplot(spec[1])
-
-    #divider = make_axes_locatable(ax)
-    #cax = divider.append_axes('right', size='5%', pad=0.05)
-
     ax2.set_aspect(20/vmax)
     cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), cax = ax2, orientation = 'vertical')
     cbar.ax.set_title(r'$\rho(0, \overrightarrow{n})$')
-    #cbar.ax.ticklabel_format(useOffset=False)
 
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight', pad_inches = 0)
     if(show):
@@ -68,9 +79,8 @@ def plots(fileNames, names, show):
         ldos(fileNames[i] + ".dat", names[i], show)
 
 weights = ['3', '4']
-sizes = ['10', '16', '20', '24']
+sizes = ['10', '16', '20', '24', '30']
+#sizes = sizes[0:1]
 fileNames = ['ldosBBH3D_L' + size + '_w' + w + '_E0_nMu1024_m1.1' for w in weights for size in sizes]
 names = [name + '_voxel' for name in fileNames]
 plots(fileNames, names, False)
-
-print(np.ones([3,3,3], dtype = bool))

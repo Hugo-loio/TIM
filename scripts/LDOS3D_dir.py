@@ -22,8 +22,8 @@ def plots(name, fileNames, labels, show):
     for i in range(len(fileNames)):
         ldos(ax, fileNames[i] + ".dat", labels[i])
 
-    plt.yscale('log')
-    plt.xscale('log')
+    #plt.yscale('log')
+    #plt.xscale('log')
     #ax.margins(x = 0)
     ax.legend(fontsize = 6, ncol = 1)
 
