@@ -7,14 +7,13 @@
 //int sampPerJob = 40;
 double m = 1.1;
 int l[3] = {10,10,10};
-double w = 3;
 double en = 0;
 int nStates = 50;
 
 void spectrum(double * res, double * params){
   DisorderedBBH3D bbh3d(m);
   bbh3d.setSize(l);
-  bbh3d.setW(w);
+  bbh3d.setW(params[0]);
   bbh3d.generateDisorder();
 
   vec en = bbh3d.spectrumE0(nStates);
