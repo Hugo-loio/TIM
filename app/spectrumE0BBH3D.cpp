@@ -25,12 +25,17 @@ void spectrum(double * res, double * params){
 int main (int argc, char ** argv) {
   int sampMult = 200;
   int mode = 0;
+  int version = 0;
   if(argc > 1){
     l[0] = stoi(argv[1]);
     l[1] = l[0];
     l[2] = l[0];
     if(argc > 2){
       mode = stoi(argv[2]);
+      if(argc > 4){
+	version = stoi(argv[3]);
+	sampMult = stoi(argv[4]);
+      }
     }
   }
 
@@ -59,7 +64,7 @@ int main (int argc, char ** argv) {
   }
   else if(mode == 1){
     p.setParamList(paramList2);
-    p.setFile(argv[0], "spectrumE0BBH3D_L" + to_string(l[0]) + "_m1.1_cross");
+    p.setFile(argv[0], "spectrumE0BBH3D_L" + to_string(l[0]) + "_m1.1_cross", version);
   }
   p.setJob(spectrum, nStates);
   p.run();
