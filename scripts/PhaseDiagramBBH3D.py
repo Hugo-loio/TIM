@@ -27,7 +27,7 @@ def plot(name, fileNames, labels, detail = True, show = True):
     for i in range(0, len(fileNames)):
         plotQuad(fileNames[i], labels[i], ax, detail)
 
-    ax.errorbar(extra.res[0], extra.res[1], yerr = extra.res[2], label = 'extrapolation', linestyle='', marker = "_", markersize=4, markeredgewidth = 0.5, linewidth = 0.5, capsize = 2, capthick = 0.5)
+    ax.errorbar(extra.res[0], extra.res[1], yerr = extra.res[2], label = 'extrapolation', linestyle='', marker = ".", markersize=5, markeredgewidth = 1, linewidth = 1, capsize = 2, capthick = 1, color = 'darkorchid')
     #print(extra.res)
 
     ax.set(xlabel = r'$W$', ylabel = r'$Q$')
@@ -37,8 +37,9 @@ def plot(name, fileNames, labels, detail = True, show = True):
     hp.totaiPhases(ax)
     ax.legend(bbox_to_anchor=(0.5,0.4), fontsize=8)
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".eps")
+    fig.set_size_inches(3.4, 2.5)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches = 'tight', pad_inches = 0.01)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
         plt.show()
     #plt.close()

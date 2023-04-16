@@ -45,13 +45,14 @@ int main (int argc, char ** argv) {
   //cout <<  bbh3d.getTMM(10,0,6)[0] << endl;
   */
 
-  DisorderedBBH3D bbh3d(1.1);
+  DisorderedBBH3D bbh3d(1.1,1);
   int l2[3] = {4,4,4};
   int n[3] = {0,0,0};
   bbh3d.setSize(l2);
   bbh3d.setW(3);
   bbh3d.generateDisorder();
-  cout << bbh3d.probDensE0(n) << endl;
+  //cout << bbh3d.probDensE0(n) << endl;
+  bbh3d.getBoundQuadrupole(0);
 
   //Anderson3D and3d(1);
   //and3d.setW(9);

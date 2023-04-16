@@ -29,10 +29,11 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
-    ax.legend(loc = 'upper right', fontsize = 7)
+    ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7)
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".eps")
+    fig.set_size_inches(2.3,1.7)
+    fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
         plt.show()
     plt.close()
@@ -48,13 +49,15 @@ def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
-    ax.legend(loc = 'upper right', fontsize = 7)
+    ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7, ncols = 2)
+
     plt.xlim([-0.5,0.5])
     if(ylim != 0):
         plt.ylim([-0.05*ylim, ylim])
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".eps")
+    fig.set_size_inches(2.3,1.7)
+    fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
         plt.show()
     plt.close()
@@ -98,17 +101,17 @@ labels = ["W = " + weight[i] for i in range(len(weight))]
 
 weight = ["2", "2.5", "2.6", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
-labels = ["W = " + weight[i] for i in range(len(weight))]
+labels = [weight[i] for i in range(len(weight))]
 
-#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
 
 weight = ["2.5", "2.55", "2.6"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu8192_nR1_intra1.1" for i in range(len(weight))]
 labels = ["W = " + weight[i] for i in range(len(weight))]
 
-plot("ConstWDosBBH3D_intra1.1_L80_nMu8192_nR1", names, labels, False, False)
-plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu8192_nR1_zoom", names, labels, False, False)
+#plot("ConstWDosBBH3D_intra1.1_L80_nMu8192_nR1", names, labels, False, False)
+#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu8192_nR1_zoom", names, labels, False, False)
 
 intra = ["0.5","0.9", "1", "1.1", "2"]
 names = ["dosBBH3D_L80_intra" + i + "_w0_nMu4096_nR1" for i in intra]

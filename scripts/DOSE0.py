@@ -26,11 +26,13 @@ def plot(name, fileNames, labels, detail = True, show = True):
     ax.set(xlabel = r'$W$', ylabel = r'$\rho(0)$')
     ax.margins(x = 0)
     if(len(fileNames) > 1):
-        ax.legend(loc = 'upper left', fontsize = 7)
+        ax.legend(fontsize = 8, title = 'N')
     #hp.sotaiPhases(ax)
+    hp.totaiPhases(ax,0.8)
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".eps")
+    fig.set_size_inches(2.3,1.7)
+    fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
         plt.show()
     plt.close()
@@ -41,12 +43,12 @@ rand = ["1"]
 names = ["dosSOTAI_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
 
-plot("DOSE0SOTAI_intra1.1", names, labels, False, False)
+#plot("DOSE0SOTAI_intra1.1", names, labels, False, False)
 
 size = ["80", "80"]
 mu = ["2048", "4096"]
 rand = ["1", "1"]
 names = ["dosBBH3D_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
-labels = ["N = " + mu[i]  for i in range(len(size))]
+labels = [mu[i]  for i in range(len(size))]
 
-#plot("DOSE0BBH3D_intra1.1", names, labels, False, False)
+plot("DOSE0BBH3D_intra1.1", names, labels, False, False)

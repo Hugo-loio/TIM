@@ -5,6 +5,12 @@ from scipy import optimize
 
 plt.style.use('science')
 
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "Times New Roman",
+    "font.size": 10
+})
+
 def plotCurve(ax, x, y, label, errors):
     if(errors):
         ax.errorbar(x, np.average(y, axis=0), label = label, yerr = np.std(y, axis = 0)/np.sqrt(len(y)) , capsize = 5, linestyle='-', linewidth = 0.5)
@@ -37,10 +43,14 @@ def plot(title, fileName, specs, errors = False, show = False):
             #ax.legend(fontsize = 6)
             ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.4,0.7))
         else:
-            ax.legend(fontsize = 6)
+            hp.totaiPhases(ax, 0.85)
+            ax.legend(fontsize = 6, bbox_to_anchor = (0.45,0.9))
 
-        fig.savefig(hp.plot_dir() + title + "IPR.png", dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "IPR.eps")
+        ax.tick_params(axis='y', which='major', pad=0.5)
+        ax.yaxis.labelpad = 0
+        fig.set_size_inches(1.7,1.3)
+        fig.savefig(hp.plot_dir() + title + "IPR.png", bbox_inches = 'tight', dpi = 300)
+        fig.savefig(hp.plot_dir() + title + "IPR.pdf", bbox_inches = 'tight', pad_inches = 0)
         if(show):
             plt.show()
         plt.close()
@@ -63,10 +73,18 @@ def plot(title, fileName, specs, errors = False, show = False):
         ax.margins(x = 0)
         if(specs['phases'] == 0):
             hp.sotaiPhases(ax, 0.95)
-        ax.legend(fontsize = 6)
+        else:
+            ymin, ymax = ax.get_ylim()
+            ax.set_ylim([ymin, 1.03*ymax])
+            hp.totaiPhases(ax, 0.95)
+            ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.75))
+        #ax.legend(fontsize = 7)
+        ax.tick_params(axis='y', which='major', pad=0.5)
+        ax.yaxis.labelpad = 0
 
-        fig.savefig(hp.plot_dir() + title + "LSR.png", dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "LSR.eps")
+        fig.set_size_inches(1.7,1.3)
+        fig.savefig(hp.plot_dir() + title + "LSR.png", bbox_inches = 'tight', dpi = 300)
+        fig.savefig(hp.plot_dir() + title + "LSR.pdf", bbox_inches = 'tight', pad_inches = 0)
         if(show):
             plt.show()
         plt.close()
@@ -86,8 +104,10 @@ def plot(title, fileName, specs, errors = False, show = False):
         if(specs['phases'] == 0):
             hp.sotaiPhases(ax)
 
-        fig.savefig(hp.plot_dir() + title + "Gap.png", dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "Gap.eps")
+        fig.set_size_inches(1.7, 1.3)
+        hp.totaiPhases(ax, 0.8)
+        fig.savefig(hp.plot_dir() + title + "Gap.png", bbox_inches = 'tight', dpi = 300, pad_inches = 0.01)
+        fig.savefig(hp.plot_dir() + title + "Gap.pdf", bbox_inches = 'tight', pad_inches = 0.01)
         if(show):
             plt.show()
         plt.close()
@@ -124,9 +144,18 @@ def plot(title, fileName, specs, errors = False, show = False):
             hp.sotaiPhases(ax)
             ax.legend(fontsize = 6, bbox_to_anchor=(0.71,0.8))
         else:
-            ax.legend(fontsize = 6)
-        fig.savefig(hp.plot_dir() + title + "Fractal.png", dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "Fractal.eps")
+            #ax.legend(fontsize = 6)
+            ymin, ymax = ax.get_ylim()
+            ax.set_ylim([ymin, 1.1*ymax])
+            hp.totaiPhases(ax, 0.85)
+            ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.60))
+
+        ax.tick_params(axis='y', which='major', pad=0.5)
+        ax.yaxis.labelpad = 0
+
+        fig.set_size_inches(1.7,1.3)
+        fig.savefig(hp.plot_dir() + title + "Fractal.png", bbox_inches = 'tight', dpi = 300)
+        fig.savefig(hp.plot_dir() + title + "Fractal.pdf", bbox_inches = 'tight', pad_inches = 0)
         if(show):
             plt.show()
         plt.close()
@@ -153,9 +182,9 @@ specs = {
         'fractalSizes' : [10,12,14,16,18,20],
         'lsrSizes' : [20],
         'lsrNStates' : [50, 30,10],
-        'enGapSizes' : [6,8,10,12,14,16,18,20],
+        'enGapSizes' : [20],
         'phases' : 1
         }
 
-plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs, False, True)
+plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs, False, False)
 #plot("LocBBH3D_intra1.1", "locBBH3D_intra1.1", specs)

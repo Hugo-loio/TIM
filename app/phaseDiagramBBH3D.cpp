@@ -1,10 +1,12 @@
 #include <iostream>
 #include "DisorderedBBH3D.h"
 #include "ParallelMPI.h"
+#include "AuxFunctions.h"
 
 int sampPerJob = 1;
 int l[3] = {5,5,5};
 double intra = 1.1;
+double maxW = 9;
 
 void octu(double * res, double * params){
   DisorderedBBH3D bbh3d(intra, 1);
@@ -47,28 +49,36 @@ int main (int argc, char ** argv) {
     l[0] = stoi(argv[1]);
     l[1] = l[0];
     l[2] = l[0];
+    if(argc > 2){
+      intra = stod(argv[2]);
+      if(argc > 3){
+	maxW = stod(argv[3]);
+      }
+    }
   }
 
-  int sampMult = 40;
+  int sampMult = 10;
   vector<vector<double>> paramList;
-  int nPoints = 100;
-  for(int i = 0; i <= nPoints; i++){
+  int nPoints = 50;
+  for(int i = 1; i <= nPoints; i++){
     vector<double> param; 
-    param.push_back(9*(double)i/(double)nPoints);
+    param.push_back(maxW*(double)i/(double)nPoints);
     paramList.push_back(param);
   }
 
+  /*
   if(l[0] == 24){
     paramList.erase(paramList.begin(), paramList.begin() + 95);
   }
   else if(l[0] == 22){
     paramList.erase(paramList.begin(), paramList.begin() + 49);
   }
+  */
 
   ParallelMPI p(&argc, &argv);
   p.setSamples(sampMult);
   p.setParamList(paramList);
-  p.setFile(argv[0], "phaseDiagramBBH3Dquad_L" + to_string(l[0]) + "_intra1.1");
+  p.setFile(argv[0], "phaseDiagramBBH3Dquad_L" + to_string(l[0]) + "_intra" + rmTrailZeros(to_string(intra)));
   p.setJob(quad, 3*sampPerJob);
   p.run();
 }

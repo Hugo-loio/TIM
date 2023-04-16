@@ -122,6 +122,7 @@ double MultipoleOp::quadrupole(int a, int b, double * k){
   cx_mat psi_tilde;
   double p0 = ((double)1/4)*(nOcc/(l[a]*l[b]))*(1+l[a])*(1+l[b]);
   if(!ham->getIsSparse()){
+    ham->H(k);
     vec eigVal;
     eig_sym(eigVal, psi, ham->H(k));
     psi = psi.cols(0,nOcc-1);
