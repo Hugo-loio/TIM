@@ -24,6 +24,7 @@ def plotConstW(name, fileNames, labels, xlabel, show = True, mode = 0):
     ax.set(xlabel = xlabel, ylabel = r'$\Lambda$')
     plt.xscale('log')
     plt.yscale('log')
+    #ax.legend(fontsize = 3.4, ncol = 2, title = r'$E$', title_fontsize = 7)
     ax.legend(fontsize = 4, ncol = 2, title = r'$E$', title_fontsize = 7)
     ymin, ymax = ax.get_ylim()
     ax.set_ylim([ymin, ymax*1.2])
@@ -62,7 +63,7 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
         ax.set_xlim([0,9])
         ax.set_ylim([ymin, ymax*1.3])
         hp.totaiPhases(ax, 0.5)
-        ax.legend(fontsize = 4, ncol = 2, title = r'$L_{x/y}$', title_fontsize = 7)
+        ax.legend(fontsize = 4, ncol = 2, title = r'$L$', title_fontsize = 7)
         ax.tick_params(axis='y', which='major', pad=0)
     else:
         ax.legend(fontsize = 6, ncol = 2)
@@ -110,13 +111,13 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w3.4_d2_m1.1" for val in constWVals]
 constWLabels= [val for val in constWVals]
 
-#plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False, 1)
+#plotConstW("tmmBBH3D_w3.4_d2_m1.1", constWNames, constWLabels, r'$L$', False, 1)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w5_d2_m1.1" for val in constWVals]
 constWLabels= [val for val in constWVals]
 
-plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L_{x/y}$', False, 1)
+#plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L$', False, 1)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w50_d2_m1.1" for val in constWVals]
@@ -140,7 +141,7 @@ constLVals = ["2", "4", "5", "6", "8", "10"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1" for val in constLVals]
 constLLabels = [val for val in constLVals]
 
-#plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
+plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
 
 dVals = ["0", "1", "2"]
 constLNames = ["tmmBBH3D_E0_L4_d" + val + "_m1.1" for val in dVals]

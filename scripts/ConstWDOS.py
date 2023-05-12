@@ -62,6 +62,32 @@ def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
         plt.show()
     plt.close()
 
+def plotZoom2(name, fileNames, labels, detail = True, show = True, ylim = 0):
+    fig, ax = plt.subplots()
+
+    colormap = plt.cm.turbo
+    colors = [colormap(i) for i in np.linspace(0, 1, len(fileNames))]
+    ax.set_prop_cycle('color', colors)
+
+    for i in range(0, len(fileNames)):
+        plotDOS(fileNames[i], labels[i], ax, detail)
+
+    ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
+    ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7, ncols = 2)
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+
+    plt.xlim([-0.5,0.5])
+    if(ylim != 0):
+        plt.ylim([-0.05*ylim, ylim])
+
+    #fig.set_size_inches(2.3,1.7)
+    fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
+    if(show):
+        plt.show()
+    plt.close()
+
 
 size = ["100", "100", "200", "200", "200", "200", "200"]
 weight = ["3.2", "3.2", "3.2", "3.2", "3.2", "3.2", "3.2"]
@@ -103,8 +129,15 @@ weight = ["2", "2.5", "2.6", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = [weight[i] for i in range(len(weight))]
 
-plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+
+weight = ["2.5", "2.6"]
+names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
+labels = [weight[i] for i in range(len(weight))]
+
+#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom2("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom2", names, labels, False, False)
 
 weight = ["2.5", "2.55", "2.6"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu8192_nR1_intra1.1" for i in range(len(weight))]
@@ -133,46 +166,3 @@ labels = ["$\gamma$ = " + i for i in intra]
 
 #plot("CleanDosBBH3D_L80_nMu1024_nR1", names, labels, False, False)
 #plotZoom("CleanDosBBH3D_L80_nMu1024_nR1_zoom", names, labels, False, False, 0.03)
-
-'''
-size = ["10", "20","30"]
-weight = ["3"]
-mu = ["1000", "2000", "4000", "8000"]
-rand = ["1", "2"]
-count = 0
-for s in size:
-    for w in weight:
-        for m in mu:
-            for r in rand:
-                names = ["dosBBH3D_L" + s + "_w" + w + "_nMu" + m + "_nR" + r + "_intra1.1"]
-                labels = ["L = " + s + ", W = " + w + ", N = " + m + ", R = " + r]
-                #plot("ConstWDosBBH3D_intra1.1_test" + str(count), names, labels, False, False)
-                #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
-                count += 1
-
-size = ["50"]
-weight = ["3"]
-mu = ["2000", "4000"]
-rand = ["1","2"]
-for s in size:
-    for w in weight:
-        for m in mu:
-            for r in rand:
-                names = ["dosBBH3D_L" + s + "_w" + w + "_nMu" + m + "_nR" + r + "_intra1.1"]
-                labels = ["L = " + s + ", W = " + w + ", N = " + m + ", R = " + r]
-                plot("ConstWDosBBH3D_intra1.1_test" + str(count), names, labels, False, False)
-                #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
-                count += 1
-
-size = ["80"]
-rand = ["1"]
-for s in size:
-    for w in weight:
-        for m in mu:
-            for r in rand:
-                names = ["dosBBH3D_L" + s + "_w" + w + "_nMu" + m + "_nR" + r + "_intra1.1"]
-                labels = ["L = " + s + ", W = " + w + ", N = " + m + ", R = " + r]
-                plot("ConstWDosBBH3D_intra1.1_test" + str(count), names, labels, False, False)
-                #plotZoom("ConstWDosBBH3D_intra1.1_zoom_test" + str(count), names, labels, False, False)
-                count += 1
-                '''

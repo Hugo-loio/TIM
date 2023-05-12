@@ -20,7 +20,7 @@ for i in range(12):
 #print(U[2])
 def H0(kx, ky, kz, gamma):
     return np.kron(sigma[3], (np.kron(sigma[1], sigma[0])*(np.cos(kx) + gamma) - np.kron(sigma[2],sigma[3])*np.sin(kx))) - \
-            np.kron(sigma[3], np.kron(sigma[2], sigma[2]*(np.cos(ky) + gamma) + sigma[1]*np.sin(kx))) + \
+            np.kron(sigma[3], np.kron(sigma[2], sigma[2]*(np.cos(ky) + gamma) + sigma[1]*np.sin(ky))) + \
             np.kron((sigma[1]*(np.cos(kz) + gamma) - sigma[2]*np.sin(kz)), np.kron(sigma[0], sigma[0]))
 
 def aux_disc(gamma, ndisc): 
@@ -61,11 +61,13 @@ gamma_min = 1
 gamma_max = 1.3
 W_min = 0
 W_max = 5
-ngrid = 200
-version = 1
+ngrid = 20
+version = 2
 
 gammas = np.linspace(gamma_min, gamma_max, ngrid)
 Ws = np.linspace(W_min, W_max, ngrid)
+
+#print(renorm_sigmas(Sigma0, E, 1.1, 3, aux_disc(1.1, ndisc)))
 
 print("Generating aux matrices...")
 pool = mp.Pool(mp.cpu_count(), initargs= (ndisc))
@@ -86,6 +88,14 @@ res = np.array([[r.get() for r in re] for re in res])
 file_name = "SCBA_ndisc" + str(ndisc) + "_v" + str(version) 
 path_name = os.path.dirname(os.path.realpath(__file__)) + "/data/" + file_name
 np.save(path_name, res)
+
+print(np.array_equal(np.round(res[:,:,0],8), np.round(res[:,:,1],8)))
+print(np.array_equal(np.round(res[:,:,1],8), np.round(res[:,:,2],8)))
+for re in res:
+    for r in re:
+        r2 = np.round(r,7)
+        if(r2[0] != r2[1] or r2[0] != r2[2] or r2[1] != r2[2]):
+            print(r2)
 
 file_name = "SCBA_ndisc" + str(ndisc) + "_v" + str(version) + "_params"
 path_name = os.path.dirname(os.path.realpath(__file__)) + "/data/" + file_name

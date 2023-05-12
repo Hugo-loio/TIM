@@ -6,7 +6,7 @@ import numpy as np
 
 plt.style.use('science')
 
-tran_num = np.array([[1.1, 2.55]])
+tran_num = np.array([[1.025, 1.5, 0.15], [1.05, 1.9, 0.15], [1.075, 2.4, 0.15], [1.1, 2.55, 0.15], [1.125, 2.9, 0.15], [1.15, 3.3, 0.15], [1.175, 3.4, 0.15], [1.2, 3.6, 0.15], [1.225, 3.9, 0.15], [1.25, 4.0, 0.15], [1.275, 4.3, 0.15]])
 
 def plot(name):
     fig, ax = plt.subplots()
@@ -22,10 +22,11 @@ def plot(name):
     x = axes[0]
     y = axes[1]
     mat = np.amax(ren_gammas, axis = 2) 
+    print(ren_gammas[0,0])
 
     im = ax.pcolormesh(x, y, mat, shading = 'nearest', cmap = 'viridis', linewidth = 0, rasterized = True)
     cbar = fig.colorbar(im)
-    cbar.set_label(r'$\max_{i}\{\gamma^\prime_i\}$')
+    cbar.set_label(r'$\gamma^\prime$')
     ax.set(xlabel = r'$W$', ylabel = r'$\gamma$')
 
     gamma_crit, w_crit = [], []
@@ -40,7 +41,7 @@ def plot(name):
                 print("Transition not found for gamma", gamma)
 
     ax.plot(w_crit,gamma_crit,'--', color = 'red', label = 'SCBA')
-    ax.plot(tran_num[:,1], tran_num[:,0], 'o', label = r'$Q$', markersize = 6, color = 'blue')
+    ax.errorbar(tran_num[:,1], tran_num[:,0], xerr = tran_num[:,2], marker = '.', label = r'$Q$', markersize = 4, markeredgewidth = 0.5, linewidth = 0.5, capsize = 2, capthick = 1, color = 'blue', linestyle = '')
     ax.legend(fontsize = 9, title = 'Transition')
 
     '''
@@ -67,7 +68,8 @@ def plot(name):
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0, dpi = 300)
     plt.close()
 
-ndiscs = [10,20,30]
+#ndiscs = [10,20]
+ndiscs = [10]
 version = 1
 names = ["SCBA_ndisc" + str(ndisc) + "_v" + str(version) for ndisc in ndiscs]
 
