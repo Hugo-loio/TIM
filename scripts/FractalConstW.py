@@ -39,9 +39,10 @@ def plot(name, fileNames, labels, sizes, show = True):
             ax.plot(dataPlot[1][0:nPoints], d, linestyle = '-', label = labels[e])
 
     ax.set(xlabel = r'$E$', ylabel = r'$D_2$')
-    ax.legend()
+    ax.legend(fontsize = 8, title = "W")
     ax.tick_params(axis='y', which='major', pad=0.5)
     ax.yaxis.labelpad = 0.5
+    ax.axhline(y = 3, color = 'black', linestyle = '--', linewidth = 0.5)
 
     fig.set_size_inches(1.7, 1.3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300, pad_inches = 0)
@@ -61,6 +62,7 @@ labels = ["W = " + w for w in weights]
 weights = ["3.4", "5"]
 sizes = [4, 6, 8, 10, 12, 14, 16]
 names = ["fractalBBH3D_w" + w + "_m1.1" for w in weights]
-labels = ["W = " + w for w in weights]
+#labels = ["W = " + w for w in weights]
+labels = ["3.4 (phase II)", "5 (phase III)"]
 plot("FractalConstWBBH3D", names, labels, sizes, False)
 

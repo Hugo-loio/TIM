@@ -24,12 +24,14 @@ def plotConstW(name, fileNames, labels, xlabel, show = True, mode = 0):
     ax.set(xlabel = xlabel, ylabel = r'$\Lambda$')
     plt.xscale('log')
     plt.yscale('log')
-    #ax.legend(fontsize = 3.4, ncol = 2, title = r'$E$', title_fontsize = 7)
-    ax.legend(fontsize = 4, ncol = 2, title = r'$E$', title_fontsize = 7)
+    ax.legend(fontsize = 3.4, ncol = 2, title = r'$E$', title_fontsize = 7)
+    #ax.legend(fontsize = 4, ncol = 2, title = r'$E$', title_fontsize = 7)
     ymin, ymax = ax.get_ylim()
     ax.set_ylim([ymin, ymax*1.2])
     ax.yaxis.labelpad = 0
     ax.tick_params(axis='y', which='major', pad=0)
+    #ax.text(6.4,4, "Phase III")
+    ax.text(4,11, "Phase II")
 
     #ax.yaxis.set_minor_formatter(ticker.ScalarFormatter()) 
     ax.yaxis.set_minor_formatter(ticker.NullFormatter()) 
@@ -65,6 +67,17 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
         hp.totaiPhases(ax, 0.5)
         ax.legend(fontsize = 4, ncol = 2, title = r'$L$', title_fontsize = 7)
         ax.tick_params(axis='y', which='major', pad=0)
+    elif(model == 3):
+        ax.set_xlim([18,34])
+        ax.set_ylim([0.2,3])
+        ax.legend(fontsize = 5, ncol = 2, title = r'$L$', title_fontsize = 8, bbox_to_anchor = (0.7,0.65), loc = 'center')
+        ax.yaxis.set_minor_formatter(ticker.NullFormatter()) 
+        #ax.yaxis.set_minor_formatter(ticker.ScalarFormatter()) 
+        ax.axvline(24, color='black', linestyle='dashed', linewidth=0.8)
+        ax.text((18+24)/2, 2.2, r'III', ha = 'center', fontsize=8)
+        ax.text((24+34)/2, 2.2, r'IV', ha = 'center', fontsize=8)
+        ax.tick_params(axis='y', which='major', pad=0)
+        #ax.legend(fontsize = 6, ncol = 2)
     else:
         ax.legend(fontsize = 6, ncol = 2)
 
@@ -141,7 +154,7 @@ constLVals = ["2", "4", "5", "6", "8", "10"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1" for val in constLVals]
 constLLabels = [val for val in constLVals]
 
-plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
+#plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
 
 dVals = ["0", "1", "2"]
 constLNames = ["tmmBBH3D_E0_L4_d" + val + "_m1.1" for val in dVals]
@@ -151,6 +164,6 @@ constLLabels = ["x", "y", "z"]
 
 constLVals = ["4", "6", "8", "10", "12"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1_cross2" for val in constLVals]
-constLLabels = [r'$L_{x/y} = $ ' + val for val in constLVals]
+constLLabels = [val for val in constLVals]
 
-#plotConstL("tmmBBH3D_E0_d2_m1.1_cross2", constLNames, constLLabels, False)
+plotConstL("tmmBBH3D_E0_d2_m1.1_cross2", constLNames, constLLabels, False, 3)

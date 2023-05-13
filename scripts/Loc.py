@@ -139,6 +139,7 @@ def plot(title, fileName, specs, errors = False, show = False):
             ax.plot(dataPlot[1][0:nPoints], d, linestyle = '-', label = "n = " + str(n))
 
         ax.set(xlabel = r'$W$', ylabel = r'$D_2$')
+        ax.axhline(y = 3, color = 'black', linestyle = '--', linewidth = 0.5)
         ax.margins(x = 0)
         if(specs['phases'] == 0):
             hp.sotaiPhases(ax)

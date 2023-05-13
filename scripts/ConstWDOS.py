@@ -1,6 +1,7 @@
 import helper as hp
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import optimize
 
 plt.style.use('science')
 
@@ -62,7 +63,10 @@ def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
         plt.show()
     plt.close()
 
-def plotZoom2(name, fileNames, labels, detail = True, show = True, ylim = 0):
+def linFunc(x, a, b):
+    return a*x + b
+
+def plotFit(name, fileNames, labels, detail = True, show = True, ylim = 0):
     fig, ax = plt.subplots()
 
     colormap = plt.cm.turbo
@@ -70,16 +74,29 @@ def plotZoom2(name, fileNames, labels, detail = True, show = True, ylim = 0):
     ax.set_prop_cycle('color', colors)
 
     for i in range(0, len(fileNames)):
-        plotDOS(fileNames[i], labels[i], ax, detail)
+        data = hp.readfile(fileNames[i] + ".dat")
+        nPoints = int(len(data)/2)
+        en = data[0::2,0]
+        indices = np.argwhere(np.where((en > 0.04) & (en < 0.65), en, 0))
+        en = en[indices]
+        rho = data[1::2,0][indices]
+
+        ax.plot(en, rho, label = labels[i], linestyle='-', linewidth=0.5, alpha = 1)
+        
+        xFit = np.array(np.log(en)[:,0])
+        yFit = np.array(np.log(rho)[:,0])
+        popt, pcov = optimize.curve_fit(linFunc, xFit, yFit)
+        err = np.sqrt(np.diag(pcov))
+        print(popt, err)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
-    ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7, ncols = 2)
+    ax.legend(fontsize = 10, title = r'$W$', title_fontsize = 12, ncols = 1)
     ax.set_xscale('log')
     ax.set_yscale('log')
 
-    plt.xlim([-0.5,0.5])
-    if(ylim != 0):
-        plt.ylim([-0.05*ylim, ylim])
+    #plt.xlim([-0.5,0.5])
+    #if(ylim != 0):
+    #    plt.ylim([-0.05*ylim, ylim])
 
     #fig.set_size_inches(2.3,1.7)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
@@ -137,7 +154,7 @@ names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(l
 labels = [weight[i] for i in range(len(weight))]
 
 #plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom2("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom2", names, labels, False, False)
+plotFit("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_fit", names, labels, False, False)
 
 weight = ["2.5", "2.55", "2.6"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu8192_nR1_intra1.1" for i in range(len(weight))]
