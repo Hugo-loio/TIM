@@ -42,7 +42,8 @@ def plotEnGap(name, fileName, show):
         lsr.append(np.average(lsrs, axis = 1))
         lsrErr.append(np.std(lsrs, axis = 1)/np.sqrt(nsamp))
 
-
+    avg_ratios = np.average(ratios, axis = 1)
+    print(avg_ratios[10])
 
     spec = gridspec.GridSpec(ncols=2, nrows=1, width_ratios=[40, 1])
     fig = plt.figure()
