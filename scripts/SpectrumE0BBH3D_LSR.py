@@ -118,13 +118,16 @@ def plotEnGap(name, fileName, show):
         ax.errorbar(w[1:], lsr[i][1:], capsize = 2, linewidth = 0.5, capthick = 0.5, label = r'$n = ' + str(n) + '$')
     ymin, ymax = ax.get_ylim()
     ax.set_ylim([ymin, 1.01*ymax])
-    hp.totaiPhases(ax, 0.95)
-    fig.set_size_inches(1.7,1.3)
-    ax.legend(fontsize = 7, bbox_to_anchor = (0.41,0.55, 0.16, 0.1), alignment = 'center')
+    #hp.totaiPhases(ax, 0.95)
+    hp.totaiPhases(ax, 0.97)
+    #fig.set_size_inches(1.7,1.3)
+    fig.set_size_inches(4,3)
+    #ax.legend(fontsize = 7, bbox_to_anchor = (0.41,0.55, 0.16, 0.1), alignment = 'center')
+    ax.legend(bbox_to_anchor = (0.7,0.5), loc = 'center')
     ax.yaxis.labelpad = 0
     ax.tick_params(axis='y', which='major', pad=0.5)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight')
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches='tight', pad_inches = 0)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches='tight', pad_inches = 0.01)
 
 
 sizes = ['20']

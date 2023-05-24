@@ -30,9 +30,11 @@ def plot(name, fileNames, labels, detail = True, show = True):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
-    ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7)
+    #ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7)
+    ax.legend(loc = 'upper right', fontsize = 9, title = r'$W$', title_fontsize = 12)
 
-    fig.set_size_inches(2.3,1.7)
+    #fig.set_size_inches(2.3,1.7)
+    fig.set_size_inches(4,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
@@ -50,13 +52,15 @@ def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
-    ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7, ncols = 2)
+    #ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7, ncols = 2)
+    ax.legend(loc = 'upper right', fontsize = 10, title = r'$W$', title_fontsize = 12, ncols = 2)
 
     plt.xlim([-0.5,0.5])
     if(ylim != 0):
         plt.ylim([-0.05*ylim, ylim])
 
-    fig.set_size_inches(2.3,1.7)
+    #fig.set_size_inches(2.3,1.7)
+    fig.set_size_inches(4,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
@@ -146,8 +150,8 @@ weight = ["2", "2.5", "2.6", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = [weight[i] for i in range(len(weight))]
 
-plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
 
 weight = ["2.5", "2.6"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]

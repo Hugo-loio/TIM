@@ -120,10 +120,11 @@ for i in range(3):
 w0_avg = np.average(w0)
 w0_err = np.amax(abs(w0-w0_avg))
 w0_err = np.amax([w0_err,np.amax(abs(w0-w0_avg))])
-text = r'$ W_{\times}(0) = $'+ str(round(w0_avg, 2)) + r'$ \pm $' + str(round(w0_err, 2))
-ax.text(0.2, 3.65, text, ha = 'center')
+text = r'$ W_{\times}(0) = $'+ str(round(w0_avg, 2)) + r'$ \pm $' + str(round(1.5*w0_err, 2))
+ax.text(0.17, 3.65, text, ha = 'center')
 
 #plt.show()
+fig.set_size_inches(2.3,3)
 fig.savefig(hp.plot_dir() + "tmmBBH3D_E0_d2_m1.1_cross_L.png", dpi = 300)
-fig.savefig(hp.plot_dir() + "tmmBBH3D_E0_d2_m1.1_cross_L.eps")
+fig.savefig(hp.plot_dir() + "tmmBBH3D_E0_d2_m1.1_cross_L.pdf", bbox_inches = 'tight', pad_inches = 0.01)
 

@@ -26,11 +26,13 @@ def plot(name, fileNames, labels, detail = True, show = True):
     ax.set(xlabel = r'$W$', ylabel = r'$\rho(0)$')
     ax.margins(x = 0)
     if(len(fileNames) > 1):
-        ax.legend(fontsize = 8, title = 'N')
+        #ax.legend(fontsize = 8, title = 'N')
+        ax.legend(title = 'N', bbox_to_anchor = (0.6, 0.7))
     #hp.sotaiPhases(ax)
     hp.totaiPhases(ax,0.8)
 
-    fig.set_size_inches(2.3,1.7)
+    #fig.set_size_inches(2.3,1.7)
+    fig.set_size_inches(4,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):

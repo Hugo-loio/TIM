@@ -24,25 +24,27 @@ def plotConstW(name, fileNames, labels, xlabel, show = True, mode = 0):
     ax.set(xlabel = xlabel, ylabel = r'$\Lambda$')
     plt.xscale('log')
     plt.yscale('log')
-    ax.legend(fontsize = 3.4, ncol = 2, title = r'$E$', title_fontsize = 7)
-    #ax.legend(fontsize = 4, ncol = 2, title = r'$E$', title_fontsize = 7)
+    #ax.legend(fontsize = 3.4, ncol = 2, title = r'$E$', title_fontsize = 7)
+    ax.legend(fontsize = 8, ncol = 2, title = r'$E$', title_fontsize = 8)
     ymin, ymax = ax.get_ylim()
-    ax.set_ylim([ymin, ymax*1.2])
+    #ax.set_ylim([ymin, ymax*1.2])
     ax.yaxis.labelpad = 0
     ax.tick_params(axis='y', which='major', pad=0)
     #ax.text(6.4,4, "Phase III")
-    ax.text(4,11, "Phase II")
+    ax.text(7.5,4, "Phase III")
+    #ax.text(4,11, "Phase II")
 
     #ax.yaxis.set_minor_formatter(ticker.ScalarFormatter()) 
-    ax.yaxis.set_minor_formatter(ticker.NullFormatter()) 
+    #ax.yaxis.set_minor_formatter(ticker.NullFormatter()) 
     #ax.yaxis.set_major_formatter(ticker.ScalarFormatter()) 
 
     #ax.xaxis.set_major_formatter(ticker.ScalarFormatter()) 
     #ax.xaxis.set_minor_formatter(ticker.ScalarFormatter()) 
 
-    fig.set_size_inches(1.7,1.3)
+    #fig.set_size_inches(1.7,1.3)
+    fig.set_size_inches(4,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
         plt.show()
     plt.close()
@@ -56,7 +58,6 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
     ax.set(xlabel = r'$W$', ylabel = r'$\Lambda$')
     plt.yscale('log')
     ax.margins(x = 0)
-    fig.set_size_inches(1.7,1.3)
     if(model == 1):
         hp.sotaiPhases(ax, 0.75)
         ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.7,0.6))
@@ -64,13 +65,17 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
         ymin, ymax = ax.get_ylim()
         ax.set_xlim([0,9])
         ax.set_ylim([ymin, ymax*1.3])
-        hp.totaiPhases(ax, 0.5)
-        ax.legend(fontsize = 4, ncol = 2, title = r'$L$', title_fontsize = 7)
+        #hp.totaiPhases(ax, 0.5)
+        hp.totaiPhases(ax, 0.7)
+        #ax.legend(fontsize = 4, ncol = 2, title = r'$L$', title_fontsize = 7)
+        ax.legend(fontsize = 8, ncol = 2, title = r'$L$', title_fontsize = 9, bbox_to_anchor = (0.7, 0.15), loc = 'center')
         ax.tick_params(axis='y', which='major', pad=0)
     elif(model == 3):
         ax.set_xlim([18,34])
         ax.set_ylim([0.2,3])
-        ax.legend(fontsize = 5, ncol = 2, title = r'$L$', title_fontsize = 8, bbox_to_anchor = (0.7,0.65), loc = 'center')
+        #ax.legend(fontsize = 5, ncol = 2, title = r'$L$', title_fontsize = 8, bbox_to_anchor = (0.7,0.65), loc = 'center')
+        ax.legend(fontsize = 8, ncol = 2, title = r'$L$', title_fontsize = 9, bbox_to_anchor = (0.7, 0.65), loc = 'center')
+        ax.tick_params(axis='y', which='major', pad=0)
         ax.yaxis.set_minor_formatter(ticker.NullFormatter()) 
         #ax.yaxis.set_minor_formatter(ticker.ScalarFormatter()) 
         ax.axvline(24, color='black', linestyle='dashed', linewidth=0.8)
@@ -83,8 +88,11 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
 
     ax.yaxis.labelpad = 0
 
+    #fig.set_size_inches(1.7,1.3)
+    #fig.set_size_inches(4,3)
+    fig.set_size_inches(2.3,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):
         plt.show()
     plt.close()
@@ -130,7 +138,7 @@ constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w5_d2_m1.1" for val in constWVals]
 constWLabels= [val for val in constWVals]
 
-#plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L$', False, 1)
+plotConstW("tmmBBH3D_w5_d2_m1.1", constWNames, constWLabels, r'$L$', False, 1)
 
 constWVals = ["-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"]
 constWNames = ["tmmBBH3D_E" + val + "_w50_d2_m1.1" for val in constWVals]
@@ -166,4 +174,4 @@ constLVals = ["4", "6", "8", "10", "12"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1_cross2" for val in constLVals]
 constLLabels = [val for val in constLVals]
 
-plotConstL("tmmBBH3D_E0_d2_m1.1_cross2", constLNames, constLLabels, False, 3)
+#plotConstL("tmmBBH3D_E0_d2_m1.1_cross2", constLNames, constLLabels, False, 3)

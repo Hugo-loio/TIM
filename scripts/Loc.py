@@ -44,13 +44,15 @@ def plot(title, fileName, specs, errors = False, show = False):
             ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.4,0.7))
         else:
             hp.totaiPhases(ax, 0.85)
-            ax.legend(fontsize = 6, bbox_to_anchor = (0.45,0.9))
+            #ax.legend(fontsize = 6, bbox_to_anchor = (0.45,0.9))
+            ax.legend(bbox_to_anchor = (0.55,0.7))
 
         ax.tick_params(axis='y', which='major', pad=0.5)
         ax.yaxis.labelpad = 0
-        fig.set_size_inches(1.7,1.3)
+        #fig.set_size_inches(1.7,1.3)
+        fig.set_size_inches(4,3)
         fig.savefig(hp.plot_dir() + title + "IPR.png", bbox_inches = 'tight', dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "IPR.pdf", bbox_inches = 'tight', pad_inches = 0)
+        fig.savefig(hp.plot_dir() + title + "IPR.pdf", bbox_inches = 'tight', pad_inches = 0.01)
         if(show):
             plt.show()
         plt.close()
@@ -151,14 +153,16 @@ def plot(title, fileName, specs, errors = False, show = False):
             ymin, ymax = ax.get_ylim()
             ax.set_ylim([ymin, 1.1*ymax])
             hp.totaiPhases(ax, 0.85)
-            ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.60))
+            #ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.60))
+            ax.legend(bbox_to_anchor = (0.7,0.50), loc = 'center')
 
         ax.tick_params(axis='y', which='major', pad=0.5)
         ax.yaxis.labelpad = 0
 
-        fig.set_size_inches(1.7,1.3)
+        #fig.set_size_inches(1.7,1.3)
+        fig.set_size_inches(4,3)
         fig.savefig(hp.plot_dir() + title + "Fractal.png", bbox_inches = 'tight', dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "Fractal.pdf", bbox_inches = 'tight', pad_inches = 0)
+        fig.savefig(hp.plot_dir() + title + "Fractal.pdf", bbox_inches = 'tight', pad_inches = 0.01)
         if(show):
             plt.show()
         plt.close()

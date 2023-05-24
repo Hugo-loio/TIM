@@ -39,14 +39,16 @@ def plot(name, fileNames, labels, sizes, show = True):
             ax.plot(dataPlot[1][0:nPoints], d, linestyle = '-', label = labels[e])
 
     ax.set(xlabel = r'$E$', ylabel = r'$D_2$')
-    ax.legend(fontsize = 8, title = "W")
+    #ax.legend(fontsize = 8, title = "W")
+    ax.legend(title = "W")
     ax.tick_params(axis='y', which='major', pad=0.5)
     ax.yaxis.labelpad = 0.5
     ax.axhline(y = 3, color = 'black', linestyle = '--', linewidth = 0.5)
 
-    fig.set_size_inches(1.7, 1.3)
+    #fig.set_size_inches(1.7, 1.3)
+    fig.set_size_inches(4,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300, pad_inches = 0)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
 
     if(show):
         plt.show()
