@@ -146,15 +146,15 @@ weight = ["2", "2.5", "2.6", "3.2", "3.4", "3.6", "4", "9"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = [weight[i] for i in range(len(weight))]
 
-#plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-#plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
+plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
+plotZoom("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_zoom", names, labels, False, False)
 
 weight = ["2.5", "2.6"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu4096_nR1_intra1.1" for i in range(len(weight))]
 labels = [weight[i] for i in range(len(weight))]
 
 #plot("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1", names, labels, False, False)
-plotFit("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_fit", names, labels, False, False)
+#plotFit("ConstWDosBBH3D_intra1.1_L80_nMu4096_nR1_fit", names, labels, False, False)
 
 weight = ["2.5", "2.55", "2.6"]
 names = ["dosBBH3D_L80_w" + weight[i] + "_nMu8192_nR1_intra1.1" for i in range(len(weight))]

@@ -1,6 +1,8 @@
 import helper as hp
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from matplotlib import gridspec
+import matplotlib.colors as cls
 from scipy import optimize
 import numpy as np
 
@@ -64,27 +66,65 @@ def getCross(fileNames, nums):
         y.append(np.average(ys))
         yerr.append(np.std(ys)/np.sqrt(len(ys)))
 
-    fig, ax = plt.subplots()
+    spec = gridspec.GridSpec(ncols=2, nrows=2, width_ratios=[40, 1])
+    fig = plt.figure()
+    ax = fig.add_subplot(spec[:,0])
     ax.set(xlabel = r'$W$', ylabel = r'Energy')
 
-    plt.yscale('log')
+    black = cls.to_rgba_array('black')[0]
+    color1 = np.array([float(num) for num in cm.tab10(0)])
+    color2 = np.array([float(num) for num in cm.tab10(3)])
+    black = cls.to_rgba_array('black')[0]
+    white = cls.to_rgba_array('white')[0]
+    colors1 = [color1*0.25 + 0.75*white, color1,color1*0.5 + 0.50*black]
+    colors2 = [color2*0.25 + 0.75*white, color2,color2*0.5 + 0.50*black]
+    nodes = [0.0, 0.5, 1]
+    cmap1 = cls.LinearSegmentedColormap.from_list("mycmap1", list(zip(nodes,colors1)))
+    cmap2 = cls.LinearSegmentedColormap.from_list("mycmap2", list(zip(nodes,colors2)))
+    L = np.array([int(size) for size in sizes])
+    vmin = np.amin(L)
+    vmax = np.amax(L)
+
+    ax_cmap1 = fig.add_subplot(spec[0,1])
+    pos = ax_cmap1.get_position()
+    ax_cmap1.set_position([0.95*pos.x0, pos.y0, pos.width, pos.height])
+    norm = cls.Normalize(vmin = vmin, vmax = vmax)
+    cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap1), cax = ax_cmap1, orientation = 'vertical')
+    cbar.set_label(r'$L$')
+    cbar.ax.set_title('Gap', loc = 'left')
+
+    ax_cmap2 = fig.add_subplot(spec[1,1])
+    pos = ax_cmap2.get_position()
+    ax_cmap2.set_position([0.95*pos.x0, 0.30*pos.y0, pos.width, pos.height])
+    norm = cls.Normalize(vmin = vmin, vmax = vmax)
+    cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap2), cax = ax_cmap2, orientation = 'vertical')
+    cbar.set_label(r'$L$')
+    cbar.ax.set_title('MLS', loc = 'left')
+    ax.set_yscale('log')
+
     #plt.xscale('log')
     #ax.margins(x = 0)
 
     for i,gap in enumerate(gaps):
-        ax.errorbar(w, gap, capsize = 2, linewidth = 0.5, capthick = 0.5, label = "Gap")
+        color = cmap1((L[i]-vmin)/(vmax-vmin))
+        ax.errorbar(w, gap, color = color, linewidth = 0.5)
         #ax.errorbar(w, gap, yerr = gapErrs[i], capsize = 2, linewidth = 0.5, capthick = 0.5, label = "Gap")
 
     for i,mls in enumerate(mlss):
         for e,num in enumerate(nums[-1:]):
+            color = cmap2((L[i]-vmin)/(vmax-vmin))
+            ax.errorbar(w, mls[:,e], color = color, linewidth = 0.5)
             #ax.errorbar(w, mls[:,e], yerr = mlsErr, capsize = 2, linewidth = 0.5, capthick = 0.5, label = "MLS")
-            ax.errorbar(w, mls[:,e], capsize = 2, linewidth = 0.5, capthick = 0.5, label = "MLS")
 
-    ax.errorbar(x, y, xerr = xerr, yerr = yerr, capsize = 2, linewidth = 0.5, capthick = 0.5, color = 'black')
+    ax.errorbar(x, y, xerr = xerr, yerr = yerr, capsize = 2, linewidth = 0.5, capthick = 0.5, color = 'black', ls = '')
     #ax.legend(fontsize = 10, ncol = 1)
     #ax.legend()
 
-    fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross.png", dpi = 300, bbox_inches='tight')
+    ax.yaxis.labelpad = 0
+    fig.set_size_inches(3.3,2.5)
+    ax.tick_params(axis='y', which='major', pad=0.5)
+    fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross.png", dpi = 300, bbox_inches='tight', pad_inches = 0.01)
+    fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross.pdf", bbox_inches='tight', pad_inches = 0.01)
 
     return np.array(x), np.array(xerr), np.array(y), np.array(yerr)
 
@@ -119,8 +159,9 @@ for i in range(3):
 
 w0_avg = np.average(w0)
 w0_err = np.amax([w0_err,np.amax(abs(w0-w0_avg))])
-text = r'$ W_{\times}(0) = $'+ str(round(w0_avg, 2)) + r'$ \pm $' + str(round(w0_err, 2))
-ax.text(0.03, 3.75, text, ha = 'center')
+text = r'$ W_{\times}(0) = $'+ str(round(w0_avg, 2)) + r'$ \pm $' + str(round(1.5*w0_err, 2))
+ax.text(0.04, 3.8, text, ha = 'center')
 
-fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross_fit.png", dpi = 300)
-fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross_fit.pdf")
+fig.set_size_inches(3.3,2.5)
+fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross_fit.png", dpi = 300, bbox_inches='tight', pad_inches = 0.01)
+fig.savefig(hp.plot_dir() + "spectrumE0BBH3D_m1.1_cross_fit.pdf", bbox_inches='tight', pad_inches = 0.01)

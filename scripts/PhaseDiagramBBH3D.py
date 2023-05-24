@@ -37,7 +37,8 @@ def plot(name, fileNames, labels, detail = True, show = True):
     hp.totaiPhases(ax)
     ax.legend(bbox_to_anchor=(0.5,0.4), fontsize=8)
 
-    fig.set_size_inches(3.4, 2.5)
+    fig.set_size_inches(4, 3)
+    #fig.set_size_inches(3.4, 2.5)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches = 'tight', pad_inches = 0.01)
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     if(show):

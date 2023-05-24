@@ -15,9 +15,9 @@ sigma = np.array([[[1,0],[0,1]], [[0,1],[1,0]], [[0,-1j],[1j,0]], [[1,0],[0,-1]]
 def BBH3D(kz, ky, kx, gamma = 0.5, delta = 0, **kwargs):
     return np.kron(sigma[3], (np.kron(sigma[1], sigma[0])*(np.cos(kx) + gamma) - np.kron(sigma[2],sigma[3])*np.sin(kx))) - \
             np.kron(sigma[3], np.kron(sigma[2], sigma[2]*(np.cos(ky) + gamma) + sigma[1]*np.sin(ky))) + \
-            np.kron((sigma[1]*(np.cos(kz) + gamma) - sigma[2]*np.sin(kz)), np.kron(sigma[0], sigma[0]))
+            np.kron((sigma[1]*(np.cos(kz) + gamma) - sigma[2]*np.sin(kz)), np.kron(sigma[0], sigma[0])) + \
+            np.kron(sigma[3], np.kron(sigma[0] + sigma[3], sigma[0] + sigma[3]))*delta
             #np.kron(sigma[3], np.kron(sigma[3], sigma[0]))*delta
-            #np.kron(sigma[3], np.kron(sigma[0] + sigma[3], sigma[0] + sigma[3]))*delta
 
 def BBH3D_eff(kx, ky, kz, gamma = 0.5, delta = 0, Sigmax = 0, Sigmay = 0, Sigmaz = 0, **kwargs):
     return np.kron(sigma[3], (np.kron(sigma[1], sigma[0])*(np.cos(kx) + gamma + Sigmax) - np.kron(sigma[2],sigma[3])*np.sin(kx))) - \
@@ -50,7 +50,7 @@ def wilson_loop(kx, ky, ham, args):
     vecs2 = np.copy(vecs[1:])
     vecs2 = np.append(vecs2, [vecs[0]], axis = 0)
     loop = np.linalg.multi_dot(np.einsum('abc,abd->acd', np.conjugate(vecs), vecs2))
-    return loop + args['delta']*np.kron(sigma[3] ,sigma[0])
+    return loop #+ args['delta']*np.kron(sigma[3] ,sigma[0])
 
 def phases(vec):
     return np.real(-1j*np.log(vec))/(2*np.pi)
@@ -87,7 +87,7 @@ def wannier_bands(args):
                 zs[i].append(phase)
 
     for z in zs:
-        ax.plot_trisurf(x,y,z)
+        ax.plot_trisurf(x,y,z, rasterized = True)
 
     ax.set(xlabel = r'$k_y$', ylabel = r'$k_z$', zlabel = r'$\nu_x$')
     ax.set_zlabel(r'$\nu_x$', labelpad = 0)
@@ -98,7 +98,7 @@ def wannier_bands(args):
     name = "WannierBandsBBH3D_gamma" + str(args['gamma'])
     #fig.set_size_inches(4, 3)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight', pad_inches = 0.2)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.2)
+    fig.savefig(hp.plot_dir() + name + ".pdf", dpi = 300, bbox_inches = 'tight', pad_inches = 0.2)
 
 def nested_wilson_loop(kx, ham, args):
     vecs = []
@@ -128,6 +128,25 @@ def test_nested_wilson():
     for nu in nus:
         ax.plot(x, nu)
     plt.show()
+
+def nested_wannier_bands(args):
+    nus = []
+    x = []
+    for kx in np.linspace(-np.pi,np.pi,301):
+        x.append(kx)
+        eigs = np.linalg.eig(nested_wilson_loop(kx, BBH3D, args)[0])[0]
+        nus.append(np.sort(phases(eigs)))
+    nus = np.transpose(np.array(nus))
+
+    fig, ax = plt.subplots()
+    ax.set(xlabel = r'$k_z$', ylabel = r'$\eta_{xy}$')
+    for nu in nus:
+        ax.plot(x, nu)
+
+    name = "NestedWannierBandsBBH3D_gamma" + str(args['gamma'])
+    fig.set_size_inches(3.4, 2.5)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches = 'tight', pad_inches = 0)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0)
 
 def nested_nested_wilson_loop(ham, args):
     vecs = []
@@ -179,5 +198,16 @@ args['gamma'] = 1
 wannier_bands(args)
 args['gamma'] = 2
 wannier_bands(args)
+
+'''
+args = {'gamma' : 0.5, 'delta' : 0.0001}
+nested_wannier_bands(args)
+args['gamma'] = 1
+nested_wannier_bands(args)
+args['gamma'] = 2
+nested_wannier_bands(args)
+'''
+
+
 
 #invariant()

@@ -66,7 +66,7 @@ def plot(name):
 
     fig.set_size_inches(3,1.8)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0, dpi = 300)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01, dpi = 300)
     plt.close()
 
 #ndiscs = [10,20]

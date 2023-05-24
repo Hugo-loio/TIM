@@ -30,7 +30,8 @@ def plot(name):
     #ax.errorbar(x, qavg, yerr = qerr, capsize = 4, linestyle='none', linewidth = 0.5, capthick = 0.5, marker = '_')
     ax.errorbar(x, qavg, yerr = qerr, capsize = 1.5, linestyle='none', marker = '_', linewidth = 0.5, capthick = 0.5, markersize = 2.5, markeredgewidth = 0.5)
 
-    ax.set(xlabel = r'$\frac{1}{L}$', ylabel = r'$Q$')
+    #ax.set(xlabel = r'$\frac{1}{L}$', ylabel = r'$Q$')
+    ax.set(xlabel = r'$1/L$', ylabel = r'$Q$')
 
     nFitPoints = [5,10,len(x)]
     bFit = []
@@ -50,9 +51,18 @@ def plot(name):
     text = r'$ Q(0) = $'+ str(round(q0, 2)) + r'$ \pm $' + str(round(q0Err,2))
     xmax = ax.get_xlim()[1]
     ymax = ax.get_ylim()[1]
-    ax.text(0.55*xmax, 0.85*ymax, text, ha = 'center')
+    match w:
+        case 4:
+            ax.text(0.55*xmax, -0.1, text, ha = 'center')
+        case 9:
+            ax.text(0.43*xmax, 0.007, text, ha = 'center')
+        case _:
+            ax.text(0.55*xmax, 0.85*ymax, text, ha = 'center')
+    ax.yaxis.labelpad = 0
+    ax.tick_params(axis='y', which='major', pad=0.5)
 
-    fig.set_size_inches(1.7, 1.3)
+    #fig.set_size_inches(1.7, 1.3)
+    fig.set_size_inches(2, 1.5)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches = 'tight', pad_inches = 0.01)
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
     return q0, q0Err

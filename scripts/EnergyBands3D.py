@@ -12,7 +12,7 @@ def EnergyBands3D(fname, show: bool):
     fig = plt.figure()
     ax = fig.add_subplot(projection = '3d')
     for i in range(2,len(data)):
-        ax.plot_trisurf(data[0],data[1],data[i])
+        ax.plot_trisurf(data[0],data[1],data[i], rasterized = True)
 
     ax.set(xlabel = r'$k_x$', ylabel = r'$k_y$', zlabel = r'$E$')
     ax.set_zlabel(r'$E$', labelpad = -7)
@@ -20,7 +20,7 @@ def EnergyBands3D(fname, show: bool):
 
     ax.view_init(10,-30)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight', pad_inches = 0.2)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.2)
+    fig.savefig(hp.plot_dir() + name + ".pdf", dpi = 300, bbox_inches = 'tight', pad_inches = 0.2)
     if(show):
         plt.show()
 

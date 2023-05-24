@@ -104,8 +104,10 @@ def plot(title, fileName, specs, errors = False, show = False):
         if(specs['phases'] == 0):
             hp.sotaiPhases(ax)
 
-        fig.set_size_inches(1.7, 1.3)
-        hp.totaiPhases(ax, 0.8)
+        #fig.set_size_inches(1.7, 1.3)
+        fig.set_size_inches(4,3)
+        #hp.totaiPhases(ax, 0.8)
+        hp.totaiPhases(ax, 0.9)
         fig.savefig(hp.plot_dir() + title + "Gap.png", bbox_inches = 'tight', dpi = 300, pad_inches = 0.01)
         fig.savefig(hp.plot_dir() + title + "Gap.pdf", bbox_inches = 'tight', pad_inches = 0.01)
         if(show):

@@ -23,6 +23,15 @@ def getSpacings(data):
             res[i,j] = ls
     return res
 
+def getEn(data):
+    nsamp = int(len(data[1:])/nmax)
+    res = np.empty((len(data[0]), nsamp, nmax))
+    for i in range(len(data[0])):
+        for j in range(nsamp):
+            en = np.array(data[1+j*nmax:1+(j+1)*nmax,i])
+            res[i,j] = en
+    return res
+
 def plotEnGap(name, fileName, show):
     data = hp.readfile(fileName + ".dat")
     w = data[0]
@@ -31,6 +40,10 @@ def plotEnGap(name, fileName, show):
     lsrErr = []
     nums = np.arange(6,nmax+0.5,2)
     ls = getSpacings(data)
+    aux = int((nmax-2)/2)
+    ls1 = ls[:,:,:aux+3]
+    ls2 = ls[:,:,aux+4:]
+    ls = np.concatenate((ls1,ls2), axis = 2)
     max_ls = np.maximum(ls[:,:,int((nmax-2)/2):-1], ls[:,:,int((nmax-2)/2+1):])
     min_ls = np.minimum(ls[:,:,int((nmax-2)/2):-1], ls[:,:,int((nmax-2)/2+1):])
     max_ls[max_ls == 0] = 1
@@ -43,7 +56,20 @@ def plotEnGap(name, fileName, show):
         lsrErr.append(np.std(lsrs, axis = 1)/np.sqrt(nsamp))
 
     avg_ratios = np.average(ratios, axis = 1)
-    print(avg_ratios[10])
+    avg_spacings = np.average(ls[:,:,int((nmax-2)/2):], axis = 1)
+    avg_max = np.average(max_ls, axis = 1)
+    avg_min = np.average(min_ls, axis = 1)
+    #print(np.sort(avg_spacings[0]))
+    #print(avg_spacings[10])
+    #print(avg_ratios[10])
+    #print(avg_max[10])
+    #print(avg_min[10])
+    #en = getEn(data)
+    #print(en[0,0,:])
+    #print(en[2,0,:])
+    #print(en[2,1,:])
+    #print(en[2,2,:])
+    #print(data[0][2])
 
     spec = gridspec.GridSpec(ncols=2, nrows=1, width_ratios=[40, 1])
     fig = plt.figure()
@@ -79,9 +105,27 @@ def plotEnGap(name, fileName, show):
     hp.totaiPhases(ax,0.95)
     #ax.legend(fontsize = 4, ncol = 2, title = "n")
 
-    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight')
+    fig.savefig(hp.plot_dir() + name + "_v2.png", dpi = 300, bbox_inches='tight')
     if(show):
         plt.show()
+        
+    fig, ax = plt.subplots()
+    ax.axhline(y = 0.53, color = 'black', linestyle = '--', linewidth = 0.5)
+    ax.axhline(y = 0.386, color = 'black', linestyle = '--', linewidth = 0.5)
+    ax.set(xlabel = r'$W$', ylabel = r'LSR')
+    for n in [50, 30, 10]:
+        i = nums.tolist().index(n)
+        ax.errorbar(w[1:], lsr[i][1:], capsize = 2, linewidth = 0.5, capthick = 0.5, label = r'$n = ' + str(n) + '$')
+    ymin, ymax = ax.get_ylim()
+    ax.set_ylim([ymin, 1.01*ymax])
+    hp.totaiPhases(ax, 0.95)
+    fig.set_size_inches(1.7,1.3)
+    ax.legend(fontsize = 7, bbox_to_anchor = (0.41,0.55, 0.16, 0.1), alignment = 'center')
+    ax.yaxis.labelpad = 0
+    ax.tick_params(axis='y', which='major', pad=0.5)
+    fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight')
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches='tight', pad_inches = 0)
+
 
 sizes = ['20']
 fileNames = ['spectrumE0BBH3D_L' + size + '_m1.1' for size in sizes]

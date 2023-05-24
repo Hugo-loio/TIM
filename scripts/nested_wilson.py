@@ -54,7 +54,7 @@ def wannier_bands(args):
     nus = np.transpose(np.array(nus))
 
     fig, ax = plt.subplots()
-    ax.set(xlabel = r'$k_y$', ylabel = r'$\nu$')
+    ax.set(xlabel = r'$k_y$', ylabel = r'$\nu_x$')
     for nu in nus:
         ax.plot(x, nu)
 
@@ -75,7 +75,7 @@ def invariant():
     fig, ax = plt.subplots()
     #ax.set(xlabel = r'$\left|\frac{\gamma}{\lambda}\right|$', ylabel = r'$q_{xy}$', fontsize = 12)
     ax.set_xlabel(r'$\left|\frac{\gamma}{\lambda}\right|$', fontsize = 14)
-    ax.set_ylabel(r'$p_y^{\nu_x^-}$', fontsize = 14)
+    ax.set_ylabel(r'$p_y$', fontsize = 14)
     ax.plot(gammas, inv, ls = '--', marker = '.', markersize = 3)
 
     name = "InvBBH2D"
