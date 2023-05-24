@@ -424,11 +424,23 @@ vec DisorderedBBH3D::spectrumE0(int nStates){
   ham->setBC(bC);
   ham->setSparse(true);
 
-  vec eigVal;
-  eigs_sym(eigVal, real(ham->spH(NULL)), nStates, 0.0);
+  //vec eigVal;
+  //eigs_sym(eigVal, real(ham->spH(NULL)), nStates, 0.0);
+  cx_vec eigVal;
+  eigs_gen(eigVal, ham->spH(NULL), nStates, 0.0);
   if(size(eigVal)[0] != nStates){
     cout << "Found " << size(eigVal)[0] << " states out of " << nStates << endl;
     throw runtime_error("Diagonalization failed.");
   }
-  return sort(eigVal);
+  return sort(real(eigVal));
+}
+
+void DisorderedBBH3D::test(){
+  int order[3] = {0,1,2};
+  int bC[3] = {2,2,2};
+  ham->setOrder(order);
+  ham->setBC(bC);
+  ham->setSparse(true);
+  cout << ham->spH(NULL) << endl;
+  cout << real(ham->spH(NULL)) << endl;
 }

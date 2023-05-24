@@ -34,6 +34,7 @@ class DisorderedBBH3D{
     double getMaxE();
     double probDensE0(int * n);
     vec spectrumE0(int nStates);
+    void test();
 
   private:
     TBModel * model;
