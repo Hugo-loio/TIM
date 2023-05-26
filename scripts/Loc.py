@@ -41,14 +41,14 @@ def plot(title, fileName, specs, errors = False, show = False):
         if(specs['phases'] == 0):
             hp.sotaiPhases(ax)
             #ax.legend(fontsize = 6)
-            ax.legend(fontsize = 6, ncol = 1, bbox_to_anchor=(0.4,0.7))
+            ax.legend(fontsize = 8, ncol = 1, bbox_to_anchor=(0.38,0.8))
         else:
             hp.totaiPhases(ax, 0.85)
             #ax.legend(fontsize = 6, bbox_to_anchor = (0.45,0.9))
             ax.legend(bbox_to_anchor = (0.55,0.7))
 
-        ax.tick_params(axis='y', which='major', pad=0.5)
-        ax.yaxis.labelpad = 0
+        #ax.tick_params(axis='y', which='major', pad=0.5)
+        #ax.yaxis.labelpad = 0
         #fig.set_size_inches(1.7,1.3)
         fig.set_size_inches(4,3)
         fig.savefig(hp.plot_dir() + title + "IPR.png", bbox_inches = 'tight', dpi = 300)
@@ -75,18 +75,23 @@ def plot(title, fileName, specs, errors = False, show = False):
         ax.margins(x = 0)
         if(specs['phases'] == 0):
             hp.sotaiPhases(ax, 0.95)
+            ymin, ymax = ax.get_ylim()
+            #ax.set_ylim([0.30, 1.03*ymax])
+            #ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.75))
+            ax.legend(fontsize = 9, bbox_to_anchor = (0.835,0.25), loc = 'center')
         else:
             ymin, ymax = ax.get_ylim()
             ax.set_ylim([ymin, 1.03*ymax])
             hp.totaiPhases(ax, 0.95)
             ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.75))
         #ax.legend(fontsize = 7)
-        ax.tick_params(axis='y', which='major', pad=0.5)
-        ax.yaxis.labelpad = 0
+        #ax.tick_params(axis='y', which='major', pad=0.5)
+        #ax.yaxis.labelpad = 0
 
-        fig.set_size_inches(1.7,1.3)
+        #fig.set_size_inches(1.7,1.3)
+        fig.set_size_inches(4,3)
         fig.savefig(hp.plot_dir() + title + "LSR.png", bbox_inches = 'tight', dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "LSR.pdf", bbox_inches = 'tight', pad_inches = 0)
+        fig.savefig(hp.plot_dir() + title + "LSR.pdf", bbox_inches = 'tight', pad_inches = 0.01)
         if(show):
             plt.show()
         plt.close()
@@ -109,7 +114,7 @@ def plot(title, fileName, specs, errors = False, show = False):
         #fig.set_size_inches(1.7, 1.3)
         fig.set_size_inches(4,3)
         #hp.totaiPhases(ax, 0.8)
-        hp.totaiPhases(ax, 0.9)
+        #hp.totaiPhases(ax, 0.9)
         fig.savefig(hp.plot_dir() + title + "Gap.png", bbox_inches = 'tight', dpi = 300, pad_inches = 0.01)
         fig.savefig(hp.plot_dir() + title + "Gap.pdf", bbox_inches = 'tight', pad_inches = 0.01)
         if(show):
@@ -143,12 +148,14 @@ def plot(title, fileName, specs, errors = False, show = False):
             ax.plot(dataPlot[1][0:nPoints], d, linestyle = '-', label = "n = " + str(n))
 
         ax.set(xlabel = r'$W$', ylabel = r'$D_2$')
-        ax.axhline(y = 3, color = 'black', linestyle = '--', linewidth = 0.5)
         ax.margins(x = 0)
         if(specs['phases'] == 0):
-            hp.sotaiPhases(ax)
-            ax.legend(fontsize = 6, bbox_to_anchor=(0.71,0.8))
+            hp.sotaiPhases(ax,0.86)
+            ax.axhline(y = 2, color = 'black', linestyle = '--', linewidth = 0.5)
+            ax.axhline(y = 0, color = 'black', linestyle = '--', linewidth = 0.5)
+            ax.legend(fontsize = 9, bbox_to_anchor=(0.83,0.7), loc = 'center')
         else:
+            ax.axhline(y = 3, color = 'black', linestyle = '--', linewidth = 0.5)
             #ax.legend(fontsize = 6)
             ymin, ymax = ax.get_ylim()
             ax.set_ylim([ymin, 1.1*ymax])
@@ -179,7 +186,7 @@ specs = {
         'phases' : 0
         }
 
-#plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
+plot("LocSOTAI_m1.1", "locSOTAI_m1.1", specs)
 
 specs = {
         'nStSamp' : 5,
@@ -193,5 +200,5 @@ specs = {
         'phases' : 1
         }
 
-plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs, False, False)
+#plot("LocBBH3D_m1.1", "locBBH3D_m1.1", specs, False, False)
 #plot("LocBBH3D_intra1.1", "locBBH3D_intra1.1", specs)

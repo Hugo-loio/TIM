@@ -48,12 +48,16 @@ def ldos(fname, name, show: bool):
 
     fig, ax = plt.subplots();
     im = ax.imshow(zMat, vmin = zMin, vmax = zMax, cmap = 'cividis')
-    fig.colorbar(im , ax = ax)
+    cbar = fig.colorbar(im , ax = ax)
+    cbar.ax.set_title(r'$\rho(0, \mathbf{r})$')
+    #cbar.set_label(r'$\rho(0, \mathbf{r})$')
     shift_matrix_ticks(zMat.shape, ax)
 
     ax.set(xlabel = r'$x$', ylabel = r'$y$')
 
+    fig.set_size_inches(4,3)
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight')
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches='tight', pad_inches = 0.01)
     if(show):
         plt.show()
 
@@ -75,7 +79,7 @@ fileNames = ['ldosSOTAI_L10_w' + w + '_E0_nMu4096_m1.1' for w in weights]
 
 weights = ['1', '2.6', '3.4']
 fileNames = ['ldosSOTAI_L40_w' + w + '_E0_nMu1024_m1.1' for w in weights]
-#plots(fileNames, fileNames, False)
+plots(fileNames, fileNames, False)
 
 weights = ['1', '2.6', '3.4']
 fileNames = ['ldosSOTAI_L60_w' + w + '_E0_nMu1024_m1.1' for w in weights]

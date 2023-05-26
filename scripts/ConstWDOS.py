@@ -24,14 +24,14 @@ def plot(name, fileNames, labels, detail = True, show = True):
 
     colormap = plt.cm.turbo
     colors = [colormap(i) for i in np.linspace(0, 1, len(fileNames))]
-    ax.set_prop_cycle('color', colors)
+    #ax.set_prop_cycle('color', colors)
 
     for i in range(0, len(fileNames)):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
     #ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7)
-    ax.legend(loc = 'upper right', fontsize = 9, title = r'$W$', title_fontsize = 12)
+    ax.legend(loc = 'upper right', fontsize = 10, title = r'$W$', title_fontsize = 12)
 
     #fig.set_size_inches(2.3,1.7)
     fig.set_size_inches(4,3)
@@ -46,14 +46,14 @@ def plotZoom(name, fileNames, labels, detail = True, show = True, ylim = 0):
 
     colormap = plt.cm.turbo
     colors = [colormap(i) for i in np.linspace(0, 1, len(fileNames))]
-    ax.set_prop_cycle('color', colors)
+    #ax.set_prop_cycle('color', colors)
 
     for i in range(0, len(fileNames)):
         plotDOS(fileNames[i], labels[i], ax, detail)
 
     ax.set(xlabel = r'$E$', ylabel = r'$\rho(E)$')
     #ax.legend(loc = 'upper right', fontsize = 5, title = r'$W$', title_fontsize = 7, ncols = 2)
-    ax.legend(loc = 'upper right', fontsize = 10, title = r'$W$', title_fontsize = 12, ncols = 2)
+    ax.legend(loc = 'upper right', fontsize = 9, title = r'$W$', title_fontsize = 12, ncols = 2)
 
     plt.xlim([-0.5,0.5])
     if(ylim != 0):
@@ -121,13 +121,13 @@ labels = ["L = " + size[i] + ", W = " + weight[i] + ", N = " + mu[i] + ", R = " 
 
 weight = ["2.4", "2.8", "3.2", "3.6", "4", "9"]
 names = ["dosSOTAI_L200" + "_w" + weight[i] + "_nMu1000_nR1_m1.1" for i in range(len(weight))]
-labels = ["W = " + weight[i] for i in range(len(weight))]
+labels = [weight[i] for i in range(len(weight))]
 #plot("ConstWDosSOTAI_intra1.1_v1", names, labels, False, False)
 #plotZoom("ConstWDosSOTAI_intra1.1_v1_zoom", names, labels, False, False)
 
 names = ["dosSOTAI_L100" + "_w" + weight[i] + "_nMu8192_nR1_m1.1" for i in range(len(weight))]
-#plot("ConstWDosSOTAI_intra1.1_v2", names, labels, False, False)
-#plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names, labels, False, False)
+plot("ConstWDosSOTAI_intra1.1_v2", names, labels, False, False)
+plotZoom("ConstWDosSOTAI_intra1.1_v2_zoom", names, labels, False, False)
 
 size = ["50", "50"]
 weight = ["1", "2"]

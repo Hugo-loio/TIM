@@ -28,8 +28,8 @@ def plot(name, fileNames, labels, detail = True, show = True):
     if(len(fileNames) > 1):
         #ax.legend(fontsize = 8, title = 'N')
         ax.legend(title = 'N', bbox_to_anchor = (0.6, 0.7))
-    #hp.sotaiPhases(ax)
-    hp.totaiPhases(ax,0.8)
+    hp.sotaiPhases(ax, 0.85)
+    #hp.totaiPhases(ax,0.8)
 
     #fig.set_size_inches(2.3,1.7)
     fig.set_size_inches(4,3)
@@ -45,7 +45,7 @@ rand = ["1"]
 names = ["dosSOTAI_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = ["L = " + size[i] + ", N = " + mu[i] + ", R = " + rand[i] for i in range(len(size))]
 
-#plot("DOSE0SOTAI_intra1.1", names, labels, False, False)
+plot("DOSE0SOTAI_intra1.1", names, labels, False, False)
 
 size = ["80", "80"]
 mu = ["2048", "4096"]
@@ -53,4 +53,4 @@ rand = ["1", "1"]
 names = ["dosBBH3D_L" + size[i] + "_E0_nMu" + mu[i] + "_nR" + rand[i] + "_m1.1" for i in range(len(size))]
 labels = [mu[i]  for i in range(len(size))]
 
-plot("DOSE0BBH3D_intra1.1", names, labels, False, False)
+#plot("DOSE0BBH3D_intra1.1", names, labels, False, False)
