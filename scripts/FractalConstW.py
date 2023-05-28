@@ -58,7 +58,7 @@ def plot(name, fileNames, labels, sizes, show = True):
 weights = ["3.2", "4.6"]
 sizes = [120, 140, 160, 164, 168, 172, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228, 232, 236, 240]
 names = ["fractalSOTAI_w" + w + "_m1.1" for w in weights]
-labels = ["3.4 (phase II)", "5 (phase III)"]
+labels = ["3.2 (phase III)", "4.6 (phase IV)"]
 plot("FractalConstWSOTAI", names, labels, sizes, False)
 
 weights = ["3.4", "5"]
