@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib import gridspec
 import matplotlib.colors as cls
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import numpy as np
 
 plt.style.use('science')
@@ -124,10 +125,19 @@ def plotEnGap(name, fileName, show):
     fig.set_size_inches(4,3)
     #ax.legend(fontsize = 7, bbox_to_anchor = (0.41,0.55, 0.16, 0.1), alignment = 'center')
     ax.legend(bbox_to_anchor = (0.7,0.5), loc = 'center')
+    #ax.yaxis.set_major_locator(MultipleLocator(0.05))
     ax.yaxis.labelpad = 0
     ax.tick_params(axis='y', which='major', pad=0.5)
+
+    xmin, xmax = ax.get_xlim()
+    #ax.text(1.2*xmin, 0.53, r'GOE', ha = 'right', fontsize=6)
+    #ax.text(1.2*xmin, 0.386, r'Poisson', ha = 'right', fontsize=6, va = 'top')
+    ax.text(1.2*xmin, 0.53, r'GOE', ha = 'right', fontsize=8, va = 'center')
+    ax.text(1.2*xmin, 0.386, r'Poisson', ha = 'right', fontsize=8, va = 'center')
+
     fig.savefig(hp.plot_dir() + name + ".png", dpi = 300, bbox_inches='tight')
     fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches='tight', pad_inches = 0.01)
+    #fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches='tight', pad_inches = 0)
 
 
 sizes = ['20']

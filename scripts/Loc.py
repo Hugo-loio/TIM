@@ -2,6 +2,7 @@ import helper as hp
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import optimize
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 plt.style.use('science')
 
@@ -79,6 +80,9 @@ def plot(title, fileName, specs, errors = False, show = False):
             #ax.set_ylim([0.30, 1.03*ymax])
             #ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.75))
             ax.legend(fontsize = 9, bbox_to_anchor = (0.835,0.25), loc = 'center')
+            xmin, xmax = ax.get_xlim()
+            ax.text(0.05, 0.53, r'GOE', ha = 'right', fontsize=8, va = 'center')
+            ax.text(0.05, 0.386, r'Poisson', ha = 'right', fontsize=6, va = 'top')
         else:
             ymin, ymax = ax.get_ylim()
             ax.set_ylim([ymin, 1.03*ymax])
@@ -157,19 +161,21 @@ def plot(title, fileName, specs, errors = False, show = False):
         else:
             ax.axhline(y = 3, color = 'black', linestyle = '--', linewidth = 0.5)
             #ax.legend(fontsize = 6)
+            ax.yaxis.set_major_locator(MultipleLocator(3))
             ymin, ymax = ax.get_ylim()
             ax.set_ylim([ymin, 1.1*ymax])
             hp.totaiPhases(ax, 0.85)
-            #ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.60))
-            ax.legend(bbox_to_anchor = (0.7,0.50), loc = 'center')
+            ax.legend(fontsize = 7, bbox_to_anchor = (0.4,0.60))
+            #ax.legend(bbox_to_anchor = (0.7,0.50), loc = 'center')
 
         ax.tick_params(axis='y', which='major', pad=0.5)
         ax.yaxis.labelpad = 0
 
-        #fig.set_size_inches(1.7,1.3)
-        fig.set_size_inches(4,3)
+        fig.set_size_inches(1.7,1.3)
+        #fig.set_size_inches(4,3)
         fig.savefig(hp.plot_dir() + title + "Fractal.png", bbox_inches = 'tight', dpi = 300)
-        fig.savefig(hp.plot_dir() + title + "Fractal.pdf", bbox_inches = 'tight', pad_inches = 0.01)
+        #fig.savefig(hp.plot_dir() + title + "Fractal.pdf", bbox_inches = 'tight', pad_inches = 0.01)
+        fig.savefig(hp.plot_dir() + title + "Fractal.pdf", bbox_inches = 'tight', pad_inches = 0)
         if(show):
             plt.show()
         plt.close()
