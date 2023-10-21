@@ -75,10 +75,10 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
         ymin, ymax = ax.get_ylim()
         ax.set_xlim([0,9])
         ax.set_ylim([ymin, ymax*1.3])
-        #hp.totaiPhases(ax, 0.5)
-        hp.totaiPhases(ax, 0.7)
-        #ax.legend(fontsize = 4, ncol = 2, title = r'$L$', title_fontsize = 7)
-        ax.legend(fontsize = 8, ncol = 2, title = r'$L$', title_fontsize = 9, bbox_to_anchor = (0.7, 0.15), loc = 'center')
+        hp.totaiPhases(ax, 0.5)
+        #hp.totaiPhases(ax, 0.7)
+        ax.legend(fontsize = 4, ncol = 2, title = r'$L$', title_fontsize = 7, bbox_to_anchor = (0.75, 0.2), loc = 'center')
+        #ax.legend(fontsize = 8, ncol = 2, title = r'$L$', title_fontsize = 9, bbox_to_anchor = (0.7, 0.15), loc = 'center')
         ax.tick_params(axis='y', which='major', pad=0)
     elif(model == 3):
         ax.set_xlim([18,34])
@@ -92,17 +92,18 @@ def plotConstL(name, fileNames, labels, show = True, model = 0):
         ax.text((18+24)/2, 2.2, r'III', ha = 'center', fontsize=8)
         ax.text((24+34)/2, 2.2, r'IV', ha = 'center', fontsize=8)
         ax.tick_params(axis='y', which='major', pad=0)
-        #ax.legend(fontsize = 6, ncol = 2)
+        ax.legend(fontsize = 6, ncol = 2)
     else:
         ax.legend(fontsize = 6, ncol = 2)
 
     ax.yaxis.labelpad = 0
 
-    #fig.set_size_inches(1.7,1.3)
-    fig.set_size_inches(4,3)
+    fig.set_size_inches(1.7,1.3)
+    #fig.set_size_inches(4,3)
     #fig.set_size_inches(2.3,3)
     fig.savefig(hp.plot_dir() + name + ".png", bbox_inches = 'tight', dpi = 300)
-    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
+    #fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0.01)
+    fig.savefig(hp.plot_dir() + name + ".pdf", bbox_inches = 'tight', pad_inches = 0)
     if(show):
         plt.show()
     plt.close()
@@ -168,11 +169,12 @@ constLLabels = [r'$L_x = $ ' + val for val in constLVals]
 
 #plotConstL("tmmSOTAI_E0_d1_m1.1", constLNames, constLLabels, False, 1)
 
-constLVals = ["2", "4", "5", "6", "8", "10"]
+#constLVals = ["2", "4", "5", "6", "8", "10"]
+constLVals = ["4", "6", "8", "10"]
 constLNames = ["tmmBBH3D_E0_L" + val + "_d2_m1.1" for val in constLVals]
 constLLabels = [val for val in constLVals]
 
-#plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
+plotConstL("tmmBBH3D_E0_d2_m1.1", constLNames, constLLabels, False, 2)
 
 dVals = ["0", "1", "2"]
 constLNames = ["tmmBBH3D_E0_L4_d" + val + "_m1.1" for val in dVals]
